@@ -7,7 +7,7 @@ Website demo untuk menguji foto apel, pisang, dan jeruk dengan model **ResNet50*
 - Artefak: [`backend/model/ResNet50_terbaik.keras`](backend/model/ResNet50_terbaik.keras)
 - Manifest kelas, preprocessing, dan SHA-256: [`backend/model/model_manifest.json`](backend/model/model_manifest.json)
 - Enam kelas model dipetakan langsung: indeks 0–2 menjadi **Segar**, indeks 3–5 menjadi **Busuk**.
-- Notebook melaporkan akurasi 97,69% pada 2.727 gambar dan 31 gambar busuk tertebak Segar. Hasil foto baru adalah perkiraan visual, jadi periksa buah secara langsung.
+- Notebook melaporkan akurasi test 97,69% pada 2.727 gambar dan 31 gambar busuk tertebak Segar. Hasil foto baru adalah perkiraan visual, jadi periksa buah secara langsung.
 
 ## Menjalankan lokal
 
@@ -31,9 +31,9 @@ npm install
 npm run dev
 ```
 
-Frontend meneruskan `/api/*` ke FastAPI di `http://127.0.0.1:8000`. API menerima JPEG, PNG, atau WebP sampai 4 MB melalui `POST /api/v1/predict`. `GET /api/health` memeriksa model dan `GET /api/v1/model-info` menunjukkan versi model serta metode argmax.
+Frontend meneruskan `/api/*` ke FastAPI di `http://127.0.0.1:8000`. API menerima JPEG, PNG, atau WebP sampai 4 MB. `POST /api/v1/predict/stream` mengirim riwayat langkah backend dan hasil melalui SSE; `POST /api/v1/predict` tetap tersedia dengan respons JSON. `GET /api/health` memeriksa model.
 
-Saat prediksi berjalan, UI menggilir aktivitas validasi foto, preprocessing, inferensi ResNet50, dan pemetaan hasil.
+Riwayat UI mengikuti event aktual: validasi foto, preprocessing RGB 160 × 160, kesiapan model ResNet50, inferensi, lalu pemetaan Segar/Busuk.
 
 Tes backend: `python -m unittest discover -s backend/tests -v`.
 

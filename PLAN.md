@@ -76,18 +76,19 @@ Contoh bentuk routing di vercel.json:
 ### Alur request
 
 1. Pengguna memilih foto dan melihat pratinjau.
-2. Browser mengirim file sebagai multipart request ke POST /api/v1/predict.
+2. Browser mengirim file sebagai multipart request ke POST /api/v1/predict/stream.
 3. FastAPI memeriksa format file, ukuran unggahan, dimensi, dan apakah gambar dapat dibaca.
 4. Backend mengubah gambar ke RGB, resize ke 160 × 160, lalu menerapkan preprocessing ResNet50 yang sama dengan notebook.
 5. Model menghasilkan skor enam kelas sesuai urutan label di bawah.
-6. Backend memilih kelas dengan skor tertinggi: indeks 0–2 menghasilkan Segar dan indeks 3–5 menghasilkan Busuk. Output model invalid menampilkan error.
+6. Backend mengirim event SSE saat tiap langkah dimulai dan selesai, lalu memilih kelas dengan skor tertinggi: indeks 0–2 menghasilkan Segar dan indeks 3–5 menghasilkan Busuk. Output model invalid menampilkan error.
 7. Frontend menampilkan hasil, jenis buah bila cukup jelas, serta keterangan singkat.
 
 ### Kontrak API awal
 
 - GET /api/health — memeriksa aplikasi dan status model siap.
 - GET /api/v1/model-info — mengembalikan versi model, ukuran input, kelas, dan versi kebijakan.
-- POST /api/v1/predict — menerima satu gambar dan mengembalikan status.
+- POST /api/v1/predict/stream — menerima gambar dan mengirim event riwayat proses serta hasil melalui SSE.
+- POST /api/v1/predict — endpoint JSON langsung untuk klien non-streaming.
 
 Contoh respons berhasil:
 
@@ -188,7 +189,7 @@ File `.keras` terpilih dicommit di `backend/model/` karena diminta sebagai artef
 | 1. Pemetaan label | Aktifkan hasil langsung argmax enam kelas sesuai urutan di manifest. | Selesai; kelas segar menampilkan Segar dan kelas busuk menampilkan Busuk. |
 | 2. Modul inference | Pindahkan preprocessing dan pemanggilan model ke modul Python yang dapat menerima gambar dan mengeluarkan skor serta status. Muat model sekali per proses. | Selesai; hash diverifikasi sebelum model dimuat dan preprocessing dicocokkan dengan notebook. |
 | 3. API | Implementasikan health, model-info, dan predict; validasi upload dan error; batasi ukuran dan jumlah piksel; jangan simpan gambar. | Selesai; endpoint health/model-info serta unggah PNG lewat API lokal sudah merespons. |
-| 4. Frontend | Buat React SPA: upload/drag-drop, pratinjau, loop aktivitas backend/model saat memeriksa, hasil, error, dan tampilan ponsel. | Selesai; production build lulus. |
+| 4. Frontend | Buat React SPA: upload/drag-drop, pratinjau, riwayat langkah aktual backend/model, hasil, error, dan tampilan ponsel. | Selesai; production build lulus. |
 | 5. Integrasi lokal | Jalankan frontend dan API bersama; periksa routing /api, preprocessing, label, respons, serta alur error. | Smoke API pada 30 foto test Kaggle yang hash-nya cocok (5 per kelas): 15 foto segar menghasilkan Segar dan 15 foto busuk menghasilkan Busuk. Uji format/ukuran upload dan preprocessing juga sudah diperiksa. Ini smoke check, bukan evaluasi penuh 2.727 gambar. |
 | 6. Deploy preview Vercel | Konfigurasikan Vercel Services, root frontend/backend, entrypoint FastAPI, routing, ukuran upload, artefak model, dan kapasitas Large Functions bila bundle melewati 500 MB. Jalankan preview dari branch kerja sebelum main. | Source/config siap diajukan; deployment preview, pengukuran bundle/cold start/memori, dan pemeriksaan project Vercel masih perlu dilakukan di akun pengguna. |
 | 7. Deploy demo dan dokumentasi | Setelah preview Vercel berjalan, cek health check, upload foto, label, dan catat versi model. | Belum dideploy; perlu project/akun Vercel pemilik repo. |

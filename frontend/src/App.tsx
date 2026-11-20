@@ -16,12 +16,29 @@ import {
 
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
 const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
-const PROCESSING_STEPS = [
-  "Backend memvalidasi format dan ukuran foto",
-  "Backend menyiapkan gambar RGB 160 × 160",
-  "Model ResNet50 menganalisis enam kelas buah",
-  "Backend menerjemahkan skor ke Segar atau Busuk",
-];
+const PROCESS_STEPS = [
+  { id: "validation", label: "Validasi format dan ukuran foto" },
+  { id: "preprocessing", label: "Preprocessing RGB · 160 × 160" },
+  { id: "model", label: "Menyiapkan model ResNet50" },
+  { id: "inference", label: "Inferensi enam kelas" },
+  { id: "label", label: "Pemetaan label Segar/Busuk" },
+] as const;
+
+type ProcessingStepId = (typeof PROCESS_STEPS)[number]["id"];
+type ProcessingStatus = "pending" | "running" | "complete" | "error";
+type ProcessingLogItem = {
+  id: ProcessingStepId;
+  label: string;
+  status: ProcessingStatus;
+  durationMs?: number;
+};
+
+const PROCESSING_STATUS_LABELS: Record<ProcessingStatus, string> = {
+  pending: "Menunggu",
+  running: "Berjalan",
+  complete: "Selesai",
+  error: "Gagal",
+};
 
 type ResultStatus = "fresh" | "rotten";
 
@@ -51,8 +68,108 @@ function responseDetail(value: unknown): string | undefined {
   return typeof detail === "string" ? detail : undefined;
 }
 
+function createProcessingLog(): ProcessingLogItem[] {
+  return PROCESS_STEPS.map((step) => ({ ...step, status: "pending" }));
+}
+
+function isProcessingStepId(value: unknown): value is ProcessingStepId {
+  return PROCESS_STEPS.some((step) => step.id === value);
+}
+
+function isProcessingEventStatus(value: unknown): value is Exclude<ProcessingStatus, "pending"> {
+  return value === "running" || value === "complete" || value === "error";
+}
+
+async function readPredictionStream(
+  response: Response,
+  onStep: (
+    step: ProcessingStepId,
+    status: Exclude<ProcessingStatus, "pending">,
+    durationMs?: number,
+  ) => void,
+): Promise<Prediction> {
+  if (!response.body) throw new Error("Log proses tidak tersedia dari server.");
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let prediction: Prediction | null = null;
+
+  const handleEvent = (frame: string) => {
+    const data = frame
+      .split("\n")
+      .filter((line) => line.startsWith("data:"))
+      .map((line) => line.slice(5).trimStart())
+      .join("\n");
+    if (!data) return;
+
+    let value: unknown;
+    try {
+      value = JSON.parse(data);
+    } catch {
+      throw new Error("Format log proses dari server tidak valid.");
+    }
+    if (!value || typeof value !== "object") {
+      throw new Error("Log proses dari server tidak dikenali.");
+    }
+
+    const event = value as Record<string, unknown>;
+    if (
+      event.type === "step" &&
+      isProcessingStepId(event.step) &&
+      isProcessingEventStatus(event.status)
+    ) {
+      const durationMs =
+        typeof event.duration_ms === "number" && Number.isFinite(event.duration_ms)
+          ? event.duration_ms
+          : undefined;
+      onStep(event.step, event.status, durationMs);
+      return;
+    }
+    if (event.type === "result" && isPrediction(event.result)) {
+      prediction = event.result;
+      return;
+    }
+    if (event.type === "error") {
+      throw new Error(
+        typeof event.detail === "string" ? event.detail : "Model gagal memproses foto.",
+      );
+    }
+    throw new Error("Log proses dari server tidak dikenali.");
+  };
+
+  try {
+    let done = false;
+    while (!done) {
+      const chunk = await reader.read();
+      done = chunk.done;
+      buffer += decoder.decode(chunk.value, { stream: !done }).replace(/\r\n/g, "\n");
+      let frameEnd = buffer.indexOf("\n\n");
+      while (frameEnd >= 0) {
+        handleEvent(buffer.slice(0, frameEnd));
+        buffer = buffer.slice(frameEnd + 2);
+        frameEnd = buffer.indexOf("\n\n");
+      }
+    }
+    if (buffer.trim()) handleEvent(buffer);
+  } catch (streamError) {
+    await reader.cancel().catch(() => undefined);
+    throw streamError;
+  } finally {
+    reader.releaseLock();
+  }
+
+  if (!prediction) throw new Error("Server belum mengirim hasil prediksi.");
+  return prediction;
+}
+
 function formatFileSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+}
+
+function formatDuration(durationMs: number) {
+  if (durationMs < 1000) return `${Math.max(1, Math.round(durationMs))} ms`;
+  return `${(durationMs / 1000).toLocaleString("id-ID", { maximumFractionDigits: 1 })} dtk`;
 }
 
 function App() {
@@ -63,23 +180,13 @@ function App() {
   const [error, setError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [processingStep, setProcessingStep] = useState(0);
+  const [stepHistory, setStepHistory] = useState<ProcessingLogItem[]>([]);
 
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
-
-  useEffect(() => {
-    if (!isLoading) return;
-
-    const timer = window.setInterval(() => {
-      setProcessingStep((current) => (current + 1) % PROCESSING_STEPS.length);
-    }, 1400);
-
-    return () => window.clearInterval(timer);
-  }, [isLoading]);
 
   function chooseFile(nextFile: File | undefined) {
     if (!nextFile) return;
@@ -96,6 +203,7 @@ function App() {
     setPreviewUrl(URL.createObjectURL(nextFile));
     setPrediction(null);
     setError("");
+    setStepHistory([]);
   }
 
   function removeFile() {
@@ -103,6 +211,7 @@ function App() {
     setPreviewUrl("");
     setPrediction(null);
     setError("");
+    setStepHistory([]);
     if (inputRef.current) inputRef.current.value = "";
   }
 
@@ -116,7 +225,7 @@ function App() {
     event.preventDefault();
     if (!file || isLoading) return;
 
-    setProcessingStep(0);
+    setStepHistory(createProcessingLog());
     setIsLoading(true);
     setError("");
     setPrediction(null);
@@ -125,24 +234,34 @@ function App() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("/api/v1/predict", {
+      const response = await fetch("/api/v1/predict/stream", {
         method: "POST",
         body: formData,
       });
-      const payload: unknown = await response.json().catch(() => null);
 
       if (!response.ok) {
+        const payload: unknown = await response.json().catch(() => null);
+        if ([400, 413, 415].includes(response.status)) {
+          setStepHistory((current) =>
+            current.map((step) =>
+              step.id === "validation" ? { ...step, status: "error" } : step,
+            ),
+          );
+        }
         if (response.status === 413) {
           throw new Error("Foto terlalu besar untuk diproses. Pilih foto maksimal 4 MB.");
         }
         throw new Error(responseDetail(payload) || "Foto belum dapat diproses. Coba pilih gambar lain.");
       }
 
-      if (!isPrediction(payload)) {
-        throw new Error("Respons dari server tidak dikenali. Coba lagi.");
-      }
-
-      setPrediction(payload);
+      const result = await readPredictionStream(response, (stepId, status, durationMs) => {
+        setStepHistory((current) =>
+          current.map((step) =>
+            step.id === stepId ? { ...step, status, durationMs } : step,
+          ),
+        );
+      });
+      setPrediction(result);
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -151,7 +270,6 @@ function App() {
       );
     } finally {
       setIsLoading(false);
-      setProcessingStep(0);
     }
   }
 
@@ -309,20 +427,43 @@ function App() {
               </button>
             )}
 
-            {isLoading && (
-              <div className="processing-status" role="status" aria-live="polite" aria-atomic="true">
-                <span className="processing-status__icon" aria-hidden="true">
-                  <ScanLine size={17} />
-                </span>
-                <div className="processing-status__copy">
-                  <span className="processing-status__label">
-                    Tahap {processingStep + 1} dari {PROCESSING_STEPS.length}
+            {stepHistory.length > 0 && (
+              <section
+                className={`step-history${isLoading ? " step-history--active" : ""}`}
+                aria-label="Riwayat proses backend dan model"
+                aria-live={isLoading ? "polite" : "off"}
+                aria-atomic="false"
+              >
+                <div className="step-history__heading">
+                  <h3>Riwayat proses</h3>
+                  <span className={`step-history__summary${error ? " step-history__summary--error" : ""}`}>
+                    {isLoading ? "Berjalan" : error ? "Terhenti" : "Selesai"}
                   </span>
-                  <p key={processingStep} className="processing-status__message">
-                    {PROCESSING_STEPS[processingStep]}
-                  </p>
                 </div>
-              </div>
+                <ol className="step-history__list">
+                  {stepHistory.map((step, index) => (
+                    <li key={step.id} className={`step-history__item step-history__item--${step.status}`}>
+                      <span className="step-history__marker" aria-hidden="true">
+                        {step.status === "complete" ? (
+                          <CircleCheck size={17} />
+                        ) : step.status === "running" ? (
+                          <LoaderCircle className="spinner" size={17} />
+                        ) : step.status === "error" ? (
+                          <CircleAlert size={17} />
+                        ) : (
+                          index + 1
+                        )}
+                      </span>
+                      <span className="step-history__label">{step.label}</span>
+                      <span className="step-history__status">
+                        {step.durationMs !== undefined && step.status !== "pending"
+                          ? `${PROCESSING_STATUS_LABELS[step.status]} · ${formatDuration(step.durationMs)}`
+                          : PROCESSING_STATUS_LABELS[step.status]}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
             )}
 
             {prediction && (
