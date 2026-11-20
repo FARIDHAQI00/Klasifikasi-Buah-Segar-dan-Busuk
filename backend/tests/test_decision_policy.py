@@ -6,13 +6,13 @@ from backend.app.decision_policy import decide
 
 
 class DecisionPolicyTests(unittest.TestCase):
-    def test_fresh_argmax_never_returns_fresh(self) -> None:
+    def test_fresh_argmax_returns_fresh(self) -> None:
         for class_id in range(3):
             with self.subTest(class_id=class_id):
                 scores = np.zeros(6, dtype=np.float32)
                 scores[class_id] = 1.0
                 result = decide(scores)
-                self.assertEqual(result.status, "review")
+                self.assertEqual(result.status, "fresh")
                 self.assertIsNotNone(result.fruit)
 
     def test_rotten_argmax_returns_rotten(self) -> None:
@@ -24,11 +24,11 @@ class DecisionPolicyTests(unittest.TestCase):
                 self.assertEqual(result.status, "rotten")
                 self.assertIsNotNone(result.fruit)
 
-    def test_fresh_rotten_tie_falls_back_to_review(self) -> None:
+    def test_argmax_tie_uses_first_class(self) -> None:
         result = decide([0.5, 0.0, 0.0, 0.5, 0.0, 0.0])
-        self.assertEqual(result.status, "review")
+        self.assertEqual(result.status, "fresh")
 
-    def test_invalid_scores_fall_back_to_review(self) -> None:
+    def test_invalid_scores_raise_error(self) -> None:
         invalid_scores = (
             [],
             [0.0] * 5,
@@ -38,9 +38,8 @@ class DecisionPolicyTests(unittest.TestCase):
         )
         for scores in invalid_scores:
             with self.subTest(scores=scores):
-                result = decide(scores)
-                self.assertEqual(result.status, "review")
-                self.assertIsNone(result.fruit)
+                with self.assertRaises(ValueError):
+                    decide(scores)
 
 
 if __name__ == "__main__":

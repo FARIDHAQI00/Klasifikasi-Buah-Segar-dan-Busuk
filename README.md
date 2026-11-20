@@ -2,18 +2,12 @@
 
 Website demo untuk menguji foto apel, pisang, dan jeruk dengan model **ResNet50** dari notebook UAS.
 
-## Artefak model
+## Model
 
-- Model yang dipakai: [`backend/model/ResNet50_terbaik.keras`](backend/model/ResNet50_terbaik.keras)
-- Manifest, urutan kelas, preprocessing, dan SHA-256: [`backend/model/model_manifest.json`](backend/model/model_manifest.json)
-- Aplikasi tidak memilih arsitektur lain dan tidak mengunduh model saat request.
-- Dataset, checkpoint training, dan foto pengunjung tidak disimpan di repo atau server.
-
-## Kebijakan hasil saat ini
-
-Notebook mencatat akurasi test 97,69% pada 2.727 gambar, tetapi argmax mentah memberi label kelas segar kepada 31 gambar busuk. Karena arsip gambar validation lokal yang tersedia terpotong, ambang aman belum dapat dikalibrasi dari data yang sesuai. Sampai gerbang false-fresh lulus, backend hanya dapat mengeluarkan **Busuk** atau **Perlu diperiksa**; hasil yang mengarah ke kelas segar tidak akan ditampilkan sebagai **Segar**.
-
-Untuk mengaktifkan **Segar** pada iterasi mendatang, siapkan split validation lengkap yang dipakai run model ini, tetapkan ambang tanpa melihat test, lalu evaluasi sekali di test terkunci. Jika ada satu saja false-fresh pada kriteria rilis, status otomatis Segar harus tetap mati. Saat ini API memakai kelas argmax: kelas busuk menghasilkan **Busuk**, sedangkan kelas segar menghasilkan **Perlu diperiksa**. Backend tidak mengklaim mengenali gambar non-buah atau jenis buah di luar apel, pisang, dan jeruk.
+- Artefak: [`backend/model/ResNet50_terbaik.keras`](backend/model/ResNet50_terbaik.keras)
+- Manifest kelas, preprocessing, dan SHA-256: [`backend/model/model_manifest.json`](backend/model/model_manifest.json)
+- Enam kelas model dipetakan langsung: indeks 0–2 menjadi **Segar**, indeks 3–5 menjadi **Busuk**.
+- Notebook melaporkan akurasi 97,69% pada 2.727 gambar dan 31 gambar busuk tertebak Segar. Hasil foto baru adalah perkiraan visual, jadi periksa buah secara langsung.
 
 ## Menjalankan lokal
 
@@ -37,22 +31,15 @@ npm install
 npm run dev
 ```
 
-Frontend Vite meneruskan `/api/*` ke `http://127.0.0.1:8000`. API menerima JPEG, PNG, atau WebP sampai 4 MB melalui `POST /api/v1/predict`. `GET /api/health` memuat dan memeriksa model; `GET /api/v1/model-info` menampilkan metadata model dan kebijakan.
+Frontend meneruskan `/api/*` ke FastAPI di `http://127.0.0.1:8000`. API menerima JPEG, PNG, atau WebP sampai 4 MB melalui `POST /api/v1/predict`. `GET /api/health` memeriksa model dan `GET /api/v1/model-info` menunjukkan versi model serta metode argmax.
 
-Jalankan regression tests backend dari root repo setelah memasang dependensi:
-
-```powershell
-python -m unittest discover -s backend/tests -v
-```
-
-Tes ini memeriksa pemetaan enam kelas, status fallback aman, skor invalid, format gambar, ukuran tensor, dan preprocessing ResNet50.
+Tes backend: `python -m unittest discover -s backend/tests -v`.
 
 ## Deploy ke Vercel
 
-1. Impor repo GitHub ini sebagai satu project Vercel dengan root project di root repo. [`vercel.json`](vercel.json) mendeklarasikan service frontend Vite dan backend FastAPI, mengarahkan `/api/*` ke backend, dan path lainnya ke frontend. Ikuti preset/framework Services yang ditawarkan dashboard.
-2. Vercel Services tersedia sebagai Beta. Jalankan `vercel dev --local` untuk memeriksa routing Services lokal, lalu buat deployment preview sebelum production.
-3. Pada preview, periksa `/api/health`, unggah foto di bawah 4 MB, dan catat ukuran bundle Python, cold start, memori, serta waktu inference.
-4. Paket Python standar memiliki batas 500 MB tanpa kompresi. Jika bundel TensorFlow + model melampauinya, aktifkan Large Functions (maksimum 5 GB pada Fluid Compute Beta); untuk project yang meminta opt-in, tambahkan `VERCEL_SUPPORT_LARGE_FUNCTIONS=1` pada Environment Variables. Request body Vercel Function tetap dibatasi 4,5 MB.
-5. Promosikan ke production hanya setelah preview berfungsi dan gerbang false-fresh untuk model ini dinyatakan lulus. Sampai saat itu UI menjelaskan bahwa status Segar otomatis terkunci.
+1. Impor repo ini ke Vercel dengan root project di root repo. `vercel.json` mengatur frontend Vite, backend FastAPI, dan routing `/api/*`.
+2. Deploy preview, lalu cek `/api/health` dan coba foto Segar serta Busuk sebelum mengarahkan domain demo.
+3. Paket TensorFlow + model dapat melebihi batas Function standar 500 MB. Jika bundle melewati batas, aktifkan Large Functions pada project Vercel (`VERCEL_SUPPORT_LARGE_FUNCTIONS=1` jika diminta) dan cek cold start serta memori.
+4. Request body Vercel dibatasi 4,5 MB; batas upload aplikasi adalah 4 MB.
 
-File repo menyiapkan routing dan source, tetapi project Vercel, deployment preview, pengukuran runtime, serta environment variable Large Functions (bila diminta) masih perlu disiapkan di akun Vercel. Jangan mengaktifkan produksi sebelum gerbang keselamatan model terpenuhi.
+Preview Vercel perlu dijalankan dari project dan akun Vercel pemilik repo.

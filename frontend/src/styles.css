@@ -23,8 +23,7 @@
   --citrus-dark: #553e00;
   --tomato: #a43527;
   --tomato-pale: #fff0ec;
-  --review: #795108;
-  --review-pale: #fff6dc;
+  --success-pale: #e7f5e9;
   --radius-panel: 16px;
   --shadow-panel: 0 16px 36px rgb(23 59 49 / 8%);
 }
@@ -505,10 +504,10 @@ input:focus-visible + .dropzone-content,
   color: #6d281f;
 }
 
-.result-panel--review {
-  border-color: #e8d290;
-  background: var(--review-pale);
-  color: #5f4109;
+.result-panel--fresh {
+  border-color: #b5d9bb;
+  background: var(--success-pale);
+  color: #164a35;
 }
 
 .result-heading {
@@ -567,29 +566,6 @@ input:focus-visible + .dropzone-content,
   padding-block: 4px;
   color: inherit;
   font-size: 0.84rem;
-}
-
-.policy-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin-top: 17px;
-  padding: 12px 13px;
-  border-radius: 9px;
-  background: #edf3e9;
-  color: #354e41;
-}
-
-.policy-note svg {
-  flex: none;
-  margin-top: 1px;
-  color: var(--forest);
-}
-
-.policy-note p {
-  margin: 0;
-  font-size: 0.86rem;
-  line-height: 1.52;
 }
 
 .process-section {

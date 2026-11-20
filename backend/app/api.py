@@ -26,7 +26,7 @@ app = FastAPI(
 
 
 class PredictionResponse(BaseModel):
-    status: Literal["rotten", "review"]
+    status: Literal["fresh", "rotten"]
     fruit: str | None
     reason: str
     model_version: str
@@ -75,7 +75,7 @@ def model_info() -> dict[str, object]:
         "input_size": manifest["input_size"],
         "classes": manifest["classes"],
         "policy_version": manifest["policy_version"],
-        "fresh_auto_label_enabled": manifest["fresh_auto_label_enabled"],
+        "decision_method": manifest["decision_method"],
     }
 
 
@@ -106,13 +106,12 @@ async def classify_image(
     try:
         tensor = prepare_image(image_bytes)
         scores = predict(tensor)
+        decision = decide(scores)
     except Exception as exc:
         raise HTTPException(
             status_code=503,
             detail="Model belum dapat memproses foto. Coba lagi beberapa saat.",
         ) from exc
-
-    decision = decide(scores)
     manifest = read_manifest()
     return PredictionResponse(
         status=decision.status,

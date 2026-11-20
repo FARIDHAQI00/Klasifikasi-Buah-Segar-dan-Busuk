@@ -1,13 +1,13 @@
 # Rencana Website Klasifikasi Buah Segar dan Busuk
 
-**Status:** implementasi MVP; gerbang label Segar tetap tertutup sampai kalibrasi dapat dibuktikan
+**Status:** MVP siap demo lokal; label Segar dan Busuk memakai prediksi langsung ResNet50
 **Model website yang ditetapkan:** ResNet50 dari `backend/model/ResNet50_terbaik.keras`
 **Repo tujuan:** [FARIDHAQI00/Klasifikasi-Buah-Segar-dan-Busuk](https://github.com/FARIDHAQI00/Klasifikasi-Buah-Segar-dan-Busuk)  
 **Notebook acuan:** [UAS_Buah_Cepat_Resume.ipynb di Google Colab](https://colab.research.google.com/drive/16t9E0vxdy2ZF-86ZbjetxU_yVwtDOmON?usp=sharing)
 
 ## 1. Tujuan
 
-Membuat website sederhana untuk mengunggah foto apel, pisang, atau jeruk dan mendapat perkiraan kondisi segar atau busuk dari model ResNet50 hasil notebook. Sistem harus memiliki hasil ketiga, **Perlu diperiksa**, agar gambar yang tidak meyakinkan tidak dipaksa menjadi segar atau busuk.
+Membuat website sederhana untuk mengunggah foto apel, pisang, atau jeruk dan mendapat label **Segar** atau **Busuk** langsung dari model ResNet50 hasil notebook.
 
 Prioritas evaluasi adalah mengurangi kasus buah busuk yang diberi hasil segar. Akurasi umum tetap dilaporkan, tetapi tidak cukup sebagai kriteria rilis.
 
@@ -19,18 +19,18 @@ Prioritas evaluasi adalah mengurangi kasus buah busuk yang diberi hasil segar. A
 - Pipeline notebook memakai gambar RGB 160 × 160. ResNet50 memakai bobot pretrained ImageNet dengan backbone dibekukan; classifier enam kelas berada pada bagian akhir.
 - ResNet50 dipilih notebook berdasarkan akurasi validasi tertinggi, yaitu 98,26%. Akurasi test yang tercatat 97,69%.
 - Confusion matrix test mencakup 2.727 gambar. Dengan keputusan argmax enam kelas, 31 dari 1.548 gambar busuk diberi kelas segar: 10 apel busuk diprediksi sebagai apel segar dan 21 jeruk busuk diprediksi sebagai jeruk segar.
-- Jadi model mentah dari notebook **belum lulus** kriteria rilis aman untuk label Segar. Ambang keputusan yang dikalibrasi mungkin memperbaiki perilaku ini, tetapi hasilnya harus dibuktikan pada test terkunci dan foto baru.
+- Demo memakai argmax langsung agar pengguna melihat hasil kelas ResNet50. Catatan notebook tentang 31 false-fresh tetap disampaikan sebagai batas akurasi, bukan sebagai pengunci label.
 - Notebook menyimpan model dan hasil run ke Google Drive pada folder UAS_AI/buah_cepat_resume_daf3a93e2d. File model produksi perlu diambil dan diverifikasi sebelum integrasi; file model uji di folder lokal tidak boleh dianggap sebagai artefak final.
 
 ### Split data yang perlu diselaraskan
 
-Konfigurasi preprocessing lokal mencatat 8.720 gambar train, 2.181 validation, dan 2.698 test. Output notebook Colab menunjukkan 2.727 gambar pada test. Ini menandakan pembagian yang tercatat lokal dan run notebook tidak identik. Artefak aplikasi kini ditetapkan dari run notebook dan hash-nya disimpan; split lengkap yang cocok tetap harus diperoleh sebelum kalibrasi keselamatan. Jangan menggabungkan metrik dari split yang berbeda.
+Konfigurasi preprocessing lokal mencatat jumlah gambar yang berbeda dari output notebook. Website memakai artefak model dan preprocessing yang ditetapkan dari run notebook; pengukuran ulang untuk training berikutnya perlu memakai split yang cocok.
 
 ### Keputusan produk
 
 1. Website selalu memuat ResNet50_terbaik.keras. Tidak ada pemilihan atau pergantian arsitektur model saat runtime; model_terpilih.json hanya metadata eksperimen dan bukan ketergantungan aplikasi.
-2. Status produk yang dituju: **Segar**, **Busuk**, dan **Perlu diperiksa**. Source MVP saat ini hanya mengeluarkan **Busuk** atau **Perlu diperiksa**.
-3. Tidak mengaktifkan status otomatis Segar sampai ambang dan evaluasi risiko melewati gerbang rilis.
+2. Status produk: **Segar** atau **Busuk** langsung dari kelas argmax.
+3. Tidak ada pengunci label tambahan di luar kelas ResNet50.
 4. Website hanya membuat perkiraan visual dari foto. Hasilnya bukan jaminan keamanan atau kelayakan konsumsi.
 
 ## 3. Stack dan arsitektur
@@ -80,7 +80,7 @@ Contoh bentuk routing di vercel.json:
 3. FastAPI memeriksa format file, ukuran unggahan, dimensi, dan apakah gambar dapat dibaca.
 4. Backend mengubah gambar ke RGB, resize ke 160 × 160, lalu menerapkan preprocessing ResNet50 yang sama dengan notebook.
 5. Model menghasilkan skor enam kelas sesuai urutan label di bawah.
-6. Kebijakan MVP saat ini memakai kelas dengan skor tertinggi: kelas busuk menghasilkan Busuk; kelas segar menghasilkan Perlu diperiksa. Output invalid juga menghasilkan Perlu diperiksa. Tidak ada status Segar atau ambang kalibrasi di backend saat ini.
+6. Backend memilih kelas dengan skor tertinggi: indeks 0–2 menghasilkan Segar dan indeks 3–5 menghasilkan Busuk. Output model invalid menampilkan error.
 7. Frontend menampilkan hasil, jenis buah bila cukup jelas, serta keterangan singkat.
 
 ### Kontrak API awal
@@ -92,14 +92,14 @@ Contoh bentuk routing di vercel.json:
 Contoh respons berhasil:
 
     {
-      "status": "review",
+      "status": "fresh",
       "fruit": "Apel",
-      "reason": "Label Segar otomatis belum aktif karena kalibrasi keselamatan pada data lengkap belum lulus.",
+      "reason": "Perkiraan visual dari model ResNet50.",
       "model_version": "resnet50-terbaik-v1",
-      "policy_version": "review-until-calibrated-v1"
+      "policy_version": "direct-argmax-demo-v2"
     }
 
-Nilai skor softmax tidak otomatis dianggap probabilitas yang terkalibrasi. Persentase tidak ditampilkan sebagai kepastian sebelum kalibrasi diperiksa.
+Website menampilkan nama kelas, tanpa mengubah skor menjadi persentase keyakinan.
 
 ### Preprocessing dan pemetaan label
 
@@ -116,63 +116,24 @@ Urutan kelas harus sama persis dengan model:
 
 Model mengeluarkan enam skor sesuai urutan tabel, tetapi API MVP saat ini tidak mengirim skor tersebut ke pengguna. Decision policy memilih kelas dengan skor tertinggi.
 
-- Indeks 0–2 (kelas segar) menghasilkan **Perlu diperiksa**.
+- Indeks 0–2 (kelas segar) menghasilkan **Segar**.
 - Indeks 3–5 (kelas busuk) menghasilkan **Busuk**.
-- Skor tidak valid menghasilkan **Perlu diperiksa**.
+- Output model invalid menghasilkan error API.
 
 Fungsi preprocessing harus mengikuti implementasi notebook: decoding RGB, resize TensorFlow ke 160 × 160, lalu tf.keras.applications.resnet50.preprocess_input pada nilai gambar 0–255. Karena preprocessing berada di luar model .keras pada notebook, perubahan library atau urutan operasi harus diverifikasi sebelum deploy.
 
-## 4. Kebijakan keputusan yang mengutamakan risiko
+## 4. Kebijakan hasil demo
 
-### Perilaku source MVP saat ini
+- Backend menampilkan kelas dengan skor tertinggi: kelas 0–2 menjadi **Segar**, kelas 3–5 menjadi **Busuk**.
+- Jika output model tidak terbaca, API mengembalikan error.
+- Notebook mencatat 31 foto busuk terprediksi segar. Hasil website adalah perkiraan visual, bukan kepastian untuk semua foto baru.
+- Model dilatih untuk apel, pisang, dan jeruk; antarmuka tidak menjanjikan hasil tepat untuk objek atau buah di luar kelas tersebut.
 
-- Backend memakai kelas argmax sebagai baseline.
-- Jika kelas tertinggi adalah salah satu kelas busuk, statusnya **Busuk**.
-- Jika kelas tertinggi adalah kelas segar atau output tidak valid, statusnya **Perlu diperiksa**.
-- Status **Segar** tidak tersedia dari backend. Tidak ada ambang yang dikalibrasi pada source ini.
+## 5. Catatan evaluasi model
 
-Aturan itu mencegah kelas segar dari argmax mentah tampil sebagai label **Segar**. Aturan ini tidak membuktikan bahwa model mengenali semua foto dengan benar, dan source belum memiliki pendeteksi gambar di luar cakupan seperti jenis buah lain, benda non-buah, atau kualitas foto yang buruk. Gunakan hanya foto satu apel, pisang, atau jeruk; hasil tetap perkiraan visual.
-
-### Kebijakan target setelah gerbang keselamatan
-
-Softmax argmax tetap menjadi baseline pembanding, bukan keputusan final. Ambang untuk status Busuk dan Segar hanya boleh dikalibrasi memakai data validation lengkap yang cocok dengan run ini. Test tidak dipakai berulang kali untuk memilih ambang.
-
-- **Busuk:** pada target berikutnya dapat dipilih saat skor busuk melewati ambang validasi yang dibekukan.
-- **Segar:** hanya dapat dipilih saat skor dan pemeriksaan input melewati aturan yang telah disetujui.
-- **Perlu diperiksa:** tetap menjadi pilihan untuk hasil yang ambigu atau gagal melewati gerbang.
-
-Ambang tinggi dapat membuat lebih banyak foto masuk ke Perlu diperiksa. Karena itu, laporan selalu menyertakan jumlah dan persentase foto yang otomatis diputuskan (coverage), serta jumlah salah busuk-ke-segar. Ambang tidak boleh dilonggarkan hanya untuk menaikkan coverage tanpa mengukur kembali risiko.
-
-Model machine learning tidak dapat menjamin nol kesalahan pada semua foto baru. Jika syaratnya adalah tidak boleh salah menyebut busuk sebagai segar pada pengujian, kegagalan gerbang tersebut berarti status Segar otomatis tidak dirilis. Foto ambigu diarahkan ke pemeriksaan manusia.
-
-## 5. Rencana evaluasi dan gerbang rilis
-
-### Metrik utama
-
-1. Jumlah dan rasio buah busuk yang diprediksi segar (false-fresh rate).
-2. Recall busuk gabungan dan recall untuk apel, pisang, serta jeruk busuk.
-3. Precision status Segar.
-4. Coverage: proporsi foto yang mendapat status otomatis dibandingkan Perlu diperiksa.
-5. Akurasi enam kelas, macro-F1, confusion matrix, dan waktu inferensi sebagai metrik pendukung.
-
-### Urutan evaluasi
-
-1. Bekukan manifest train, validation, dan test serta versi model.
-2. Kalibrasi ambang dan periksa metrik keselamatan hanya dengan validation.
-3. Simpan ambang dan versi kebijakan sebelum menjalankan evaluasi final.
-4. Evaluasi sekali pada test terkunci; laporkan seluruh metrik, termasuk false-fresh per jenis buah.
-5. Uji tambahan pada foto kamera nyata: variasi cahaya, jarak, latar, sudut, satu/beberapa buah, buah rusak sebagian, dan gambar non-buah.
-6. Jika test masih menghasilkan busuk-ke-segar, rilis diblokir untuk status Segar otomatis. Tinjau kesalahan dan siapkan data tambahan atau training ulang. Jangan mengubah ambang berdasarkan hasil test lalu mengklaim test yang sama sebagai evaluasi independen.
-
-### Syarat rilis ResNet50
-
-- Model, pemetaan label, dan preprocessing cocok dengan artefak notebook.
-- Tidak ada error file atau kegagalan backend yang berubah menjadi status Segar.
-- Ambang dibekukan dari validation.
-- Gerbang false-fresh pada test terkunci terpenuhi; target usulan adalah nol kasus busuk-ke-segar pada test tersebut.
-- Coverage dan jumlah Perlu diperiksa dilaporkan agar kebijakan tidak terlihat aman hanya karena hampir semua gambar ditolak.
-- Pengujian foto nyata selesai dan hasilnya dicatat.
-- Jika gerbang gagal, aplikasi tetap boleh berjalan sebagai demo dengan status Segar otomatis dimatikan dan setiap kasus yang tidak pasti diarahkan ke pemeriksaan manual.
+- Notebook mencatat akurasi 97,69% serta 31 foto busuk yang salah diberi kelas Segar.
+- Periksa contoh foto nyata dan hasil per kelas untuk menentukan kebutuhan training ulang.
+- Hasil website adalah perkiraan visual model, bukan jaminan untuk semua foto.
 
 ## 6. Ruang lingkup MVP
 
@@ -181,8 +142,8 @@ Model machine learning tidak dapat menjamin nol kesalahan pada semua foto baru. 
 - Satu halaman responsif untuk mengunggah satu foto.
 - Pratinjau, hapus/ganti foto, indikator proses, hasil, dan pesan error.
 - Dukungan awal JPEG, PNG, dan WebP dengan ukuran file maksimal 4 MB agar total request tetap di bawah batas payload Vercel Function 4,5 MB.
-- Prediksi jenis buah dan kondisi melalui API.
-- Status runtime **Busuk** dan **Perlu diperiksa**; status **Segar** tetap terkunci hingga gerbang keselamatan.
+- Prediksi jenis buah dan kondisi Segar/Busuk melalui API.
+- Status runtime **Segar** dan **Busuk** dari argmax ResNet50.
 - Tidak menyimpan gambar pengguna atau membuat riwayat akun.
 - README berisi cara menjalankan lokal, menyiapkan artefak model, dan deploy.
 
@@ -224,21 +185,21 @@ File `.keras` terpilih dicommit di `backend/model/` karena diminta sebagai artef
 | Tahap | Pekerjaan | Hasil dan kriteria selesai |
 |---|---|---|
 | 0. Bekukan sumber dan artefak | Tetapkan `backend/model/ResNet50_terbaik.keras` sebagai satu-satunya model aplikasi; simpan SHA-256, kelas, preprocessing, versi TensorFlow, serta metrik run yang sama di manifest. | Selesai; backend hanya membaca artefak ini dan hash-nya cocok. Tidak ada model selector atau fallback arsitektur. |
-| 1. Gerbang keselamatan | Kalibrasi ambang dari validation dengan model dan split yang sama; hitung false-fresh, recall busuk per buah, dan coverage; evaluasi sekali pada test terkunci. | Sengaja tetap tertutup: data lengkap untuk kalibrasi lokal belum tersedia dan argmax baseline memiliki 31 false-fresh pada test notebook. Status Segar tidak dihasilkan. |
+| 1. Pemetaan label | Aktifkan hasil langsung argmax enam kelas sesuai urutan di manifest. | Selesai; kelas segar menampilkan Segar dan kelas busuk menampilkan Busuk. |
 | 2. Modul inference | Pindahkan preprocessing dan pemanggilan model ke modul Python yang dapat menerima gambar dan mengeluarkan skor serta status. Muat model sekali per proses. | Selesai; hash diverifikasi sebelum model dimuat dan preprocessing dicocokkan dengan notebook. |
 | 3. API | Implementasikan health, model-info, dan predict; validasi upload dan error; batasi ukuran dan jumlah piksel; jangan simpan gambar. | Selesai; endpoint health/model-info serta unggah PNG lewat API lokal sudah merespons. |
 | 4. Frontend | Buat React SPA: upload/drag-drop, pratinjau, progress, hasil, error, dan tampilan ponsel. | Selesai; production build lulus dan desktop/mobile sudah diperiksa. |
-| 5. Integrasi lokal | Jalankan frontend dan API bersama; periksa routing /api, preprocessing, label, respons, serta kebijakan status pada skenario normal dan gagal. | Selesai untuk 6 regression tests backend dan smoke API pada 30 foto test Kaggle yang hash-nya cocok (5 per kelas); semua kelas dikenali pada subset ini, 15/15 foto busuk keluar sebagai Busuk, dan 15/15 foto segar dialihkan ke Perlu diperiksa. Uji 400/413/415 dan batas piksel juga lulus. Ini smoke check, bukan pengganti evaluasi penuh 2.727 gambar; Segar otomatis tetap terkunci. |
+| 5. Integrasi lokal | Jalankan frontend dan API bersama; periksa routing /api, preprocessing, label, respons, serta alur error. | Smoke API pada 30 foto test Kaggle yang hash-nya cocok (5 per kelas): 15 foto segar menghasilkan Segar dan 15 foto busuk menghasilkan Busuk. Uji format/ukuran upload dan preprocessing juga sudah diperiksa. Ini smoke check, bukan evaluasi penuh 2.727 gambar. |
 | 6. Deploy preview Vercel | Konfigurasikan Vercel Services, root frontend/backend, entrypoint FastAPI, routing, ukuran upload, artefak model, dan kapasitas Large Functions bila bundle melewati 500 MB. Jalankan preview dari branch kerja sebelum main. | Source/config siap diajukan; deployment preview, pengukuran bundle/cold start/memori, dan pemeriksaan project Vercel masih perlu dilakukan di akun pengguna. |
-| 7. Deploy produksi dan dokumentasi | Setelah preview serta gerbang keselamatan lolos, promosikan branch main ke produksi. Pastikan health check, model version, policy version, dan langkah rollback tercatat. | Belum dideploy; menunggu preview serta gerbang keselamatan. |
+| 7. Deploy demo dan dokumentasi | Setelah preview Vercel berjalan, cek health check, upload foto, label, dan catat versi model. | Belum dideploy; perlu project/akun Vercel pemilik repo. |
 
-Estimasi awal: sekitar 5–7 hari kerja untuk MVP bila artefak siap, spike Vercel lulus, dan threshold lulus. Pengumpulan label/foto tambahan atau training ulang memperpanjang estimasi; hasil baseline saat ini menunjukkan pekerjaan gerbang keselamatan kemungkinan perlu perhatian sebelum rilis.
+Demo lokal sudah terintegrasi. Tindak lanjut yang tersisa adalah preview Vercel dan pengamatan foto tambahan untuk menentukan apakah model perlu diperbarui.
 
 ## 9. Risiko dan mitigasi
 
 | Risiko | Mitigasi |
 |---|---|
-| Busuk diberi label segar | Ambang berbasis validation, status Perlu diperiksa, gerbang false-fresh pada test, dan larangan rilis Segar otomatis bila gagal. |
+| Busuk diberi label Segar | Risiko ini tercatat di evaluasi notebook (31 kasus); tampilkan hasil sebagai perkiraan visual dan kumpulkan contoh foto untuk peningkatan model. |
 | Split lokal dan Colab berbeda | Pilih satu manifest final dan simpan hash; hitung ulang evaluasi untuk model yang sama dengan split tersebut. |
 | Preprocessing berubah | Gunakan fungsi preprocessing yang identik dengan notebook dan verifikasi pada kumpulan gambar acuan. |
 | Foto di luar dataset | UI meminta foto apel, pisang, atau jeruk. Model MVP belum memiliki pendeteksi OOD/non-buah; batasi klaim ke tiga jenis tersebut dan lakukan uji foto kamera sebelum rilis. |
@@ -250,5 +211,5 @@ Estimasi awal: sekitar 5–7 hari kerja untuk MVP bila artefak siap, spike Verce
 
 ## 10. Kriteria selesai
 
-Source MVP dinyatakan siap diajukan ke Vercel saat website dapat menerima foto, memakai ResNet50 dan preprocessing yang benar, memvalidasi file, mengembalikan Busuk atau Perlu diperiksa secara aman, serta mencatat versi model dan kebijakan. **Segar** otomatis baru tersedia setelah ambang dari validation lulus pada test terkunci. Deployment preview Vercel tetap menjadi verifikasi terpisah karena harus dilakukan dalam akun/project Vercel pengguna.
+Source MVP siap diajukan ke Vercel saat website dapat menerima foto, memakai ResNet50 dan preprocessing yang benar, serta menampilkan prediksi langsung **Segar** atau **Busuk**. Preview dan pemeriksaan endpoint publik tetap dilakukan di akun/project Vercel pemilik repo.
 

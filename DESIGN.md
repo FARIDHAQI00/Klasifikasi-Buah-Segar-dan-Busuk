@@ -11,7 +11,7 @@ colors:
   paper: "#ffffff"
   line: "#d4dfd4"
   tomato-pale: "#fff0ec"
-  review-pale: "#fff6dc"
+  success-pale: "#e7f5e9"
 typography:
   display:
     fontFamily: "Manrope Variable, Segoe UI, sans-serif"
@@ -66,9 +66,9 @@ components:
     textColor: "{colors.ink-soft}"
     typography: "{typography.label}"
     padding: "4px"
-  result-review:
-    backgroundColor: "{colors.review-pale}"
-    textColor: "#5f4109"
+  result-fresh:
+    backgroundColor: "{colors.success-pale}"
+    textColor: "#164a35"
     rounded: "{rounded.medium}"
     padding: "17px"
 ---
@@ -81,7 +81,7 @@ components:
 
 CekBuah treats a fruit photo like a single item brought to a contemporary market stall for inspection. Its interface uses the familiar structure of a produce ticket: a bold identification, a clear upload area, and one plain-language result. The visual character is practical and bright, with crate greens, citrus accents, and paper-like surfaces.
 
-The interface keeps the task ahead of decoration. One supported fruit photo moves through preview and an explicit check; the resulting state stays readable through both words and color. The current model policy presents “Busuk” or “Perlu diperiksa” and keeps automatic “Segar” locked.
+The interface keeps the task ahead of decoration. One supported fruit photo moves through preview and an explicit check; the resulting “Segar” or “Busuk” state stays readable through both words and color.
 
 **Key Characteristics:**
 - Market greens and citrus yellow frame a clean, paper-white inspection surface.
@@ -101,7 +101,7 @@ The palette balances leafy greens with warm produce accents against a soft off-w
 
 ### Tertiary
 - **Soft Tomato Paper** (`{colors.tomato-pale}`): Busuk and upload-error surfaces. Pair it with the written state and dark red-brown text.
-- **Market Amber Paper** (`{colors.review-pale}`): Perlu diperiksa surface, visually distinct from the Busuk state.
+- **Fresh Produce Paper** (`#e7f5e9`): Segar result surface with dark green text.
 
 ### Neutral
 - **Produce Ink** (`{colors.ink}`): Headlines and high-priority copy.
@@ -174,7 +174,7 @@ The interface uses softly rounded rectangles for working surfaces, buttons, and 
 
 ### Inspection Result
 - **Style:** A single result block pairs an icon, a plain-language status, and a concise explanation.
-- **States:** Busuk uses pale tomato; Perlu diperiksa uses pale amber. The component remains text-first so color is never the only indicator.
+- **States:** Segar uses pale green and Busuk uses pale tomato. The component remains text-first so color is never the only indicator.
 
 **The One-Photo Rule.** Keep the upload target and explicit action on one ticket. Show one result for one submitted image.
 
@@ -187,6 +187,5 @@ The interface uses softly rounded rectangles for working surfaces, buttons, and 
 - **Do** keep keyboard focus visible with the existing amber outline treatment.
 
 ### Don't:
-- **Don't** present automatic “Segar” as an available result while the model safety gate is locked.
 - **Don't** make status depend on color alone.
 - **Don't** let decorative market motifs compete with the photo preview or upload action.

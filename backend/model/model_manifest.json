@@ -32,10 +32,7 @@
     "rotten_bananas_predicted_fresh": 0,
     "rotten_oranges_predicted_fresh": 21
   },
-  "policy_version": "review-until-calibrated-v1",
-  "fresh_auto_label_enabled": false,
-  "safety_gate": {
-    "status": "blocked",
-    "reason": "The available local dataset archive is incomplete. Calibrate thresholds on the matching validation split and evaluate once on the locked test split before enabling automatic Segar output."
-  }
+  "policy_version": "direct-argmax-demo-v2",
+  "decision_method": "six-class-argmax",
+  "prediction_note": "Direct six-class argmax for demo; notebook test recorded 31 rotten images classified as fresh."
 }

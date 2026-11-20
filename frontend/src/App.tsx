@@ -17,7 +17,7 @@ import {
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
 const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
-type ResultStatus = "rotten" | "review";
+type ResultStatus = "fresh" | "rotten";
 
 type Prediction = {
   status: ResultStatus;
@@ -31,7 +31,7 @@ function isPrediction(value: unknown): value is Prediction {
   if (!value || typeof value !== "object") return false;
   const result = value as Record<string, unknown>;
   return (
-    (result.status === "rotten" || result.status === "review") &&
+    (result.status === "fresh" || result.status === "rotten") &&
     (result.fruit === null || typeof result.fruit === "string") &&
     typeof result.reason === "string" &&
     typeof result.model_version === "string" &&
@@ -138,7 +138,7 @@ function App() {
     }
   }
 
-  const resultTitle = prediction?.status === "rotten" ? "Cenderung busuk" : "Perlu diperiksa";
+  const resultTitle = prediction?.status === "rotten" ? "Busuk" : "Segar";
 
   return (
     <div className="site-shell">
@@ -303,7 +303,7 @@ function App() {
                     {prediction.status === "rotten" ? (
                       <TriangleAlert size={21} />
                     ) : (
-                      <CircleAlert size={21} />
+                      <CircleCheck size={21} />
                     )}
                   </span>
                   <div>
@@ -325,13 +325,6 @@ function App() {
               </section>
             )}
 
-            <div className="policy-note">
-              <ShieldCheck size={17} aria-hidden="true" />
-              <p>
-                Label <strong>Segar</strong> otomatis dikunci sampai uji risiko false-fresh
-                pada data lengkap lulus.
-              </p>
-            </div>
           </form>
         </section>
 
@@ -365,7 +358,7 @@ function App() {
               </span>
               <div>
                 <h3>Tinjau hasilnya</h3>
-                <p>Jika belum aman dipastikan, hasil diarahkan untuk diperiksa.</p>
+                <p>Lihat perkiraan kondisi buah dari hasil klasifikasi.</p>
               </div>
             </article>
           </div>
@@ -376,11 +369,8 @@ function App() {
             <ShieldCheck size={22} />
           </div>
           <div>
-            <h2 id="limits-title">Hasil foto adalah perkiraan visual.</h2>
-            <p>
-              Pemeriksaan ini tidak melihat bagian dalam buah dan bukan jaminan keamanan
-              pangan. Periksa kondisi buah secara langsung sebelum dikonsumsi.
-            </p>
+            <h2 id="limits-title">Hasil model adalah perkiraan visual.</h2>
+            <p>Periksa kondisi buah secara langsung sebelum dikonsumsi.</p>
           </div>
         </section>
       </main>
