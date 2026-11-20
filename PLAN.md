@@ -41,10 +41,37 @@ Konfigurasi preprocessing lokal mencatat 8.720 gambar train, 2.181 validation, d
 - **Styling:** Tailwind CSS melalui integrasi Vite.
 - **Backend:** Python + FastAPI.
 - **Inference:** TensorFlow/Keras memuat ResNet50 dalam format .keras.
-- **Penyajian:** hasil build frontend disajikan pada origin/domain yang sama dengan FastAPI untuk menyederhanakan deployment dan menghindari konfigurasi lintas domain yang tidak perlu.
+- **Deployment target:** Vercel. Frontend Vite dan backend FastAPI ditempatkan sebagai dua service dalam satu repo dan satu deployment Vercel, dengan routing same-origin.
 - **Artefak model:** berkas model disimpan terpisah dari source code, misalnya pada release atau penyimpanan artefak yang dikonfigurasi saat deploy. Dataset, checkpoint training, dan foto pengguna tidak dimasukkan ke repo.
 
-Dokumentasi stack: [React](https://react.dev/learn), [Vite](https://vite.dev/guide/), [Tailwind CSS untuk Vite](https://tailwindcss.com/docs/installation/using-vite), dan [frontend statis di FastAPI](https://fastapi.tiangolo.com/tutorial/frontend/).
+Dokumentasi stack dan deploy: [React](https://react.dev/learn), [Vite](https://vite.dev/guide/), [Tailwind CSS untuk Vite](https://tailwindcss.com/docs/installation/using-vite), [Vite di Vercel](https://vercel.com/docs/frameworks/frontend/vite), [FastAPI di Vercel](https://vercel.com/kb/guide/ship-a-fastapi-app-on-vercel), [Vercel Services](https://vercel.com/docs/services), dan [batas Vercel Functions](https://vercel.com/docs/functions/limitations).
+
+### Target deploy Vercel
+
+- Gunakan satu Vercel Project yang terhubung ke repo GitHub ini. Vercel Services membangun frontend dan backend secara terpisah dalam satu project, lalu merutekan keduanya melalui satu domain. Fitur Services saat ini berstatus beta; konfirmasi ketersediaan dan pengaturannya pada akun sebelum deploy.
+- Service frontend memakai root frontend/ dan membangun React/Vite menjadi asset statis. Service backend memakai root backend/ dan mengekspos instance FastAPI bernama app melalui entrypoint main:app.
+- File vercel.json di root mendefinisikan service dan rewrite: /api/* menuju backend, sedangkan path lain menuju frontend. Karena satu deployment memiliki satu origin, frontend memanggil /api/v1/predict tanpa konfigurasi CORS lintas domain.
+- Hubungkan GitHub ke Vercel agar branch main menjadi deployment produksi dan pull request mendapat preview deployment. Gunakan vercel dev untuk memeriksa routing lokal bila konfigurasi Services sudah dipasang.
+- FastAPI dijalankan oleh Python Runtime sebagai Vercel Function. Model dimuat sekali per instance Function yang masih hidup; cold start berikutnya mungkin memuat ulang model. Jangan mengandalkan memori proses untuk menyimpan state permanen.
+- Sebelum fitur lengkap, buat spike kelayakan deploy yang membangun backend beserta TensorFlow dan ResNet50, lalu ukur ukuran bundle, cold start, RAM, dan latency inference pada plan Vercel yang akan dipakai.
+- Batas request body Vercel Function adalah 4,5 MB. MVP membatasi file gambar hingga 4 MB dan juga memeriksa total Content-Length; upload di atas batas dikembalikan sebagai error yang jelas, tidak diteruskan ke prediksi.
+- Bundle Python standar dibatasi hingga 500 MB tanpa kompresi. Large Functions hingga 5 GB tersedia sebagai beta pada Fluid Compute. Pilih paket standar bila cukup; bila melampaui batas, evaluasi Large Functions di preview terlebih dahulu. Catat bahwa memori Function pada Hobby adalah 2 GB/1 vCPU; ukur apakah TensorFlow dan inference cocok pada resource tersebut.
+- Pilih strategi artefak ResNet50 setelah spike: sertakan bobot pada artefak deployment jika ukuran bundle masih memenuhi batas, atau ambil dari private model storage satu kali per cold start dan verifikasi SHA-256. Jangan mengunduh model dari Google Drive pada setiap prediksi.
+- Pin Python 3.12 dan versi TensorFlow/Keras yang kompatibel dengan model Colab. Verifikasi impor dan pemuatan model pada runtime Vercel sebelum mengerjakan seluruh UI.
+- Jika bundle, cold start, atau pemakaian RAM tidak layak pada akun Vercel, frontend tetap dideploy di Vercel dan API inference dipindahkan ke layanan Python yang mendukung container/model menetap. Frontend memakai URL backend melalui environment variable dan API hanya mengizinkan origin website tersebut.
+
+Contoh bentuk routing di vercel.json:
+
+    {
+      "services": {
+        "frontend": { "root": "frontend/" },
+        "backend": { "root": "backend/", "entrypoint": "main:app" }
+      },
+      "rewrites": [
+        { "source": "/api/(.*)", "destination": { "service": "backend" } },
+        { "source": "/(.*)", "destination": { "service": "frontend" } }
+      ]
+    }
 
 ### Alur request
 
@@ -145,7 +172,7 @@ Model machine learning tidak dapat menjamin nol kesalahan pada semua foto baru. 
 
 - Satu halaman responsif untuk mengunggah satu foto.
 - Pratinjau, hapus/ganti foto, indikator proses, hasil, dan pesan error.
-- Dukungan awal JPEG, PNG, dan WebP dengan batas ukuran unggahan yang ditetapkan di konfigurasi.
+- Dukungan awal JPEG, PNG, dan WebP dengan ukuran file maksimal 4 MB agar total request tetap di bawah batas payload Vercel Function 4,5 MB.
 - Prediksi jenis buah dan kondisi melalui API.
 - Tiga status hasil dan kebijakan keselamatan.
 - Tidak menyimpan gambar pengguna atau membuat riwayat akun.
@@ -162,18 +189,21 @@ Model machine learning tidak dapat menjamin nol kesalahan pada semua foto baru. 
     website-klasifikasi-buah/
       PLAN.md
       README.md
+      vercel.json
       frontend/
         src/
         public/
+        vite.config.ts
         package.json
       backend/
+        main.py
         app/
-          main.py
           inference.py
           preprocessing.py
           decision_policy.py
           schemas.py
         requirements.txt
+        .python-version
       ml/
         labels.json
         preprocessing.json
@@ -181,7 +211,6 @@ Model machine learning tidak dapat menjamin nol kesalahan pada semua foto baru. 
       artifacts/
         README.md
       .gitignore
-      Dockerfile
 
 Folder artifacts hanya menyimpan petunjuk cara memperoleh model atau konfigurasi lokal; file .keras, dataset, hasil checkpoint, dan foto pengguna tidak dicommit. Hash SHA-256 dan versi artefak dicatat di model_manifest.json.
 
@@ -189,15 +218,16 @@ Folder artifacts hanya menyimpan petunjuk cara memperoleh model atau konfigurasi
 
 | Tahap | Pekerjaan | Hasil dan kriteria selesai |
 |---|---|---|
-| 0. Bekukan sumber | Pastikan split Colab atau split lokal yang akan menjadi acuan; ambil model ResNet50 final; verifikasi kelas, preprocessing, versi TensorFlow, dan hash artefak. | Satu manifest, satu model, dan satu konfigurasi inference yang konsisten. |
+| 0. Bekukan sumber dan uji kelayakan Vercel | Pastikan split Colab atau split lokal yang akan menjadi acuan; ambil model ResNet50 final; verifikasi kelas, preprocessing, versi TensorFlow, hash artefak, ukuran bundle, cold start, RAM, serta status dukungan Services pada akun. | Satu manifest, satu model, satu konfigurasi inference, dan bukti backend bisa dibangun di Vercel. |
 | 1. Gerbang keselamatan | Kalibrasi ambang dari validation, hitung false-fresh, recall busuk per buah, coverage; jalankan evaluasi final pada test terkunci. | Keputusan rilis tercatat. Jika ada false-fresh pada target test, Segar otomatis tetap mati. |
 | 2. Modul inference | Pindahkan preprocessing dan pemanggilan model ke modul Python yang dapat menerima gambar dan mengeluarkan skor serta status. Muat model sekali saat startup. | Backend inference dapat direproduksi dan memakai versi label/ambang yang tercatat. |
 | 3. API | Implementasikan health, model-info, dan predict; validasi upload dan error; batasi ukuran dan jumlah piksel; jangan simpan gambar. | Respons API konsisten untuk foto valid, rusak, terlalu besar, dan ambigu. |
 | 4. Frontend | Buat React SPA: upload/drag-drop, pratinjau, progress, hasil tiga status, error, dan tampilan ponsel. | Alur upload sampai hasil dapat dipakai tanpa mengirim ulang foto secara tidak sengaja. |
-| 5. Integrasi | Hubungkan frontend ke API same-origin; periksa preprocessing, label, respons, dan kebijakan status pada skenario normal dan gagal. | Demo end-to-end sesuai kontrak API dan tidak pernah mengubah kegagalan menjadi Segar. |
-| 6. Deploy dan dokumentasi | Build container Python, sertakan asset frontend, ambil model dari penyimpanan artefak, atur health check, lalu dokumentasikan URL dan cara update versi. | Layanan dapat dimulai ulang, model termuat, dan versi model/ambang dapat diperiksa. |
+| 5. Integrasi lokal | Jalankan frontend dan API bersama; periksa routing /api, preprocessing, label, respons, serta kebijakan status pada skenario normal dan gagal. | Demo end-to-end sesuai kontrak API dan tidak pernah mengubah kegagalan menjadi Segar. |
+| 6. Deploy preview Vercel | Konfigurasikan Vercel Services, root frontend/backend, entrypoint FastAPI, routing, ukuran upload, dan artefak model. Deploy preview dari branch kerja sebelum main. | URL preview dapat memuat model dan menerima gambar dalam batas payload; ukuran bundle, cold/warm start, RAM, latency, dan error dicatat. |
+| 7. Deploy produksi dan dokumentasi | Setelah preview serta gerbang keselamatan lolos, promosikan branch main ke produksi. Pastikan health check, model version, threshold version, dan langkah rollback tercatat. | Website live di Vercel; versi model/ambang dapat diperiksa dan deployment dapat dipulihkan bila perlu. |
 
-Estimasi awal: sekitar 4–6 hari kerja untuk MVP bila artefak siap dan threshold lulus. Pengumpulan label/foto tambahan atau training ulang memperpanjang estimasi; hasil baseline saat ini menunjukkan pekerjaan gerbang keselamatan kemungkinan perlu perhatian sebelum rilis.
+Estimasi awal: sekitar 5–7 hari kerja untuk MVP bila artefak siap, spike Vercel lulus, dan threshold lulus. Pengumpulan label/foto tambahan atau training ulang memperpanjang estimasi; hasil baseline saat ini menunjukkan pekerjaan gerbang keselamatan kemungkinan perlu perhatian sebelum rilis.
 
 ## 9. Risiko dan mitigasi
 
@@ -209,7 +239,9 @@ Estimasi awal: sekitar 4–6 hari kerja untuk MVP bila artefak siap dan threshol
 | Foto di luar dataset | Batasi dukungan ke apel, pisang, dan jeruk; arahkan foto tidak dikenal/ambigu ke Perlu diperiksa; lakukan uji foto kamera. |
 | Artefak model besar atau hilang | Jangan simpan dataset/model/checkpoint besar dalam riwayat Git; simpan di storage artefak dan verifikasi SHA-256. |
 | Kebocoran foto pengguna | Jangan simpan upload; hapus data gambar dari memori setelah request selesai; jangan mencatat file ke log. |
-| Hosting terlalu kecil | Ukur penggunaan RAM, waktu startup, dan latency pada host tujuan sebelum rilis. |
+| Batas Vercel Function | Ukur bundle, payload, RAM, cold start, dan latency pada preview; gunakan Large Functions bila sesuai atau pindahkan hanya API inference ke layanan Python container jika tetap tidak layak. |
+| Perubahan/ketidaktersediaan fitur beta Vercel Services | Verifikasi fitur di akun sebelum konfigurasi; siapkan opsi dua project Vercel atau backend Python terpisah tanpa mengubah frontend. |
+| Ketidakcocokan TensorFlow dengan runtime Python | Pin Python 3.12 dan dependency; buat uji pemuatan model sebagai bagian spike sebelum membangun seluruh aplikasi. |
 
 ## 10. Kriteria selesai
 
