@@ -1,191 +1,237 @@
 ---
 name: CekBuah
-description: A market-inspired fruit photo inspection interface.
+description: A focused fruit-photo inspection experience in a luminous dark interface.
 colors:
-  forest-dark: "#10392f"
-  forest: "#194d3f"
-  citrus: "#f2c84b"
-  ink: "#173b31"
-  ink-soft: "#465c52"
-  ground: "#f3f6ef"
-  paper: "#ffffff"
-  line: "#d4dfd4"
-  tomato-pale: "#fff0ec"
-  success-pale: "#e7f5e9"
+  ground: "#091326"
+  frame-teal: "#086c87"
+  frame-blue: "#121b45"
+  frame-violet: "#24208d"
+  surface: "#08090f"
+  surface-raised: "#10111a"
+  surface-quiet: "#0d0e15"
+  ink: "#f6f4ff"
+  ink-soft: "#cbc8da"
+  muted: "#9693a8"
+  primary: "#5754ee"
+  primary-bright: "#7774ff"
+  accent-soft: "#bebaff"
+  line: "rgb(220 216 255 / 14%)"
+  fresh-state: "#e2f8e8"
+  rotten-state: "#ffe2dc"
 typography:
   display:
-    fontFamily: "Manrope Variable, Segoe UI, sans-serif"
-    fontSize: "clamp(3.1rem, 5.6vw, 4.65rem)"
-    fontWeight: 740
-    lineHeight: 0.99
-    letterSpacing: "-0.035em"
+    fontFamily: "DM Serif Display, Georgia, serif"
+    fontSize: "clamp(3.3rem, 6.4vw, 5.45rem)"
+    fontWeight: 400
+    lineHeight: 0.98
+    letterSpacing: "-0.022em"
+  title:
+    fontFamily: "DM Serif Display, Georgia, serif"
+    fontSize: "clamp(2.3rem, 4vw, 3.55rem)"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "-0.02em"
   body:
     fontFamily: "Manrope Variable, Segoe UI, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
-    lineHeight: 1.5
+    lineHeight: 1.6
   label:
     fontFamily: "Manrope Variable, Segoe UI, sans-serif"
-    fontSize: "0.9rem"
+    fontSize: "0.78rem"
     fontWeight: 700
-    letterSpacing: "0.01em"
+    lineHeight: 1.4
 rounded:
-  small: "8px"
-  button: "9px"
-  medium: "12px"
-  panel: "16px"
+  control: "10px"
+  content: "13px"
+  card: "18px"
+  panel: "22px"
+  shell: "32px"
   pill: "999px"
 spacing:
-  small: "8px"
-  medium: "16px"
-  large: "24px"
-  panel: "32px"
+  sm: "8px"
+  md: "12px"
+  lg: "16px"
+  xl: "24px"
+  section: "32px"
 components:
   button-primary:
-    backgroundColor: "{colors.forest-dark}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.button}"
-    padding: "13px 18px"
-    height: "52px"
-  fruit-chip:
-    backgroundColor: "#f9fbf7"
-    textColor: "{colors.forest-dark}"
-    rounded: "{rounded.pill}"
-    padding: "8px 14px"
-  inspection-panel:
-    backgroundColor: "{colors.paper}"
+    backgroundColor: "{colors.primary}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.panel}"
-    padding: "clamp(22px, 3vw, 32px)"
-  file-dropzone:
-    backgroundColor: "#f8faf6"
+    typography: "{typography.label}"
+    rounded: "{rounded.control}"
+    padding: "12px 19px"
+    height: "48px"
+  button-secondary:
+    backgroundColor: "rgb(11 11 16 / 38%)"
     textColor: "{colors.ink}"
-    rounded: "{rounded.medium}"
-    padding: "24px 18px"
-  navigation-links:
+    typography: "{typography.label}"
+    rounded: "{rounded.control}"
+    padding: "11px 19px"
+    height: "48px"
+  navigation-pill:
+    backgroundColor: "rgb(255 255 255 / 5%)"
     textColor: "{colors.ink-soft}"
     typography: "{typography.label}"
-    padding: "4px"
+    rounded: "{rounded.pill}"
+    padding: "5px"
+  inspection-panel:
+    backgroundColor: "linear-gradient(145deg, rgb(20 21 30 / 98%), rgb(12 13 19 / 98%))"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.panel}"
+    padding: "clamp(19px, 2.6vw, 28px)"
+  upload-target:
+    backgroundColor: "#0c0d14"
+    textColor: "{colors.ink}"
+    rounded: "15px"
+    padding: "24px 18px"
+  processing-history:
+    backgroundColor: "#0b0c13"
+    textColor: "{colors.ink-soft}"
+    rounded: "13px"
+    padding: "14px 15px 8px"
   result-fresh:
-    backgroundColor: "{colors.success-pale}"
-    textColor: "#164a35"
-    rounded: "{rounded.medium}"
-    padding: "17px"
+    backgroundColor: "linear-gradient(130deg, rgb(30 77 58 / 38%), rgb(18 42 35 / 72%))"
+    textColor: "{colors.fresh-state}"
+    rounded: "{rounded.content}"
+    padding: "16px"
+  result-rotten:
+    backgroundColor: "linear-gradient(130deg, rgb(102 39 40 / 34%), rgb(48 23 30 / 67%))"
+    textColor: "{colors.rotten-state}"
+    rounded: "{rounded.content}"
+    padding: "16px"
 ---
 
 # Design System: CekBuah
 
 ## Overview
 
-**Creative North Star: “The Market Inspection Ticket”**
+**Creative North Star: “The Luminous Inspection Window”**
 
-CekBuah treats a fruit photo like a single item brought to a contemporary market stall for inspection. Its interface uses the familiar structure of a produce ticket: a bold identification, a clear upload area, and one plain-language result. The visual character is practical and bright, with crate greens, citrus accents, and paper-like surfaces.
+CekBuah places one clear fruit-inspection task inside a near-black, softly framed surface. A blue, teal, and violet field surrounds the application; a single CSS-drawn orbit gives the headline its luminous focus. The interface follows the user's supplied Clarid reference while replacing its finance claims with CekBuah's actual supported fruits and model details.
 
-The interface keeps the task ahead of decoration. One supported fruit photo moves through preview and an explicit check; the resulting “Segar” or “Busuk” state stays readable through both words and color.
+DM Serif Display gives the page a calm editorial voice. Manrope keeps the working copy, controls, upload guidance, processing history, and result states compact and readable. The page moves from introduction to upload, five actual backend/model steps, then the ResNet50 label. Segar and Busuk stay explicit in text and use distinct colors. The model result remains a visual estimate.
 
 **Key Characteristics:**
-- Market greens and citrus yellow frame a clean, paper-white inspection surface.
-- Manrope carries the hierarchy from large, direct headings to compact ticket labels.
-- Result states use quiet tinted panels and always pair color with a written status.
+- A near-black inset surface inside a teal-to-blue-to-violet outer field.
+- One editorial headline and one geometric orbit lead into a practical upload flow.
+- The proof strip uses only three supported fruits and real ResNet50 specifications.
+- Result colors always accompany the words Segar or Busuk.
 
 ## Colors
 
-The palette balances leafy greens with warm produce accents against a soft off-white page and clean white working surface.
+The palette uses an almost-black working surface, a saturated violet action color, and a luminous outer frame that stays behind the application content.
 
 ### Primary
-- **Crate Green** (`{colors.forest-dark}`): Main action button, strong navigation text, and the darkest readable interface emphasis.
-- **Market Leaf** (`{colors.forest}`): Secondary emphasis for icons, links, and focus-adjacent accents.
+- **Signal Violet** (`{colors.primary}`): Main actions and the strongest interactive emphasis.
+- **Bright Violet** (`{colors.primary-bright}`): Hover state for violet actions.
+- **Soft Violet** (`{colors.accent-soft}`): Secondary emphasis, model stamps, and interface icons.
 
 ### Secondary
-- **Citrus Tag** (`{colors.citrus}`): Small brand mark and fruit-market signal; keep it as an accent rather than a large text background.
+- **Market Teal** (`{colors.frame-teal}`): The left side of the ambient page frame.
+- **Night Blue** (`{colors.frame-blue}`): The middle ground of the outer frame.
+- **Orbit Violet** (`{colors.frame-violet}`): The right and lower edge of the outer frame.
 
 ### Tertiary
-- **Soft Tomato Paper** (`{colors.tomato-pale}`): Busuk and upload-error surfaces. Pair it with the written state and dark red-brown text.
-- **Fresh Produce Paper** (`#e7f5e9`): Segar result surface with dark green text.
+- **Fresh Result Ink** (`{colors.fresh-state}`): Text in the Segar result state.
+- **Rotten Result Ink** (`{colors.rotten-state}`): Text in the Busuk result state.
 
 ### Neutral
-- **Produce Ink** (`{colors.ink}`): Headlines and high-priority copy.
-- **Soft Leaf Ink** (`{colors.ink-soft}`): Supporting text and instructions.
-- **Stall Ground** (`{colors.ground}`): Main page background.
-- **Ticket White** (`{colors.paper}`): Upload and result working surfaces.
-- **Pale Crate Line** (`{colors.line}`): Quiet boundaries between regions and controls.
+- **Night Ground** (`{colors.ground}`): Base page color visible behind the gradient frame.
+- **Black Glass** (`{colors.surface}`): Main inset application surface.
+- **Raised Charcoal** (`{colors.surface-raised}`): Inspection panel and elevated working surfaces.
+- **Quiet Charcoal** (`{colors.surface-quiet}`): Drop target and secondary working surface.
+- **Ivory Ink** (`{colors.ink}`): Main text on dark surfaces.
+- **Lavender Copy** (`{colors.ink-soft}`): Supporting text and descriptions.
+- **Muted Lavender** (`{colors.muted}`): Lowest-priority helper text.
+- **Moonlit Line** (`{colors.line}`): Quiet borders and dividers.
 
-**The Result Mark Rule.** Use amber for uncertain results and the tomato tint for Busuk or errors; color always appears alongside a plain text label.
+**The Truth-Only Proof Rule.** Use the supported fruit names and actual model specifications as proof. Do not add audience counts, partner claims, reliability claims, or an accuracy percentage to the interface.
+
+**The Written Result Rule.** Segar and Busuk must remain visible words; color may reinforce a result but never replace its label.
 
 ## Typography
 
-**Display Font:** Manrope Variable (with Segoe UI, sans-serif fallbacks)
-
+**Display Font:** DM Serif Display (with Georgia, serif fallbacks)
 **Body Font:** Manrope Variable (with Segoe UI, sans-serif fallbacks)
-
 **Label/Mono Font:** Manrope Variable; no separate monospace face is used.
 
-**Character:** Manrope gives the interface sturdy market-ticket lettering without sacrificing small-screen clarity. The same family keeps upload instructions, model stamps, and results visually related.
+**Character:** DM Serif Display supplies the high-contrast editorial headline from the reference. Manrope supports the compact Indonesian interface copy and keeps upload, status, and timing details easy to scan.
 
 ### Hierarchy
-- **Display** (weight 740, responsive 3.1–4.65rem, line-height 0.99): Main task heading.
-- **Headline** (weight 740, responsive 1.9–2.5rem, line-height 1.1): Section headings.
-- **Title** (weight 740, 1.19–1.28rem): Inspection panel and result headings.
-- **Body** (weight 400, 0.9–1.08rem, line-height about 1.5–1.72): Instructions and explanatory copy, kept to readable line lengths.
-- **Label** (weight 650–750, 0.78–0.94rem): Fruit chips, model stamp, action labels, and result metadata.
+- **Display** (weight 400, responsive 3.3–5.45rem on desktop, line-height 0.98): Centered hero headline; it scales down separately on phones.
+- **Title** (weight 400, responsive 2.3–3.55rem, line-height 1): Section headings.
+- **Component title** (weight 700–780, about 0.86–1.19rem): Inspection, history, and result headings.
+- **Body** (weight 400, 0.86–1.08rem, line-height 1.5–1.68): Supporting copy and explanations, kept to readable measures.
+- **Label** (weight 600–750, about 0.68–0.94rem): Navigation, model stamp, result metadata, and processing status.
+
+**The Two-Voice Rule.** Reserve the serif face for display and section titles. Keep controls, long copy, and status details in Manrope.
 
 ## Layout
 
-The desktop shell uses a centered content width capped at 1160px, with a two-column hero: explanation and supported fruit on the left, the inspection ticket on the right. At 900px the hero becomes one column; at 620px the page tightens its side margins and stacks the navigation, upload surface, and information sections for a narrow screen. The upload ticket stays the strongest working surface, with generous padding and a clear primary action below the image chooser.
+The page uses a centered inset shell capped at 1320px, with a content column capped at 1100px. The top bar places the wordmark, a centered pill navigation, and a violet action on one row. The hero is centered over the orbit; supported fruits follow as a short proof strip, and the real specifications sit in a three-part capsule.
+
+The inspection section uses two columns above 900px: product guidance on the left and the upload panel on the right. At 900px and below, those areas stack. At 620px and below, the navigation moves below the wordmark and action, the hero and specification capsule tighten, and the process rows stack vertically. The layout was inspected at 320px, 390px, 620px, 768px, 900px, 1024px, and 1440px without horizontal overflow.
 
 ## Elevation & Depth
 
-Depth is mostly tonal: the ground recedes behind white panels, and pale borders separate neighboring regions. A soft ambient shadow lifts the main inspection panel; smaller shadows only lift the floating image-removal control. Keep the rest of the page calm and flat.
+Depth comes from nested charcoal surfaces, fine lavender-tinted borders, and a few soft shadows. The outer shell lifts from the ambient background; the upload panel sits above the main application surface; smaller shadows appear on the primary actions. The orbit's glow is part of the hero lighting, not a layer behind controls.
 
 ### Shadow Vocabulary
-- **Inspection lift** (`0 16px 36px rgb(23 59 49 / 8%)`): Separates the primary upload ticket from the page ground.
-- **Floating control** (`0 3px 12px rgb(16 57 47 / 13%)`): Keeps the image-removal control legible over a photo preview.
+- **Outer frame** (`0 34px 100px rgb(0 0 0 / 34%)`): Separates the large inset page from the colored outer field.
+- **Inspection panel** (`0 22px 60px rgb(0 0 0 / 29%)`): Lifts the upload task within the page.
+- **Primary action** (`0 8px 22px rgb(75 69 224 / 20%)`): Adds restrained violet depth to the main action.
+
+**The Border-and-Tone Rule.** Use a quiet border or a shadow to separate a surface. Do not stack both as competing elevation cues.
 
 ## Shapes
 
-The interface uses softly rounded rectangles for working surfaces, buttons, and result blocks. Fruit labels use a full pill silhouette; the image preview clips to the same rounded edge as its frame. Thin, pale borders do most of the structural work.
+The app shell has generous rounded corners (32px on desktop, 23px on mobile). Working panels use medium corners (17–22px); controls use compact corners (9–11px); navigation and the specification capsule use pill shapes. The orbit is a large, abstract geometric ellipse. It stays behind the headline and does not imitate a fruit photograph.
 
 ## Components
 
 ### Buttons
-- **Shape:** Gently rounded corners (9px).
-- **Primary:** Full-width forest action with white text, a 52px minimum height, and 13px 18px padding.
-- **Hover / Focus:** Hover darkens toward a brighter forest and rises by 1px. Keyboard focus uses a high-contrast amber outline with a 3px stroke and 3px offset.
-- **Disabled:** The submit button remains visible, with a progress cursor and reduced opacity while inference is running.
-
-### Chips
-- **Style:** Fruit names use small, pale surfaces with a thin green-gray border and pill corners.
-- **State:** These labels indicate supported fruit types; they do not behave as filters or selectable controls.
+- **Shape:** Compact rounded controls (10–11px radius).
+- **Primary:** Signal Violet fill, ivory label, and a soft violet shadow; primary links and the submit action share this treatment.
+- **Hover / Focus:** Hover lifts the control by one pixel and brightens it. Focus uses a clear lavender outline with a four-pixel offset.
+- **Secondary:** Transparent dark fill with a restrained lavender-gray border.
+- **Disabled / Loading:** Keep the primary action visible; reduce opacity while loading and show the spinner with “Sedang memeriksa”.
 
 ### Cards / Containers
-- **Corner Style:** The inspection panel uses 16px corners; the preview and result panels use 12px.
-- **Background:** White inspection ticket on the soft page ground.
-- **Shadow Strategy:** The main panel receives a soft ambient shadow; result blocks use border and tint instead.
-- **Border:** A quiet green-gray line frames the panel and preview.
-- **Internal Padding:** Responsive 22–32px inside the ticket; result blocks use compact 17px padding.
+- **Corner Style:** The application shell uses the largest radius; the inspection panel is smaller; nested result and history regions are compact.
+- **Background:** Charcoal surfaces distinguish work areas from the near-black inset.
+- **Shadow Strategy:** Use the inspection-panel shadow once; results and history rely mainly on tone and borders.
+- **Border:** Thin lavender-gray lines define panel edges and quiet dividers.
+- **Internal Padding:** 19–28px for the inspection panel, tightening at mobile widths.
 
 ### Inputs / Fields
-- **Style:** The file input is visually hidden inside a large, dashed upload target with a pale surface and 12px corners.
-- **Focus:** The target shows the shared visible keyboard outline when focused.
-- **Error / Disabled:** Upload errors use a pale tomato panel with explicit text; file replacement is disabled during inference.
+- **Style:** A dark, dashed upload target with a centered image icon and plain format/size guidance.
+- **Focus:** The upload target receives the shared visible focus outline.
+- **Hover / Drag / Error:** Hover and drag highlight the dashed edge in violet. Errors use a dark red surface with a written recovery message.
+- **Selected Photo:** Show a contained preview, file name, size, remove control, and replace action.
 
 ### Navigation
-- **Style:** A restrained top bar places the wordmark left and two in-page links right. Links use supporting ink, then shift to forest on hover. On narrow screens the gaps and type size tighten while preserving both links.
+- **Style:** A centered translucent pill with compact Manrope links, between the wordmark and violet action.
+- **Hover / Focus:** Links gain a brighter pill surface and visible keyboard outline.
+- **Mobile:** The navigation moves to a centered row below the wordmark and primary action.
+
+### Processing History
+The panel lists the five backend events in their actual order: validation, preprocessing, model setup, inference, and label mapping. Each row pairs a step name with its live state and backend duration when available. The history is local to the current check and is not saved as an account history.
 
 ### Inspection Result
-- **Style:** A single result block pairs an icon, a plain-language status, and a concise explanation.
-- **States:** Segar uses pale green and Busuk uses pale tomato. The component remains text-first so color is never the only indicator.
-
-**The One-Photo Rule.** Keep the upload target and explicit action on one ticket. Show one result for one submitted image.
+Segar and Busuk use distinct dark-tinted result surfaces. Each result includes a state icon, written label, recognized fruit when available, the backend reason, model version, and a control to try another photo.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep the supported fruit labels near the upload task.
-- **Do** pair every result tint with a written status and its short explanation.
-- **Do** preserve the clear two-column desktop layout and the single-column mobile flow.
-- **Do** keep keyboard focus visible with the existing amber outline treatment.
+- **Do** keep the first actions, supported fruit types, and ResNet50 purpose clear at a glance.
+- **Do** use the orb as restrained geometric lighting behind the hero text.
+- **Do** pair Segar and Busuk with their written labels and distinct state colors.
+- **Do** preserve all five live processing steps and their backend timings.
+- **Do** keep the outer teal-blue-violet field outside the near-black application surface.
 
 ### Don't:
-- **Don't** make status depend on color alone.
-- **Don't** let decorative market motifs compete with the photo preview or upload action.
+- **Don't** add invented partner names, audience counts, uptime claims, or an accuracy percentage.
+- **Don't** present a model result as a guarantee about the fruit's interior.
+- **Don't** let decorative lighting reduce the contrast of the headline or upload controls.
+- **Don't** hide an interactive state behind color alone.

@@ -1,160 +1,427 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-21T00:02:38+07:00",
+  "generatedAt": "2026-11-20T21:32:24.956Z",
   "title": "Design System: CekBuah",
   "extensions": {
     "colorMeta": {
-      "forest-dark": {
-        "role": "primary",
-        "displayName": "Crate Green",
-        "canonical": "#10392f",
-        "tonalRamp": ["color-mix(in oklch, #10392f 20%, black)", "color-mix(in oklch, #10392f 35%, black)", "color-mix(in oklch, #10392f 50%, black)", "color-mix(in oklch, #10392f 70%, black)", "#10392f", "color-mix(in oklch, #10392f 85%, white)", "color-mix(in oklch, #10392f 70%, white)", "color-mix(in oklch, #10392f 50%, white)"]
+      "ground": {
+        "role": "neutral",
+        "displayName": "Night Ground",
+        "canonical": "#091326",
+        "tonalRamp": [
+          "color-mix(in oklch, #091326 20%, black)",
+          "color-mix(in oklch, #091326 35%, black)",
+          "color-mix(in oklch, #091326 50%, black)",
+          "color-mix(in oklch, #091326 70%, black)",
+          "#091326",
+          "color-mix(in oklch, #091326 85%, white)",
+          "color-mix(in oklch, #091326 70%, white)",
+          "color-mix(in oklch, #091326 50%, white)"
+        ]
       },
-      "forest": {
-        "role": "primary",
-        "displayName": "Market Leaf",
-        "canonical": "#194d3f",
-        "tonalRamp": ["color-mix(in oklch, #194d3f 20%, black)", "color-mix(in oklch, #194d3f 35%, black)", "color-mix(in oklch, #194d3f 50%, black)", "color-mix(in oklch, #194d3f 70%, black)", "#194d3f", "color-mix(in oklch, #194d3f 85%, white)", "color-mix(in oklch, #194d3f 70%, white)", "color-mix(in oklch, #194d3f 50%, white)"]
-      },
-      "citrus": {
+      "frame-teal": {
         "role": "secondary",
-        "displayName": "Citrus Tag",
-        "canonical": "#f2c84b",
-        "tonalRamp": ["color-mix(in oklch, #f2c84b 20%, black)", "color-mix(in oklch, #f2c84b 35%, black)", "color-mix(in oklch, #f2c84b 50%, black)", "color-mix(in oklch, #f2c84b 70%, black)", "#f2c84b", "color-mix(in oklch, #f2c84b 85%, white)", "color-mix(in oklch, #f2c84b 70%, white)", "color-mix(in oklch, #f2c84b 50%, white)"]
+        "displayName": "Market Teal",
+        "canonical": "#086c87",
+        "tonalRamp": [
+          "color-mix(in oklch, #086c87 20%, black)",
+          "color-mix(in oklch, #086c87 35%, black)",
+          "color-mix(in oklch, #086c87 50%, black)",
+          "color-mix(in oklch, #086c87 70%, black)",
+          "#086c87",
+          "color-mix(in oklch, #086c87 85%, white)",
+          "color-mix(in oklch, #086c87 70%, white)",
+          "color-mix(in oklch, #086c87 50%, white)"
+        ]
+      },
+      "frame-blue": {
+        "role": "secondary",
+        "displayName": "Night Blue",
+        "canonical": "#121b45",
+        "tonalRamp": [
+          "color-mix(in oklch, #121b45 20%, black)",
+          "color-mix(in oklch, #121b45 35%, black)",
+          "color-mix(in oklch, #121b45 50%, black)",
+          "color-mix(in oklch, #121b45 70%, black)",
+          "#121b45",
+          "color-mix(in oklch, #121b45 85%, white)",
+          "color-mix(in oklch, #121b45 70%, white)",
+          "color-mix(in oklch, #121b45 50%, white)"
+        ]
+      },
+      "frame-violet": {
+        "role": "secondary",
+        "displayName": "Orbit Violet",
+        "canonical": "#24208d",
+        "tonalRamp": [
+          "color-mix(in oklch, #24208d 20%, black)",
+          "color-mix(in oklch, #24208d 35%, black)",
+          "color-mix(in oklch, #24208d 50%, black)",
+          "color-mix(in oklch, #24208d 70%, black)",
+          "#24208d",
+          "color-mix(in oklch, #24208d 85%, white)",
+          "color-mix(in oklch, #24208d 70%, white)",
+          "color-mix(in oklch, #24208d 50%, white)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Black Glass",
+        "canonical": "#08090f",
+        "tonalRamp": [
+          "color-mix(in oklch, #08090f 20%, black)",
+          "color-mix(in oklch, #08090f 35%, black)",
+          "color-mix(in oklch, #08090f 50%, black)",
+          "color-mix(in oklch, #08090f 70%, black)",
+          "#08090f",
+          "color-mix(in oklch, #08090f 85%, white)",
+          "color-mix(in oklch, #08090f 70%, white)",
+          "color-mix(in oklch, #08090f 50%, white)"
+        ]
+      },
+      "surface-raised": {
+        "role": "neutral",
+        "displayName": "Raised Charcoal",
+        "canonical": "#10111a",
+        "tonalRamp": [
+          "color-mix(in oklch, #10111a 20%, black)",
+          "color-mix(in oklch, #10111a 35%, black)",
+          "color-mix(in oklch, #10111a 50%, black)",
+          "color-mix(in oklch, #10111a 70%, black)",
+          "#10111a",
+          "color-mix(in oklch, #10111a 85%, white)",
+          "color-mix(in oklch, #10111a 70%, white)",
+          "color-mix(in oklch, #10111a 50%, white)"
+        ]
+      },
+      "surface-quiet": {
+        "role": "neutral",
+        "displayName": "Quiet Charcoal",
+        "canonical": "#0d0e15",
+        "tonalRamp": [
+          "color-mix(in oklch, #0d0e15 20%, black)",
+          "color-mix(in oklch, #0d0e15 35%, black)",
+          "color-mix(in oklch, #0d0e15 50%, black)",
+          "color-mix(in oklch, #0d0e15 70%, black)",
+          "#0d0e15",
+          "color-mix(in oklch, #0d0e15 85%, white)",
+          "color-mix(in oklch, #0d0e15 70%, white)",
+          "color-mix(in oklch, #0d0e15 50%, white)"
+        ]
       },
       "ink": {
         "role": "neutral",
-        "displayName": "Produce Ink",
-        "canonical": "#173b31",
-        "tonalRamp": ["color-mix(in oklch, #173b31 20%, black)", "color-mix(in oklch, #173b31 35%, black)", "color-mix(in oklch, #173b31 50%, black)", "color-mix(in oklch, #173b31 70%, black)", "#173b31", "color-mix(in oklch, #173b31 85%, white)", "color-mix(in oklch, #173b31 70%, white)", "color-mix(in oklch, #173b31 50%, white)"]
+        "displayName": "Ivory Ink",
+        "canonical": "#f6f4ff",
+        "tonalRamp": [
+          "color-mix(in oklch, #f6f4ff 20%, black)",
+          "color-mix(in oklch, #f6f4ff 35%, black)",
+          "color-mix(in oklch, #f6f4ff 50%, black)",
+          "color-mix(in oklch, #f6f4ff 70%, black)",
+          "#f6f4ff",
+          "color-mix(in oklch, #f6f4ff 85%, white)",
+          "color-mix(in oklch, #f6f4ff 70%, white)",
+          "color-mix(in oklch, #f6f4ff 50%, white)"
+        ]
       },
       "ink-soft": {
         "role": "neutral",
-        "displayName": "Soft Leaf Ink",
-        "canonical": "#465c52",
-        "tonalRamp": ["color-mix(in oklch, #465c52 20%, black)", "color-mix(in oklch, #465c52 35%, black)", "color-mix(in oklch, #465c52 50%, black)", "color-mix(in oklch, #465c52 70%, black)", "#465c52", "color-mix(in oklch, #465c52 85%, white)", "color-mix(in oklch, #465c52 70%, white)", "color-mix(in oklch, #465c52 50%, white)"]
+        "displayName": "Lavender Copy",
+        "canonical": "#cbc8da",
+        "tonalRamp": [
+          "color-mix(in oklch, #cbc8da 20%, black)",
+          "color-mix(in oklch, #cbc8da 35%, black)",
+          "color-mix(in oklch, #cbc8da 50%, black)",
+          "color-mix(in oklch, #cbc8da 70%, black)",
+          "#cbc8da",
+          "color-mix(in oklch, #cbc8da 85%, white)",
+          "color-mix(in oklch, #cbc8da 70%, white)",
+          "color-mix(in oklch, #cbc8da 50%, white)"
+        ]
       },
-      "ground": {
+      "muted": {
         "role": "neutral",
-        "displayName": "Stall Ground",
-        "canonical": "#f3f6ef",
-        "tonalRamp": ["color-mix(in oklch, #f3f6ef 20%, black)", "color-mix(in oklch, #f3f6ef 35%, black)", "color-mix(in oklch, #f3f6ef 50%, black)", "color-mix(in oklch, #f3f6ef 70%, black)", "#f3f6ef", "color-mix(in oklch, #f3f6ef 85%, white)", "color-mix(in oklch, #f3f6ef 70%, white)", "color-mix(in oklch, #f3f6ef 50%, white)"]
+        "displayName": "Muted Lavender",
+        "canonical": "#9693a8",
+        "tonalRamp": [
+          "color-mix(in oklch, #9693a8 20%, black)",
+          "color-mix(in oklch, #9693a8 35%, black)",
+          "color-mix(in oklch, #9693a8 50%, black)",
+          "color-mix(in oklch, #9693a8 70%, black)",
+          "#9693a8",
+          "color-mix(in oklch, #9693a8 85%, white)",
+          "color-mix(in oklch, #9693a8 70%, white)",
+          "color-mix(in oklch, #9693a8 50%, white)"
+        ]
       },
-      "paper": {
-        "role": "neutral",
-        "displayName": "Ticket White",
-        "canonical": "#ffffff",
-        "tonalRamp": ["color-mix(in oklch, #ffffff 20%, black)", "color-mix(in oklch, #ffffff 35%, black)", "color-mix(in oklch, #ffffff 50%, black)", "color-mix(in oklch, #ffffff 70%, black)", "#ffffff", "color-mix(in oklch, #ffffff 85%, white)", "color-mix(in oklch, #ffffff 70%, white)", "color-mix(in oklch, #ffffff 50%, white)"]
+      "primary": {
+        "role": "primary",
+        "displayName": "Signal Violet",
+        "canonical": "#5754ee",
+        "tonalRamp": [
+          "color-mix(in oklch, #5754ee 20%, black)",
+          "color-mix(in oklch, #5754ee 35%, black)",
+          "color-mix(in oklch, #5754ee 50%, black)",
+          "color-mix(in oklch, #5754ee 70%, black)",
+          "#5754ee",
+          "color-mix(in oklch, #5754ee 85%, white)",
+          "color-mix(in oklch, #5754ee 70%, white)",
+          "color-mix(in oklch, #5754ee 50%, white)"
+        ]
+      },
+      "primary-bright": {
+        "role": "primary",
+        "displayName": "Bright Violet",
+        "canonical": "#7774ff",
+        "tonalRamp": [
+          "color-mix(in oklch, #7774ff 20%, black)",
+          "color-mix(in oklch, #7774ff 35%, black)",
+          "color-mix(in oklch, #7774ff 50%, black)",
+          "color-mix(in oklch, #7774ff 70%, black)",
+          "#7774ff",
+          "color-mix(in oklch, #7774ff 85%, white)",
+          "color-mix(in oklch, #7774ff 70%, white)",
+          "color-mix(in oklch, #7774ff 50%, white)"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Soft Violet",
+        "canonical": "#bebaff",
+        "tonalRamp": [
+          "color-mix(in oklch, #bebaff 20%, black)",
+          "color-mix(in oklch, #bebaff 35%, black)",
+          "color-mix(in oklch, #bebaff 50%, black)",
+          "color-mix(in oklch, #bebaff 70%, black)",
+          "#bebaff",
+          "color-mix(in oklch, #bebaff 85%, white)",
+          "color-mix(in oklch, #bebaff 70%, white)",
+          "color-mix(in oklch, #bebaff 50%, white)"
+        ]
       },
       "line": {
         "role": "neutral",
-        "displayName": "Pale Crate Line",
-        "canonical": "#d4dfd4",
-        "tonalRamp": ["color-mix(in oklch, #d4dfd4 20%, black)", "color-mix(in oklch, #d4dfd4 35%, black)", "color-mix(in oklch, #d4dfd4 50%, black)", "color-mix(in oklch, #d4dfd4 70%, black)", "#d4dfd4", "color-mix(in oklch, #d4dfd4 85%, white)", "color-mix(in oklch, #d4dfd4 70%, white)", "color-mix(in oklch, #d4dfd4 50%, white)"]
+        "displayName": "Moonlit Line",
+        "canonical": "rgb(220 216 255 / 14%)",
+        "tonalRamp": [
+          "color-mix(in oklch, rgb(220 216 255 / 14%) 20%, black)",
+          "color-mix(in oklch, rgb(220 216 255 / 14%) 35%, black)",
+          "color-mix(in oklch, rgb(220 216 255 / 14%) 50%, black)",
+          "color-mix(in oklch, rgb(220 216 255 / 14%) 70%, black)",
+          "rgb(220 216 255 / 14%)",
+          "color-mix(in oklch, rgb(220 216 255 / 14%) 85%, white)",
+          "color-mix(in oklch, rgb(220 216 255 / 14%) 70%, white)",
+          "color-mix(in oklch, rgb(220 216 255 / 14%) 50%, white)"
+        ]
       },
-      "tomato-pale": {
+      "fresh-state": {
         "role": "tertiary",
-        "displayName": "Soft Tomato Paper",
-        "canonical": "#fff0ec",
-        "tonalRamp": ["color-mix(in oklch, #fff0ec 20%, black)", "color-mix(in oklch, #fff0ec 35%, black)", "color-mix(in oklch, #fff0ec 50%, black)", "color-mix(in oklch, #fff0ec 70%, black)", "#fff0ec", "color-mix(in oklch, #fff0ec 85%, white)", "color-mix(in oklch, #fff0ec 70%, white)", "color-mix(in oklch, #fff0ec 50%, white)"]
+        "displayName": "Fresh Result Ink",
+        "canonical": "#e2f8e8",
+        "tonalRamp": [
+          "color-mix(in oklch, #e2f8e8 20%, black)",
+          "color-mix(in oklch, #e2f8e8 35%, black)",
+          "color-mix(in oklch, #e2f8e8 50%, black)",
+          "color-mix(in oklch, #e2f8e8 70%, black)",
+          "#e2f8e8",
+          "color-mix(in oklch, #e2f8e8 85%, white)",
+          "color-mix(in oklch, #e2f8e8 70%, white)",
+          "color-mix(in oklch, #e2f8e8 50%, white)"
+        ]
       },
-      "success-pale": {
+      "rotten-state": {
         "role": "tertiary",
-        "displayName": "Fresh Produce Paper",
-        "canonical": "#e7f5e9",
-        "tonalRamp": ["color-mix(in oklch, #e7f5e9 20%, black)", "color-mix(in oklch, #e7f5e9 35%, black)", "color-mix(in oklch, #e7f5e9 50%, black)", "color-mix(in oklch, #e7f5e9 70%, black)", "#e7f5e9", "color-mix(in oklch, #e7f5e9 85%, white)", "color-mix(in oklch, #e7f5e9 70%, white)", "color-mix(in oklch, #e7f5e9 50%, white)"]
+        "displayName": "Rotten Result Ink",
+        "canonical": "#ffe2dc",
+        "tonalRamp": [
+          "color-mix(in oklch, #ffe2dc 20%, black)",
+          "color-mix(in oklch, #ffe2dc 35%, black)",
+          "color-mix(in oklch, #ffe2dc 50%, black)",
+          "color-mix(in oklch, #ffe2dc 70%, black)",
+          "#ffe2dc",
+          "color-mix(in oklch, #ffe2dc 85%, white)",
+          "color-mix(in oklch, #ffe2dc 70%, white)",
+          "color-mix(in oklch, #ffe2dc 50%, white)"
+        ]
       }
     },
     "typographyMeta": {
-      "display": {"displayName": "Market Headline", "purpose": "The page's primary inspection instruction."},
-      "body": {"displayName": "Working Copy", "purpose": "Upload directions, result explanations, and supporting information."},
-      "label": {"displayName": "Ticket Labels", "purpose": "Fruit names, model stamp, actions, and result metadata."}
+      "display": {
+        "displayName": "Editorial Display",
+        "purpose": "The centered hero headline and section titles."
+      },
+      "title": {
+        "displayName": "Section Title",
+        "purpose": "Large headings that introduce the inspection and process sections."
+      },
+      "body": {
+        "displayName": "Working Copy",
+        "purpose": "Upload instructions, explanations, and process details."
+      },
+      "label": {
+        "displayName": "Interface Label",
+        "purpose": "Navigation, actions, model stamps, result metadata, and processing state."
+      }
     },
     "shadows": [
-      {"name": "inspection-lift", "value": "0 16px 36px rgb(23 59 49 / 8%)", "purpose": "Lift the white upload ticket from the page ground."},
-      {"name": "floating-control", "value": "0 3px 12px rgb(16 57 47 / 13%)", "purpose": "Keep the remove-photo control legible over an image."}
+      {
+        "name": "outer-frame",
+        "value": "0 34px 100px rgb(0 0 0 / 34%)",
+        "purpose": "Separate the inset application surface from its blue-teal-violet frame."
+      },
+      {
+        "name": "inspection-panel",
+        "value": "0 22px 60px rgb(0 0 0 / 29%)",
+        "purpose": "Lift the upload panel within the near-black surface."
+      },
+      {
+        "name": "primary-action",
+        "value": "0 8px 22px rgb(75 69 224 / 20%)",
+        "purpose": "Give the main violet action restrained depth."
+      }
     ],
     "motion": [
-      {"name": "control-hover", "value": "160ms ease", "purpose": "Brief color and position feedback on buttons and links."},
-      {"name": "result-arrive", "value": "300ms cubic-bezier(0.2, 0.75, 0.25, 1)", "purpose": "Gently introduce a newly returned result."},
-      {"name": "spinner", "value": "950ms linear infinite", "purpose": "Show active inference while the request is running."}
+      {
+        "name": "control-feedback",
+        "value": "180ms ease",
+        "purpose": "Lift and brighten interactive actions and links on hover."
+      },
+      {
+        "name": "spinner",
+        "value": "950ms linear infinite",
+        "purpose": "Show that the ResNet50 check is still processing."
+      },
+      {
+        "name": "result-arrive",
+        "value": "300ms cubic-bezier(0.2, 0.75, 0.25, 1)",
+        "purpose": "Introduce the completed prediction."
+      },
+      {
+        "name": "smooth-scroll",
+        "value": "scroll-behavior: smooth",
+        "purpose": "Move between the hero, inspection, process, and result notes."
+      }
     ],
     "breakpoints": [
-      {"name": "tablet", "value": "900px"},
-      {"name": "mobile", "value": "620px"}
+      {
+        "name": "tablet",
+        "value": "900px"
+      },
+      {
+        "name": "mobile",
+        "value": "620px"
+      }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Primary Action",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Explicitly starts one photo inspection.",
-      "html": "<button class=\"ds-button-primary\" type=\"button\">Periksa foto</button>",
-      "css": ".ds-button-primary { min-height: 52px; width: 100%; padding: 13px 18px; border: 1px solid var(--forest-dark); border-radius: 9px; background: var(--forest-dark); color: white; font: 700 1rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; cursor: pointer; transition: background-color 160ms ease, transform 160ms ease; } .ds-button-primary:hover { transform: translateY(-1px); background: #1c5544; } .ds-button-primary:focus-visible { outline: 3px solid #b77a00; outline-offset: 3px; } .ds-button-primary:active { transform: translateY(0); }"
+      "description": "Starts the upload task or submits the selected photo.",
+      "html": "<a class=\"ds-button-primary\" href=\"#pemeriksaan\">Mulai pemeriksaan <svg aria-hidden=\"true\" viewBox=\"0 0 16 16\"><path d=\"M4 12 12 4M5 4h7v7\"/></svg></a>",
+      "css": ".ds-button-primary { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 11px 19px; border: 1px solid rgb(255 255 255 / 9%); border-radius: 10px; background: var(--violet); color: #fff; font: 650 0.88rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; text-decoration: none; box-shadow: 0 8px 22px rgb(75 69 224 / 20%); transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease; } .ds-button-primary svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; } .ds-button-primary:hover { transform: translateY(-1px); background: var(--violet-bright); box-shadow: 0 11px 26px rgb(75 69 224 / 28%); } .ds-button-primary:focus-visible { outline: 3px solid #a8a4ff; outline-offset: 4px; } .ds-button-primary:active { transform: translateY(0); }"
     },
     {
-      "name": "Fruit Chip",
-      "kind": "chip",
-      "refersTo": "fruit-chip",
-      "description": "Names the supported fruit types near the upload task.",
-      "html": "<span class=\"ds-chip\">Apel</span>",
-      "css": ".ds-chip { display: inline-flex; align-items: center; padding: 8px 14px; border: 1px solid #c9d7c8; border-radius: 999px; background: #f9fbf7; color: var(--forest-dark); font: 650 0.9rem/1.35 'Manrope Variable', 'Segoe UI', sans-serif; }"
-    },
-    {
-      "name": "Inspection Ticket",
-      "kind": "card",
-      "refersTo": "inspection-panel",
-      "description": "Holds the model stamp, upload target, and action.",
-      "html": "<section class=\"ds-ticket\"><strong>Periksa satu foto</strong><p>Pilih satu apel, pisang, atau jeruk.</p></section>",
-      "css": ".ds-ticket { padding: clamp(22px, 3vw, 32px); border: 1px solid #d5dfd5; border-radius: 16px; background: var(--paper); color: var(--ink); box-shadow: 0 16px 36px rgb(23 59 49 / 8%); } .ds-ticket strong { font: 740 1.28rem/1.3 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-ticket p { margin: 7px 0 0; color: var(--ink-soft); font: 400 0.94rem/1.55 'Manrope Variable', 'Segoe UI', sans-serif; }"
-    },
-    {
-      "name": "Upload Target",
-      "kind": "input",
-      "refersTo": "file-dropzone",
-      "description": "Keyboard-accessible dashed target for choosing a photo.",
-      "html": "<label class=\"ds-upload\"><input type=\"file\" accept=\"image/*\"><span>Pilih foto buah</span><small>JPEG, PNG, atau WebP · maks. 4 MB</small></label>",
-      "css": ".ds-upload { min-height: 258px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px 18px; border: 1.5px dashed #a9bdab; border-radius: 12px; background: #f8faf6; color: var(--ink); text-align: center; cursor: pointer; transition: border-color 180ms ease, background-color 180ms ease; } .ds-upload:hover, .ds-upload:focus-within { border-color: var(--forest); background: #f2f7ee; } .ds-upload input { width: 1px; height: 1px; position: absolute; opacity: 0; } .ds-upload input:focus-visible + span { outline: 3px solid #b77a00; outline-offset: 3px; } .ds-upload span { font: 700 1rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-upload small { color: var(--ink-soft); font: 400 0.83rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; }"
+      "name": "Secondary Action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Provides a lower-emphasis path to the process explanation.",
+      "html": "<a class=\"ds-button-secondary\" href=\"#alur\">Lihat cara kerja</a>",
+      "css": ".ds-button-secondary { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; padding: 11px 19px; border: 1px solid rgb(225 223 243 / 32%); border-radius: 10px; background: rgb(11 11 16 / 38%); color: #f6f4ff; font: 650 0.88rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; text-decoration: none; transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease; } .ds-button-secondary:hover { transform: translateY(-1px); border-color: rgb(225 223 243 / 58%); background: rgb(255 255 255 / 8%); } .ds-button-secondary:focus-visible { outline: 3px solid #a8a4ff; outline-offset: 4px; } .ds-button-secondary:active { transform: translateY(0); }"
     },
     {
       "name": "Top Navigation",
       "kind": "nav",
-      "refersTo": "navigation-links",
-      "description": "Keeps the two in-page destinations quiet and easy to scan.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Navigasi utama\"><a href=\"#alur\">Cara kerja</a><a href=\"#catatan\">Batas hasil</a></nav>",
-      "css": ".ds-nav { display: flex; align-items: center; gap: 30px; } .ds-nav a { color: var(--ink-soft); font: 600 0.95rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; text-decoration-color: transparent; text-underline-offset: 5px; transition: color 160ms ease, text-decoration-color 160ms ease; } .ds-nav a:hover, .ds-nav a:focus-visible { color: var(--forest-dark); text-decoration-color: var(--forest); } .ds-nav a:focus-visible { outline: 3px solid #b77a00; outline-offset: 3px; }"
+      "refersTo": "navigation-pill",
+      "description": "Keeps inspection, process, and result-note links centered in the header.",
+      "html": "<nav class=\"ds-navigation-pill\" aria-label=\"Navigasi utama\"><a href=\"#pemeriksaan\">Pemeriksaan</a><a href=\"#alur\">Cara kerja</a><a href=\"#catatan\">Tentang hasil</a></nav>",
+      "css": ".ds-navigation-pill { display: inline-flex; align-items: center; gap: 3px; padding: 5px; border: 1px solid rgb(255 255 255 / 10%); border-radius: 999px; background: rgb(255 255 255 / 5%); box-shadow: inset 0 1px rgb(255 255 255 / 4%), 0 8px 20px rgb(0 0 0 / 17%); } .ds-navigation-pill a { padding: 9px 14px; border-radius: 999px; color: #d7d5df; font: 550 0.79rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; text-decoration: none; transition: background-color 180ms ease, color 180ms ease; } .ds-navigation-pill a:hover { background: rgb(255 255 255 / 8%); color: #fff; } .ds-navigation-pill a:focus-visible { outline: 2px solid #a8a4ff; outline-offset: 2px; }"
+    },
+    {
+      "name": "Photo Upload Target",
+      "kind": "input",
+      "refersTo": "upload-target",
+      "description": "Accepts one supported fruit photo and exposes a keyboard-focusable file control.",
+      "html": "<label class=\"ds-upload-target\"><input type=\"file\" accept=\"image/jpeg,image/png,image/webp\"><span class=\"ds-upload-icon\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\"><path d=\"M4 5.5A1.5 1.5 0 0 1 5.5 4H11l2 2h5.5A1.5 1.5 0 0 1 20 7.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5zM8 15l2.5-2.5L14 16l2-2 3 3M15.5 10.5h.01\"/></svg></span><strong>Letakkan foto di sini</strong><span>atau pilih dari perangkat</span><small>JPG, PNG, atau WebP · maks. 4 MB</small></label>",
+      "css": ".ds-upload-target { min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 18px; border: 1px dashed rgb(184 180 212 / 32%); border-radius: 15px; background: radial-gradient(ellipse at 50% 0%, rgb(96 87 190 / 10%), transparent 54%), #0c0d14; color: #f6f4ff; cursor: pointer; text-align: center; transition: border-color 180ms ease, transform 180ms ease; } .ds-upload-target input { position: absolute; width: 1px; height: 1px; opacity: 0; } .ds-upload-target:hover, .ds-upload-target:focus-within { transform: translateY(-1px); border-color: #938dff; } .ds-upload-target:focus-within { outline: 3px solid #a8a4ff; outline-offset: 4px; } .ds-upload-icon { width: 48px; height: 48px; display: grid; place-items: center; margin-bottom: 13px; border: 1px solid rgb(161 153 255 / 22%); border-radius: 14px; background: rgb(93 84 222 / 14%); color: #c2bdff; } .ds-upload-icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.7; } .ds-upload-target strong { font: 680 0.98rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-upload-target > span:not(.ds-upload-icon) { margin-top: 4px; color: #aaa7b9; font: 400 0.84rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-upload-target small { margin-top: 13px; color: #898697; font: 400 0.75rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; }"
+    },
+    {
+      "name": "Inspection Panel",
+      "kind": "card",
+      "refersTo": "inspection-panel",
+      "description": "Frames the model stamp, upload target, preview, and explicit submit action.",
+      "html": "<section class=\"ds-inspection-panel\"><header><div><h2>Unggah foto buah</h2><p>JPG, PNG, atau WebP · maksimal 4 MB</p></div><span>ResNet50</span></header><div class=\"ds-inspection-slot\">Photo upload target</div><button type=\"button\">Periksa kesegaran</button></section>",
+      "css": ".ds-inspection-panel { padding: 24px; border: 1px solid rgb(225 223 245 / 12%); border-radius: 22px; background: linear-gradient(145deg, rgb(20 21 30 / 98%), rgb(12 13 19 / 98%)); color: #f6f4ff; box-shadow: 0 22px 60px rgb(0 0 0 / 29%), inset 0 1px rgb(255 255 255 / 4%); } .ds-inspection-panel header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 19px; } .ds-inspection-panel h2 { margin: 0; font: 700 1.08rem/1.35 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-inspection-panel p { margin: 6px 0 0; color: #aaa8b6; font: 400 0.82rem/1.5 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-inspection-panel header > span { padding: 7px 10px; border: 1px solid rgb(166 160 255 / 21%); border-radius: 7px; background: rgb(90 83 211 / 13%); color: #c5c1ff; font: 750 0.7rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-inspection-slot { min-height: 180px; display: grid; place-items: center; border: 1px dashed rgb(184 180 212 / 32%); border-radius: 15px; color: #aaa7b9; font: 400 0.84rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-inspection-panel button { width: 100%; min-height: 51px; margin-top: 13px; border: 1px solid rgb(255 255 255 / 9%); border-radius: 10px; background: #5754ee; color: #fff; font: 700 0.94rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; cursor: pointer; transition: background-color 180ms ease, transform 180ms ease; } .ds-inspection-panel button:hover { transform: translateY(-1px); background: #7774ff; } .ds-inspection-panel button:focus-visible { outline: 3px solid #a8a4ff; outline-offset: 4px; }"
+    },
+    {
+      "name": "Processing History",
+      "kind": "custom",
+      "refersTo": "processing-history",
+      "description": "Shows the backend-reported status and duration of each current inspection step.",
+      "html": "<section class=\"ds-history\" aria-label=\"Riwayat proses\"><header><h3>Riwayat proses</h3><span>Selesai</span></header><ol><li>Validasi format dan ukuran foto <span>Selesai · 18 ms</span></li><li>Preprocessing RGB · 160 × 160 <span>Selesai · 18 ms</span></li><li>Menyiapkan model ResNet50 <span>Selesai · 420 ms</span></li><li>Inferensi enam kelas <span>Selesai · 18 ms</span></li><li>Pemetaan label Segar/Busuk <span>Selesai · 18 ms</span></li></ol></section>",
+      "css": ".ds-history { padding: 14px 15px 8px; border: 1px solid rgb(225 223 245 / 11%); border-radius: 13px; background: #0b0c13; color: #bab7c6; font: 400 0.76rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-history header { display: flex; justify-content: space-between; gap: 12px; } .ds-history h3 { margin: 0; color: #eeeefa; font: 700 0.86rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-history header > span { color: #bcb7ff; font-weight: 700; } .ds-history ol { display: grid; margin: 9px 0 0; padding: 0; list-style: none; } .ds-history li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-top: 1px solid rgb(225 223 245 / 8%); } .ds-history li span { flex: none; color: #c1bdff; font-size: 0.68rem; }"
     },
     {
       "name": "Fresh Result",
       "kind": "custom",
       "refersTo": "result-fresh",
-      "description": "Shows the model's fresh prediction with a green tint and plain language.",
-      "html": "<section class=\"ds-result\" aria-live=\"polite\"><strong>Segar</strong><p>Perkiraan visual dari model ResNet50.</p></section>",
-      "css": ".ds-result { padding: 17px; border: 1px solid #b5d9bb; border-radius: 12px; background: var(--success-pale); color: #164a35; } .ds-result strong { font: 780 1.22rem/1.35 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result p { margin: 8px 0 0; font: 400 0.91rem/1.55 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result:focus-visible { outline: 3px solid #b77a00; outline-offset: 3px; }"
+      "description": "Displays the Segar result with written fruit information and model reason.",
+      "html": "<section class=\"ds-result-fresh\" aria-live=\"polite\"><strong>Hasil pemeriksaan</strong><h3>Segar</h3><p>Jenis yang dikenali: Pisang</p><p>Hasil klasifikasi visual dari ResNet50.</p></section>",
+      "css": ".ds-result-fresh { padding: 16px; border: 1px solid rgb(132 216 160 / 27%); border-radius: 13px; background: linear-gradient(130deg, rgb(30 77 58 / 38%), rgb(18 42 35 / 72%)); color: #e2f8e8; } .ds-result-fresh strong { font: 650 0.75rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-fresh h3 { margin: 2px 0 0; font: 780 1.19rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-fresh p { margin: 8px 0 0; font: 400 0.86rem/1.55 'Manrope Variable', 'Segoe UI', sans-serif; }"
+    },
+    {
+      "name": "Rotten Result",
+      "kind": "custom",
+      "refersTo": "result-rotten",
+      "description": "Displays the Busuk result with written fruit information and model reason.",
+      "html": "<section class=\"ds-result-rotten\" aria-live=\"polite\"><strong>Hasil pemeriksaan</strong><h3>Busuk</h3><p>Jenis yang dikenali: Pisang</p><p>Hasil klasifikasi visual dari ResNet50.</p></section>",
+      "css": ".ds-result-rotten { padding: 16px; border: 1px solid rgb(255 157 139 / 31%); border-radius: 13px; background: linear-gradient(130deg, rgb(102 39 40 / 34%), rgb(48 23 30 / 67%)); color: #ffe2dc; } .ds-result-rotten strong { font: 650 0.75rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-rotten h3 { margin: 2px 0 0; font: 780 1.19rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-rotten p { margin: 8px 0 0; font: 400 0.86rem/1.55 'Manrope Variable', 'Segoe UI', sans-serif; }"
     }
   ],
   "narrative": {
-    "northStar": "The Market Inspection Ticket",
-    "overview": "CekBuah treats a fruit photo like a single item brought to a contemporary market stall for inspection. Its interface uses the familiar structure of a produce ticket: a bold identification, a clear upload area, and one plain-language result. The visual character is practical and bright, with crate greens, citrus accents, and paper-like surfaces.\n\nOne supported fruit photo moves through preview and an explicit check; the ResNet50 result appears as “Segar” or “Busuk” and stays readable through both words and color.",
+    "northStar": "The Luminous Inspection Window",
+    "overview": "CekBuah places one clear fruit-inspection task inside a near-black, softly framed surface. A blue, teal, and violet field surrounds the application; a single CSS-drawn orbit gives the headline its luminous focus. The interface follows the user's supplied Clarid reference while replacing its finance claims with CekBuah's actual supported fruits and model details.\n\nDM Serif Display gives the page a calm editorial voice. Manrope keeps the working copy, controls, upload guidance, processing history, and result states compact and readable. The page moves from introduction to upload, five actual backend/model steps, then the ResNet50 label. Segar and Busuk stay explicit in text and use distinct colors. The model result remains a visual estimate.",
     "keyCharacteristics": [
-      "Market greens and citrus yellow frame a clean, paper-white inspection surface.",
-      "Manrope carries the hierarchy from large, direct headings to compact ticket labels.",
-      "Result states use quiet tinted panels and always pair color with a written status."
+      "A near-black inset surface inside a teal-to-blue-to-violet outer field.",
+      "One editorial headline and one geometric orbit lead into a practical upload flow.",
+      "The proof strip uses only three supported fruits and real ResNet50 specifications.",
+      "Result colors always accompany the words Segar or Busuk."
     ],
     "rules": [
-      {"name": "The Result Mark Rule", "body": "Use amber for uncertain results and the tomato tint for Busuk or errors; color always appears alongside a plain text label.", "section": "colors"},
-      {"name": "The One-Photo Rule", "body": "Keep the upload target and explicit action on one ticket. Show one result for one submitted image.", "section": "components"}
+      {
+        "name": "The Truth-Only Proof Rule",
+        "body": "Use the supported fruit names and actual model specifications as proof. Do not add audience counts, partner claims, reliability claims, or an accuracy percentage to the interface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Written Result Rule",
+        "body": "Segar and Busuk must remain visible words; color may reinforce a result but never replace its label.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Voice Rule",
+        "body": "Reserve the serif face for display and section titles. Keep controls, long copy, and status details in Manrope.",
+        "section": "typography"
+      },
+      {
+        "name": "The Border-and-Tone Rule",
+        "body": "Use a quiet border or a shadow to separate a surface. Do not stack both as competing elevation cues.",
+        "section": "elevation"
+      }
     ],
     "dos": [
-      "**Do** keep the supported fruit labels near the upload task.",
-      "**Do** pair every result tint with a written status and its short explanation.",
-      "**Do** preserve the clear two-column desktop layout and the single-column mobile flow.",
-      "**Do** keep keyboard focus visible with the existing amber outline treatment."
+      "**Do** keep the first actions, supported fruit types, and ResNet50 purpose clear at a glance.",
+      "**Do** use the orb as restrained geometric lighting behind the hero text.",
+      "**Do** pair Segar and Busuk with their written labels and distinct state colors.",
+      "**Do** preserve all five live processing steps and their backend timings.",
+      "**Do** keep the outer teal-blue-violet field outside the near-black application surface."
     ],
     "donts": [
-      "**Don't** make status depend on color alone.",
-      "**Don't** let decorative market motifs compete with the photo preview or upload action."
+      "**Don't** add invented partner names, audience counts, uptime claims, or an accuracy percentage.",
+      "**Don't** present a model result as a guarantee about the fruit's interior.",
+      "**Don't** let decorative lighting reduce the contrast of the headline or upload controls.",
+      "**Don't** hide an interactive state behind color alone."
     ]
   }
 }

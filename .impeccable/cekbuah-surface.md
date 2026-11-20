@@ -1,17 +1,21 @@
 # CekBuah surface brief
 
-Operate surface for visitors testing one photo of an apple, banana, or orange. The primary action is upload, preview, then explicitly request one prediction. Evidence is the fixed ResNet50 training artifact and its matching preprocessing. The product has no accounts, history, or saved images. Fresh output stays disabled until the false-fresh safety gate passes.
+Operate surface for one photo of an apple, banana, or orange. The visitor chooses a photo, starts one check, and sees the ResNet50 output as **Segar** or **Busuk**, together with the fruit name and the processing steps returned by the backend. The history is local to the current check; photos are not saved. The result is a visual estimate, not a guarantee about the inside of a fruit.
 
 ## Direction contract
 
-**THESIS:** Treat the classifier like a produce inspection ticket at a contemporary fruit market: one photo receives one legible condition mark. Refuse the category-default dashboard, metric cards, and automatic verdict for an uncertain image.
+**THESIS:** Make one fruit photo feel like it has entered a focused inspection light. The result is a clear condition label, supported by the real ResNet50 workflow.
 
-**OWN-WORLD:** Use the market's crate-green and price-label citrus yellow with a tomato red reserved for the rotten result. The interface is bright leaf-white, with strong printed labels, compact produce stamps, and an image-led inspection surface. Manrope is self-hosted for clear market-ticket lettering and dense Indonesian UI copy. Result states use plain words and distinct tonal surfaces.
+**OWN-WORLD:** Follow the user's supplied Clarid reference: an inset near-black page inside a blue, teal, and violet outer field; one centered luminous orbit behind a large editorial serif headline; a restrained pill navigation; violet actions; and a compact, dark three-part specification band. Use DM Serif Display for large headlines and Manrope for the working interface. Use green and red only for the Segar and Busuk result states.
 
-**STORY:** A visitor sees which fruit types are supported, chooses one photo, explicitly starts the check, then gets “Busuk” or “Perlu diperiksa”. The interface explains that automatic “Segar” is locked pending full safety calibration and that the photo is not a food-safety guarantee.
+**STORY:** The first screen introduces the inspection and supported fruit. One CTA moves to the upload; the user chooses one JPEG, PNG, or WebP photo and explicitly starts the check. The page displays the backend's five processing steps, then the model's label. The process stays usable at phone widths.
 
-**FIRST VIEWPORT:** At desktop width, the brand and two in-page links sit above a wide two-column composition. The left column carries one large actionable heading, the three supported fruit labels, and the no-storage statement. The right column is a white inspection ticket with the ResNet50 stamp, a large drop area, a visible 4 MB limit, and the policy note. At mobile width these stack in that order, with upload above the fold.
+**FIRST VIEWPORT:** The black inset has a simple wordmark, a centered navigation pill, and a violet action. A two-line, centered serif headline sits over one abstract orbit, followed by a short product explanation, the three supported fruit names, and a three-column band containing only real specifications: supported fruit count, 160 × 160 input size, and ResNet50. The upload panel follows directly below the band.
 
-**FORM:** Code-led market inspection-ticket composition, candidate 4 in the grounded market list, with the user's “Aplikasi pasar buah” context pinned. `seed:03714b97ba812ce8`.
+**SIGNATURE MOVE:** A single CSS-drawn light orbit frames the hero copy and visually leads down to the violet specification capsule. It is geometric interface lighting, not fruit imagery; it does not cover the title or task controls.
 
-**FINISH:** unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+**HONEST RISK:** The supplied reference contains invented finance partners and audience metrics. CekBuah replaces those with supported fruit names and actual model details. No audience counts or accuracy percentage appear in this UI.
+
+**FORM:** User-pinned screenshot direction (the user confirmed it should guide the style 100%). The direction seed roll was `seed:e35f4944c29bd4a0`; its assignment does not override the pinned reference. Build code-led and keep existing upload, inference, result, and process-history behavior as the product source of truth.
+
+**FINISH:** Review desktop and 390px mobile captures, inspect the upload and result states, run the design detector once, then document the replacement system in DESIGN.md and `.impeccable/design.json`.

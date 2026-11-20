@@ -19,6 +19,9 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Impeccable-generated review screenshots and concept-roll output
+.impeccable/review/
+
 # Training data and generated artifacts
 dataset/
 data/

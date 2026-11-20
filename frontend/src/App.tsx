@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  ArrowUpRight,
   Camera,
   CircleAlert,
   CircleCheck,
@@ -276,283 +277,330 @@ function App() {
   const resultTitle = prediction?.status === "rotten" ? "Busuk" : "Segar";
 
   return (
-    <div className="site-shell">
+    <div className="ambient-shell">
       <a className="skip-link" href="#main-content">
         Langsung ke pemeriksaan
       </a>
 
-      <header className="topbar page-width">
-        <a className="brand" href="#main-content" aria-label="CekBuah, beranda">
-          <span className="brand-mark" aria-hidden="true">
-            <ShoppingBasket size={21} strokeWidth={2.2} />
-          </span>
-          <span>CekBuah</span>
-        </a>
-        <nav className="top-nav" aria-label="Navigasi utama">
-          <a href="#alur">Cara kerja</a>
-          <a href="#catatan">Batas hasil</a>
-        </nav>
-      </header>
+      <div className="site-shell">
+        <header className="topbar page-width">
+          <a className="brand" href="#main-content" aria-label="CekBuah, beranda">
+            <span className="brand-mark" aria-hidden="true">
+              <ShoppingBasket size={20} strokeWidth={1.9} />
+            </span>
+            <span>CekBuah</span>
+          </a>
+          <nav className="top-nav" aria-label="Navigasi utama">
+            <a href="#pemeriksaan">Pemeriksaan</a>
+            <a href="#alur">Cara kerja</a>
+            <a href="#catatan">Tentang hasil</a>
+          </nav>
+          <a className="topbar-cta" href="#pemeriksaan">
+            Mulai cek <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+        </header>
 
-      <main id="main-content">
-        <section className="hero page-width" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <div className="market-label">
-              <span className="market-label__seal" aria-hidden="true">
-                <ScanLine size={18} />
-              </span>
-              Pemeriksaan visual buah
-            </div>
-            <h1 id="hero-title">Cek kondisi buah sebelum dibawa pulang.</h1>
-            <p className="hero-description">
-              Unggah satu foto apel, pisang, atau jeruk. Model ResNet50 membaca pola
-              visualnya dan memberi hasil yang bisa ditinjau kembali.
-            </p>
-
-            <div className="fruit-list" aria-label="Jenis buah yang didukung">
-              <span>Apel</span>
-              <span>Pisang</span>
-              <span>Jeruk</span>
+        <main id="main-content">
+          <section className="hero page-width" aria-labelledby="hero-title">
+            <div className="hero-orbit" aria-hidden="true">
+              <span className="hero-orbit__ring hero-orbit__ring--outer" />
+              <span className="hero-orbit__ring hero-orbit__ring--inner" />
+              <span className="hero-orbit__flare hero-orbit__flare--left" />
+              <span className="hero-orbit__flare hero-orbit__flare--right" />
             </div>
 
-            <p className="privacy-note">
-              <ShieldCheck size={18} strokeWidth={1.9} aria-hidden="true" />
-              Foto diproses untuk prediksi dan tidak disimpan.
-            </p>
-          </div>
+            <div className="hero-copy">
+              <h1 id="hero-title">
+                Kenali kondisi buah
+                <br />
+                {" "}
+                <span className="hero-accent">sebelum dibawa pulang.</span>
+              </h1>
+              <p className="hero-description">
+                Periksa satu foto apel, pisang, atau jeruk. ResNet50 membaca pola visual
+                untuk memperkirakan kondisinya.
+              </p>
 
-          <form className="inspection-panel" onSubmit={submitImage}>
-            <div className="panel-heading">
-              <div>
-                <h2>Periksa satu buah</h2>
-                <p>Gunakan foto yang terang dan memperlihatkan permukaannya.</p>
+              <div className="hero-actions">
+                <a className="hero-button hero-button--primary" href="#pemeriksaan">
+                  Mulai pemeriksaan <ArrowUpRight size={17} aria-hidden="true" />
+                </a>
+                <a className="hero-button hero-button--secondary" href="#alur">
+                  Lihat cara kerja
+                </a>
               </div>
-              <span className="model-stamp">ResNet50</span>
+
+              <div className="fruit-proof">
+                <span className="fruit-proof__label">Bisa memeriksa</span>
+                <div className="fruit-list" aria-label="Jenis buah yang didukung">
+                  <span>Apel</span>
+                  <span>Pisang</span>
+                  <span>Jeruk</span>
+                </div>
+                <span className="fruit-proof__note">
+                  <ShieldCheck size={15} strokeWidth={1.8} aria-hidden="true" />
+                  Foto tidak disimpan
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <section className="metrics-band page-width" aria-label="Spesifikasi pemeriksaan">
+            <div className="metric-item">
+              <strong>03</strong>
+              <span>jenis buah</span>
+            </div>
+            <div className="metric-item">
+              <strong>160 × 160</strong>
+              <span>ukuran input model</span>
+            </div>
+            <div className="metric-item">
+              <strong>ResNet50</strong>
+              <span>model klasifikasi</span>
+            </div>
+          </section>
+
+          <section className="inspection-section page-width" id="pemeriksaan" aria-labelledby="inspection-title">
+            <div className="inspection-intro">
+              <h2 id="inspection-title">Satu foto untuk mulai.</h2>
+              <p>Unggah foto buah dengan pencahayaan cukup dan permukaan terlihat jelas.</p>
             </div>
 
-            {!file ? (
-              <label
-                className={`dropzone${isDragging ? " dropzone--active" : ""}`}
-                htmlFor="fruit-image"
-                onDragOver={(event) => {
-                  event.preventDefault();
-                  setIsDragging(true);
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={handleDrop}
-              >
-                <input
-                  ref={inputRef}
-                  className="visually-hidden"
-                  id="fruit-image"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  aria-label="Pilih foto buah"
-                  onChange={(event) => {
-                    chooseFile(event.currentTarget.files?.[0]);
-                    event.currentTarget.value = "";
-                  }}
-                />
-                <span className="upload-symbol" aria-hidden="true">
-                  <ImagePlus size={25} strokeWidth={1.8} />
-                </span>
-                <span className="dropzone-title">Letakkan foto di sini</span>
-                <span className="dropzone-support">atau pilih dari perangkat</span>
-                <span className="choose-file-button">Pilih foto</span>
-                <span className="dropzone-limit">JPG, PNG, atau WebP · maks. 4 MB</span>
-              </label>
-            ) : (
-              <div className="selected-image">
-                <div className="preview-frame">
-                  <img src={previewUrl} alt={`Pratinjau ${file.name}`} />
-                  <button
-                    className="remove-image"
-                    type="button"
-                    onClick={removeFile}
-                    aria-label="Hapus foto yang dipilih"
-                    disabled={isLoading}
-                  >
-                    <X size={18} />
-                  </button>
+            <form className="inspection-panel" onSubmit={submitImage}>
+              <div className="panel-heading">
+                <div>
+                  <h3>Unggah foto buah</h3>
+                  <p>JPG, PNG, atau WebP · maksimal 4 MB</p>
                 </div>
-                <div className="file-meta">
-                  <div className="file-meta__text">
-                    <strong title={file.name}>{file.name}</strong>
-                    <span>{formatFileSize(file.size)}</span>
-                  </div>
-                  <button
-                    className="replace-button"
-                    type="button"
-                    onClick={() => inputRef.current?.click()}
-                    disabled={isLoading}
-                  >
-                    <RotateCcw size={15} aria-hidden="true" />
-                    Ganti foto
-                  </button>
+                <span className="model-stamp">ResNet50</span>
+              </div>
+
+              {!file ? (
+                <label
+                  className={`dropzone${isDragging ? " dropzone--active" : ""}`}
+                  htmlFor="fruit-image"
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handleDrop}
+                >
                   <input
                     ref={inputRef}
                     className="visually-hidden"
+                    id="fruit-image"
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
-                    aria-label="Ganti foto buah"
+                    aria-label="Pilih foto buah"
                     onChange={(event) => {
                       chooseFile(event.currentTarget.files?.[0]);
                       event.currentTarget.value = "";
                     }}
                   />
-                </div>
-              </div>
-            )}
-
-            {error && (
-              <div className="inline-error" role="alert">
-                <CircleAlert size={18} aria-hidden="true" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            {file && (
-              <button className="submit-button" type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <LoaderCircle className="spinner" size={18} aria-hidden="true" />
-                    Sedang memeriksa
-                  </>
-                ) : (
-                  <>
-                    <Camera size={18} aria-hidden="true" />
-                    Periksa kesegaran
-                  </>
-                )}
-              </button>
-            )}
-
-            {stepHistory.length > 0 && (
-              <section
-                className={`step-history${isLoading ? " step-history--active" : ""}`}
-                aria-label="Riwayat proses backend dan model"
-                aria-live={isLoading ? "polite" : "off"}
-                aria-atomic="false"
-              >
-                <div className="step-history__heading">
-                  <h3>Riwayat proses</h3>
-                  <span className={`step-history__summary${error ? " step-history__summary--error" : ""}`}>
-                    {isLoading ? "Berjalan" : error ? "Terhenti" : "Selesai"}
+                  <span className="upload-symbol" aria-hidden="true">
+                    <ImagePlus size={25} strokeWidth={1.8} />
                   </span>
-                </div>
-                <ol className="step-history__list">
-                  {stepHistory.map((step, index) => (
-                    <li key={step.id} className={`step-history__item step-history__item--${step.status}`}>
-                      <span className="step-history__marker" aria-hidden="true">
-                        {step.status === "complete" ? (
-                          <CircleCheck size={17} />
-                        ) : step.status === "running" ? (
-                          <LoaderCircle className="spinner" size={17} />
-                        ) : step.status === "error" ? (
-                          <CircleAlert size={17} />
-                        ) : (
-                          index + 1
-                        )}
-                      </span>
-                      <span className="step-history__label">{step.label}</span>
-                      <span className="step-history__status">
-                        {step.durationMs !== undefined && step.status !== "pending"
-                          ? `${PROCESSING_STATUS_LABELS[step.status]} · ${formatDuration(step.durationMs)}`
-                          : PROCESSING_STATUS_LABELS[step.status]}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            )}
-
-            {prediction && (
-              <section
-                className={`result-panel result-panel--${prediction.status}`}
-                aria-labelledby="result-title"
-                aria-live="polite"
-              >
-                <div className="result-heading">
-                  <span className="result-icon" aria-hidden="true">
-                    {prediction.status === "rotten" ? (
-                      <TriangleAlert size={21} />
-                    ) : (
-                      <CircleCheck size={21} />
-                    )}
-                  </span>
-                  <div>
-                    <p className="result-label">Hasil pemeriksaan</p>
-                    <h3 id="result-title">{resultTitle}</h3>
+                  <span className="dropzone-title">Letakkan foto di sini</span>
+                  <span className="dropzone-support">atau pilih dari perangkat</span>
+                  <span className="choose-file-button">Pilih foto</span>
+                  <span className="dropzone-limit">JPG, PNG, atau WebP · maks. 4 MB</span>
+                </label>
+              ) : (
+                <div className="selected-image">
+                  <div className="preview-frame">
+                    <img src={previewUrl} alt={`Pratinjau ${file.name}`} />
+                    <button
+                      className="remove-image"
+                      type="button"
+                      onClick={removeFile}
+                      aria-label="Hapus foto yang dipilih"
+                      disabled={isLoading}
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                  <div className="file-meta">
+                    <div className="file-meta__text">
+                      <strong title={file.name}>{file.name}</strong>
+                      <span>{formatFileSize(file.size)}</span>
+                    </div>
+                    <button
+                      className="replace-button"
+                      type="button"
+                      onClick={() => inputRef.current?.click()}
+                      disabled={isLoading}
+                    >
+                      <RotateCcw size={15} aria-hidden="true" />
+                      Ganti foto
+                    </button>
+                    <input
+                      ref={inputRef}
+                      className="visually-hidden"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      aria-label="Ganti foto buah"
+                      onChange={(event) => {
+                        chooseFile(event.currentTarget.files?.[0]);
+                        event.currentTarget.value = "";
+                      }}
+                    />
                   </div>
                 </div>
-                {prediction.fruit && (
-                  <p className="fruit-detected">Jenis yang dikenali: {prediction.fruit}</p>
-                )}
-                <p className="result-reason">{prediction.reason}</p>
-                <div className="result-footer">
-                  <span>{prediction.model_version}</span>
-                  <button type="button" onClick={removeFile}>
-                    <RotateCcw size={14} aria-hidden="true" />
-                    Coba foto lain
-                  </button>
+              )}
+
+              {error && (
+                <div className="inline-error" role="alert">
+                  <CircleAlert size={18} aria-hidden="true" />
+                  <span>{error}</span>
                 </div>
-              </section>
-            )}
+              )}
 
-          </form>
-        </section>
+              {file && (
+                <button className="submit-button" type="submit" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <LoaderCircle className="spinner" size={18} aria-hidden="true" />
+                      Sedang memeriksa
+                    </>
+                  ) : (
+                    <>
+                      <Camera size={18} aria-hidden="true" />
+                      Periksa kesegaran
+                    </>
+                  )}
+                </button>
+              )}
 
-        <section className="process-section page-width" id="alur" aria-labelledby="process-title">
-          <div className="section-heading">
-            <h2 id="process-title">Dari foto sampai hasil.</h2>
-            <p>Alur singkat agar setiap hasil mudah dipahami.</p>
-          </div>
-          <div className="process-steps">
-            <article className="process-step">
-              <span className="step-icon" aria-hidden="true">
-                <Upload size={19} />
-              </span>
+              {stepHistory.length > 0 && (
+                <section
+                  className={`step-history${isLoading ? " step-history--active" : ""}`}
+                  aria-label="Riwayat proses backend dan model"
+                  aria-live={isLoading ? "polite" : "off"}
+                  aria-atomic="false"
+                >
+                  <div className="step-history__heading">
+                    <h3>Riwayat proses</h3>
+                    <span className={`step-history__summary${error ? " step-history__summary--error" : ""}`}>
+                      {isLoading ? "Berjalan" : error ? "Terhenti" : "Selesai"}
+                    </span>
+                  </div>
+                  <ol className="step-history__list">
+                    {stepHistory.map((step, index) => (
+                      <li key={step.id} className={`step-history__item step-history__item--${step.status}`}>
+                        <span className="step-history__marker" aria-hidden="true">
+                          {step.status === "complete" ? (
+                            <CircleCheck size={17} />
+                          ) : step.status === "running" ? (
+                            <LoaderCircle className="spinner" size={17} />
+                          ) : step.status === "error" ? (
+                            <CircleAlert size={17} />
+                          ) : (
+                            index + 1
+                          )}
+                        </span>
+                        <span className="step-history__label">{step.label}</span>
+                        <span className="step-history__status">
+                          {step.durationMs !== undefined && step.status !== "pending"
+                            ? `${PROCESSING_STATUS_LABELS[step.status]} · ${formatDuration(step.durationMs)}`
+                            : PROCESSING_STATUS_LABELS[step.status]}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
+
+              {prediction && (
+                <section
+                  className={`result-panel result-panel--${prediction.status}`}
+                  aria-labelledby="result-title"
+                  aria-live="polite"
+                >
+                  <div className="result-heading">
+                    <span className="result-icon" aria-hidden="true">
+                      {prediction.status === "rotten" ? (
+                        <TriangleAlert size={21} />
+                      ) : (
+                        <CircleCheck size={21} />
+                      )}
+                    </span>
+                    <div>
+                      <p className="result-label">Hasil pemeriksaan</p>
+                      <h3 id="result-title">{resultTitle}</h3>
+                    </div>
+                  </div>
+                  {prediction.fruit && (
+                    <p className="fruit-detected">Jenis yang dikenali: {prediction.fruit}</p>
+                  )}
+                  <p className="result-reason">{prediction.reason}</p>
+                  <div className="result-footer">
+                    <span>{prediction.model_version}</span>
+                    <button type="button" onClick={removeFile}>
+                      <RotateCcw size={14} aria-hidden="true" />
+                      Coba foto lain
+                    </button>
+                  </div>
+                </section>
+              )}
+
+            </form>
+          </section>
+
+          <section className="process-section page-width" id="alur" aria-labelledby="process-title">
+            <div className="section-heading">
               <div>
-                <h3>Unggah satu foto</h3>
-                <p>Pilih satu apel, pisang, atau jeruk dengan permukaan terlihat.</p>
+                <h2 id="process-title">Dari foto sampai hasil.</h2>
               </div>
-            </article>
-            <article className="process-step">
-              <span className="step-icon" aria-hidden="true">
-                <ScanLine size={19} />
-              </span>
-              <div>
-                <h3>ResNet50 membaca pola</h3>
-                <p>Ukuran dan preprocessing mengikuti notebook training.</p>
-              </div>
-            </article>
-            <article className="process-step">
-              <span className="step-icon" aria-hidden="true">
-                <CircleCheck size={19} />
-              </span>
-              <div>
-                <h3>Tinjau hasilnya</h3>
-                <p>Lihat perkiraan kondisi buah dari hasil klasifikasi.</p>
-              </div>
-            </article>
-          </div>
-        </section>
+              <p>Setiap tahap yang tampil mengikuti proses backend dan model.</p>
+            </div>
+            <div className="process-steps">
+              <article className="process-step">
+                <span className="step-icon" aria-hidden="true">
+                  <Upload size={19} />
+                </span>
+                <div>
+                  <h3>Unggah satu foto</h3>
+                  <p>Pilih satu apel, pisang, atau jeruk dengan permukaan terlihat.</p>
+                </div>
+              </article>
+              <article className="process-step">
+                <span className="step-icon" aria-hidden="true">
+                  <ScanLine size={19} />
+                </span>
+                <div>
+                  <h3>ResNet50 membaca pola</h3>
+                  <p>Ukuran dan preprocessing mengikuti notebook training.</p>
+                </div>
+              </article>
+              <article className="process-step">
+                <span className="step-icon" aria-hidden="true">
+                  <CircleCheck size={19} />
+                </span>
+                <div>
+                  <h3>Tinjau hasilnya</h3>
+                  <p>Lihat perkiraan kondisi buah dari hasil klasifikasi.</p>
+                </div>
+              </article>
+            </div>
+          </section>
 
-        <section className="limits-section page-width" id="catatan" aria-labelledby="limits-title">
-          <div className="limits-icon" aria-hidden="true">
-            <ShieldCheck size={22} />
-          </div>
-          <div>
-            <h2 id="limits-title">Hasil model adalah perkiraan visual.</h2>
-            <p>Periksa kondisi buah secara langsung sebelum dikonsumsi.</p>
-          </div>
-        </section>
-      </main>
+          <section className="limits-section page-width" id="catatan" aria-labelledby="limits-title">
+            <div className="limits-icon" aria-hidden="true">
+              <ShieldCheck size={21} />
+            </div>
+            <div>
+              <h2 id="limits-title">Hasilnya adalah perkiraan visual.</h2>
+              <p>Periksa kondisi buah secara langsung sebelum dikonsumsi.</p>
+            </div>
+          </section>
+        </main>
 
-      <footer className="footer page-width">
-        <span>CekBuah</span>
-        <span>Demo klasifikasi buah · model ResNet50</span>
-      </footer>
+        <footer className="footer page-width">
+          <span>CekBuah</span>
+          <span>Demo klasifikasi buah · model ResNet50</span>
+        </footer>
+      </div>
     </div>
   );
 }
