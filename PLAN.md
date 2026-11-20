@@ -1,7 +1,7 @@
 # Rencana Website Klasifikasi Buah Segar dan Busuk
 
 **Status:** dokumen perencanaan; implementasi aplikasi belum dimulai  
-**Model kandidat yang dipilih:** ResNet50  
+**Model website yang ditetapkan:** ResNet50 dari file ResNet50_terbaik.keras
 **Repo tujuan:** [FARIDHAQI00/Klasifikasi-Buah-Segar-dan-Busuk](https://github.com/FARIDHAQI00/Klasifikasi-Buah-Segar-dan-Busuk)  
 **Notebook acuan:** [UAS_Buah_Cepat_Resume.ipynb di Google Colab](https://colab.research.google.com/drive/16t9E0vxdy2ZF-86ZbjetxU_yVwtDOmON?usp=sharing)
 
@@ -28,7 +28,7 @@ Konfigurasi preprocessing lokal mencatat 8.720 gambar train, 2.181 validation, d
 
 ### Keputusan produk
 
-1. ResNet50 menjadi satu-satunya model kandidat untuk MVP.
+1. Website selalu memuat ResNet50_terbaik.keras. Tidak ada pemilihan atau pergantian arsitektur model saat runtime; model_terpilih.json hanya metadata eksperimen dan bukan ketergantungan aplikasi.
 2. Hasil website memiliki tiga status: **Segar**, **Busuk**, dan **Perlu diperiksa**.
 3. Tidak mengaktifkan status otomatis Segar sampai ambang dan evaluasi risiko melewati gerbang rilis.
 4. Website hanya membuat perkiraan visual dari foto. Hasilnya bukan jaminan keamanan atau kelayakan konsumsi.
@@ -156,7 +156,7 @@ Model machine learning tidak dapat menjamin nol kesalahan pada semua foto baru. 
 5. Uji tambahan pada foto kamera nyata: variasi cahaya, jarak, latar, sudut, satu/beberapa buah, buah rusak sebagian, dan gambar non-buah.
 6. Jika test masih menghasilkan busuk-ke-segar, rilis diblokir untuk status Segar otomatis. Tinjau kesalahan dan siapkan data tambahan atau training ulang. Jangan mengubah ambang berdasarkan hasil test lalu mengklaim test yang sama sebagai evaluasi independen.
 
-### Syarat kandidat untuk rilis
+### Syarat rilis ResNet50
 
 - Model, pemetaan label, dan preprocessing cocok dengan artefak notebook.
 - Tidak ada error file atau kegagalan backend yang berubah menjadi status Segar.
@@ -218,7 +218,7 @@ Folder artifacts hanya menyimpan petunjuk cara memperoleh model atau konfigurasi
 
 | Tahap | Pekerjaan | Hasil dan kriteria selesai |
 |---|---|---|
-| 0. Bekukan sumber dan uji kelayakan Vercel | Pastikan split Colab atau split lokal yang akan menjadi acuan; ambil model ResNet50 final; verifikasi kelas, preprocessing, versi TensorFlow, hash artefak, ukuran bundle, cold start, RAM, serta status dukungan Services pada akun. | Satu manifest, satu model, satu konfigurasi inference, dan bukti backend bisa dibangun di Vercel. |
+| 0. Bekukan sumber dan uji kelayakan Vercel | Tetapkan ResNet50_terbaik.keras sebagai satu-satunya model aplikasi; pastikan split Colab atau split lokal yang akan menjadi acuan; verifikasi kelas, preprocessing, versi TensorFlow, hash artefak, ukuran bundle, cold start, RAM, serta status dukungan Services pada akun. | Satu manifest, file ResNet50_terbaik.keras, satu konfigurasi inference, dan bukti backend bisa dibangun di Vercel. |
 | 1. Gerbang keselamatan | Kalibrasi ambang dari validation, hitung false-fresh, recall busuk per buah, coverage; jalankan evaluasi final pada test terkunci. | Keputusan rilis tercatat. Jika ada false-fresh pada target test, Segar otomatis tetap mati. |
 | 2. Modul inference | Pindahkan preprocessing dan pemanggilan model ke modul Python yang dapat menerima gambar dan mengeluarkan skor serta status. Muat model sekali saat startup. | Backend inference dapat direproduksi dan memakai versi label/ambang yang tercatat. |
 | 3. API | Implementasikan health, model-info, dan predict; validasi upload dan error; batasi ukuran dan jumlah piksel; jangan simpan gambar. | Respons API konsisten untuk foto valid, rusak, terlalu besar, dan ambigu. |
