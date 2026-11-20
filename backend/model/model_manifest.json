@@ -1,0 +1,41 @@
+{
+  "architecture": "ResNet50",
+  "model_version": "resnet50-terbaik-v1",
+  "source_run": "buah_cepat_resume_daf3a93e2d",
+  "artifact": "ResNet50_terbaik.keras",
+  "size_bytes": 95157337,
+  "sha256": "c94bca788f6f4be7a2b7e84b4df19dac9160e0c579a7850e3cdcb8cd534c5641",
+  "input_size": [160, 160],
+  "channels": "RGB",
+  "classes": [
+    "freshapples",
+    "freshbanana",
+    "freshoranges",
+    "rottenapples",
+    "rottenbanana",
+    "rottenoranges"
+  ],
+  "preprocessing": {
+    "decode": "tf.io.decode_image(channels=3, expand_animations=False)",
+    "resize": "tf.image.resize(160x160, bilinear, antialias=false)",
+    "resnet50": "tf.keras.applications.resnet50.preprocess_input on float32 RGB values scaled 0..255"
+  },
+  "tensorflow_version": "2.21.0",
+  "parameters": 23600006,
+  "selection_basis": "Highest validation accuracy, then lowest validation loss",
+  "notebook_test_metrics": {
+    "accuracy": 0.9768976898,
+    "images": 2727,
+    "rotten_images": 1548,
+    "raw_argmax_false_fresh": 31,
+    "rotten_apples_predicted_fresh": 10,
+    "rotten_bananas_predicted_fresh": 0,
+    "rotten_oranges_predicted_fresh": 21
+  },
+  "policy_version": "review-until-calibrated-v1",
+  "fresh_auto_label_enabled": false,
+  "safety_gate": {
+    "status": "blocked",
+    "reason": "The available local dataset archive is incomplete. Calibrate thresholds on the matching validation split and evaluate once on the locked test split before enabling automatic Segar output."
+  }
+}

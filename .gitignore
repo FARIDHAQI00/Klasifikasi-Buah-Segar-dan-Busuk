@@ -1,0 +1,28 @@
+# JavaScript build output
+node_modules/
+frontend/dist/
+.vercel/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+backend/.venv/
+.venv/
+
+# Environment and editor files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Training data and generated artifacts
+dataset/
+data/
+work/
+outputs/
+*.keras
+!backend/model/ResNet50_terbaik.keras
