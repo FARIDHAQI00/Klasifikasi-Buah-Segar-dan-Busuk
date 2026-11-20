@@ -16,6 +16,12 @@ import {
 
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
 const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const PROCESSING_STEPS = [
+  "Backend memvalidasi format dan ukuran foto",
+  "Backend menyiapkan gambar RGB 160 × 160",
+  "Model ResNet50 menganalisis enam kelas buah",
+  "Backend menerjemahkan skor ke Segar atau Busuk",
+];
 
 type ResultStatus = "fresh" | "rotten";
 
@@ -57,12 +63,23 @@ function App() {
   const [error, setError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [processingStep, setProcessingStep] = useState(0);
 
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
+
+  useEffect(() => {
+    if (!isLoading) return;
+
+    const timer = window.setInterval(() => {
+      setProcessingStep((current) => (current + 1) % PROCESSING_STEPS.length);
+    }, 1400);
+
+    return () => window.clearInterval(timer);
+  }, [isLoading]);
 
   function chooseFile(nextFile: File | undefined) {
     if (!nextFile) return;
@@ -99,6 +116,7 @@ function App() {
     event.preventDefault();
     if (!file || isLoading) return;
 
+    setProcessingStep(0);
     setIsLoading(true);
     setError("");
     setPrediction(null);
@@ -121,9 +139,7 @@ function App() {
       }
 
       if (!isPrediction(payload)) {
-        throw new Error(
-          "Respons model tidak sesuai kebijakan. Hasil tidak ditampilkan; periksa buah secara langsung atau coba lagi.",
-        );
+        throw new Error("Respons dari server tidak dikenali. Coba lagi.");
       }
 
       setPrediction(payload);
@@ -135,6 +151,7 @@ function App() {
       );
     } finally {
       setIsLoading(false);
+      setProcessingStep(0);
     }
   }
 
@@ -290,6 +307,22 @@ function App() {
                   </>
                 )}
               </button>
+            )}
+
+            {isLoading && (
+              <div className="processing-status" role="status" aria-live="polite" aria-atomic="true">
+                <span className="processing-status__icon" aria-hidden="true">
+                  <ScanLine size={17} />
+                </span>
+                <div className="processing-status__copy">
+                  <span className="processing-status__label">
+                    Tahap {processingStep + 1} dari {PROCESSING_STEPS.length}
+                  </span>
+                  <p key={processingStep} className="processing-status__message">
+                    {PROCESSING_STEPS[processingStep]}
+                  </p>
+                </div>
+              </div>
             )}
 
             {prediction && (

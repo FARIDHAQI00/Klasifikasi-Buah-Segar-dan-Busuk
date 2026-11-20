@@ -33,6 +33,8 @@ npm run dev
 
 Frontend meneruskan `/api/*` ke FastAPI di `http://127.0.0.1:8000`. API menerima JPEG, PNG, atau WebP sampai 4 MB melalui `POST /api/v1/predict`. `GET /api/health` memeriksa model dan `GET /api/v1/model-info` menunjukkan versi model serta metode argmax.
 
+Saat prediksi berjalan, UI menggilir aktivitas validasi foto, preprocessing, inferensi ResNet50, dan pemetaan hasil.
+
 Tes backend: `python -m unittest discover -s backend/tests -v`.
 
 ## Deploy ke Vercel
