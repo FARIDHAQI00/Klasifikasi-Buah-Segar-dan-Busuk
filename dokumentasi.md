@@ -1,12 +1,73 @@
 # Dokumentasi Proyek CekBuah
 
-Dokumen ini menjelaskan peran setiap berkas utama, alur foto dari browser sampai hasil, hubungan pipeline website dengan notebook training, serta cara menjalankan dan men-deploy aplikasi.
+Dokumen ini menjelaskan CekBuah dengan bahasa sederhana dan tetap merujuk ke implementasi kode: apa tugas tiap model, bagaimana foto diproses, arti riwayat, peran berkas utama, dan cara menjalankan aplikasi.
 
 ## Ringkasan
 
-CekBuah adalah demo klasifikasi kondisi apel, pisang, dan jeruk menggunakan artefak `ResNet50_terbaik.keras`. Sebelum inference, COCO-SSD Lite di browser mencari tiga jenis buah tersebut dan membuat potongan objek. Backend FastAPI menjalankan preprocessing dan ResNet50 untuk setiap potongan; hasil keseluruhan menjadi **Busuk** bila salah satu potongan diprediksi busuk.
+CekBuah memeriksa foto apel, pisang, atau jeruk. Sistem memakai **dua model AI dengan tugas berbeda**: COCO-SSD Lite mencari objek buah di browser; ResNet50 menilai kondisi setiap potongan buah di backend.
 
-Jika detektor browser tidak menemukan apel, pisang, atau jeruk, backend tidak dipanggil dan UI menampilkan **Foto tidak dikenali**. Foto dan potongan buah hanya diproses selama request dan tidak disimpan. Riwayat hanya berlaku pada permintaan yang sedang berjalan.
+Kalau COCO-SSD Lite tidak menemukan buah target, website menampilkan **Foto tidak dikenali** dan tidak mengirim foto ke backend ResNet50. Jika buah ditemukan, website mengirim potongan yang diperlukan ke backend. Hasil akhir menjadi **Busuk** jika ada setidaknya satu potongan yang ResNet50 prediksi busuk; jika semua potongan diprediksi segar, hasilnya **Segar**.
+
+## Memahami model AI dan kode aplikasi
+
+| Bagian | Tugas | Yang tidak dikerjakan |
+| --- | --- | --- |
+| **COCO-SSD Lite** (`lite_mobilenet_v2`) | Model deteksi objek yang berjalan di browser. Sistem hanya memakai hasil deteksi berkelas `apple`, `banana`, atau `orange`, beserta kotak lokasi buahnya. | Tidak menentukan segar atau busuk. |
+| **ResNet50** (`ResNet50_terbaik.keras`) | Model klasifikasi yang berjalan di backend. Untuk tiap potongan, model memilih satu dari enam kelas: apel/pisang/jeruk segar atau busuk. | Tidak memeriksa apakah seluruh foto asal merupakan foto buah. |
+| **Kode website dan backend** | Memeriksa format/ukuran foto, membuat crop, menyiapkan input, memuat model, mencatat tahap, dan menggabungkan hasil crop. | Bukan model AI dan tidak mengenali kondisi visual sendiri. |
+
+Istilah **Lite** merujuk ke varian detektor yang dipakai agar deteksi bisa berjalan di browser. Pada pemakaian pertama, browser memuat bobot model detektor; foto tetap diproses di browser dan tidak diunggah ke layanan COCO. Angka batas deteksi `0,5` di kode adalah ambang internal untuk menerima deteksi COCO; itu **bukan** angka akurasi ResNet50 dan tidak ditampilkan sebagai persentase ke pengguna.
+
+Label untuk setiap crop datang langsung dari `argmax` ResNet50; tidak ada ambang confidence tambahan untuk mengubah label crop. Ada keputusan aplikasi untuk foto dengan beberapa crop: satu foto pisang dibagi menjadi tiga crop tumpang-tindih, lalu aplikasi menetapkan hasil keseluruhan **Busuk** jika ada satu crop yang diprediksi busuk. Keputusan penggabungan ini dibuat oleh kode `decision_policy.py`, bukan dipelajari model dari notebook.
+
+## Alur foto dari awal sampai hasil
+
+```mermaid
+flowchart TD
+    A[Pengguna memilih foto] --> B[Browser cek format dan ukuran]
+    B --> C[COCO-SSD Lite mencari apel, pisang, atau jeruk]
+    C -->|Tidak ada buah target| D[Foto tidak dikenali; berhenti di browser]
+    C -->|Buah terdeteksi| E[Browser membuat crop objek]
+    E --> F[Browser kirim crop ke FastAPI]
+    F --> G[Backend validasi setiap crop]
+    G --> H[Decode RGB, resize 160 x 160, preprocessing ResNet50]
+    H --> I[ResNet50 memilih satu dari enam kelas per crop]
+    I --> J[Backend gabungkan hasil crop]
+    J -->|Ada crop Busuk| K[Hasil Busuk]
+    J -->|Semua crop Segar| L[Hasil Segar]
+```
+
+### Langkah yang terjadi
+
+1. **Pilih foto.** Browser menerima JPEG, PNG, atau WebP sampai 4 MB dan menampilkan pratinjau. Foto asli belum dikirim ke ResNet50.
+2. **Deteksi jenis objek.** COCO-SSD Lite memeriksa foto di browser. Yang dipakai hanya kotak objek `apple`, `banana`, dan `orange`; objek kelas lain diabaikan. Jika tidak ada buah target terdeteksi, website menampilkan **Foto tidak dikenali** dan alur backend tidak dijalankan.
+3. **Buat crop.** Apel dan jeruk mendapat satu crop untuk setiap objek terdeteksi. Kotak pisang dibagi menjadi tiga bagian yang saling tumpang-tindih sepanjang sisi kotak yang lebih panjang. Crop disiapkan sebagai JPEG; foto pisang campuran yang kamu berikan menghasilkan tiga crop di production.
+4. **Kirim ke backend.** Frontend mengirim crop melalui `POST /api/v1/predict/stream`, dalam field multipart bernama `files`. Batas aplikasi adalah maksimal empat objek terdeteksi dan dua belas crop per request.
+5. **Validasi backend.** FastAPI memeriksa bahwa tiap crop dapat dibaca, berformat JPEG/PNG/WebP, maksimal 4 MB per file, dan tidak lebih dari 20 megapiksel. Batas total request adalah 4,5 MB.
+6. **Preprocessing.** Backend decode gambar menjadi RGB, resize ke `160 × 160`, ubah ke float32, lalu memakai `tf.keras.applications.resnet50.preprocess_input`. Urutan ini disamakan dengan pipeline notebook.
+7. **Siapkan dan jalankan ResNet50.** Backend memeriksa SHA-256 artefak model terhadap manifest, memuat model jika belum ada di proses tersebut, lalu menjalankan inference untuk setiap crop. Output model berisi enam skor kelas; aplikasi tidak menampilkan skor tersebut sebagai persentase.
+8. **Pilih label tiap crop.** `argmax` memilih kelas dengan skor tertinggi untuk crop itu. Indeks 0–2 berarti kelas segar; 3–5 berarti kelas busuk.
+9. **Gabungkan label.** Jika satu crop saja busuk, hasil foto **Busuk**. Jika semua crop segar, hasil **Segar**. Nama buah berasal dari kelas ResNet50; jika prediksi crop berbeda jenis buah, nama gabungannya bisa tampil sebagai **Campuran**.
+10. **Tampilkan hasil dan riwayat.** Frontend menampilkan hasil, versi model, dan langkah yang benar-benar dijalankan. Foto tidak disimpan ke database atau disk aplikasi.
+
+### Apa arti riwayat proses
+
+Urutan normal untuk foto yang berisi buah adalah:
+
+1. **Deteksi buah** — proses COCO-SSD Lite di browser; durasinya diukur browser.
+2. **Validasi format dan ukuran foto** — validasi crop di backend.
+3. **Preprocessing ResNet50** — persiapan semua crop ke ukuran dan format tensor model.
+4. **Menyiapkan model ResNet50** — hash diperiksa dan model siap dipakai. Model dimuat sekali per proses backend dan bisa dipakai kembali.
+5. **Inferensi ResNet50** — model memeriksa tiap crop.
+6. **Agregasi hasil** — kode aplikasi menggabungkan label crop menjadi hasil foto.
+
+Kalau detektor tidak menemukan buah target, riwayat hanya menampilkan tahap deteksi karena backend memang tidak dipanggil. Durasi tahap backend berasal dari event yang dikirim backend; tahap cepat ditahan di layar minimal 240 ms supaya terbaca. Penahanan visual ini tidak mengubah durasi yang dicatat.
+
+## Hasil pengujian terakhir
+
+Pada deployment Vercel aktif, foto non-buah yang diberikan menghasilkan **Foto tidak dikenali** tanpa error browser. Foto pisang yang sebagian busuk menghasilkan tiga crop dan keputusan ResNet50 **Busuk — Pisang**. Keenam tahap riwayat tampil; `/api/health` melaporkan ResNet50 siap. Pemeriksaan ini dilakukan pada 21 November 2026 untuk commit `7fed7e7`. Ini membuktikan sampel tersebut diproses seperti yang dimaksud, tetapi tidak membuktikan akurasi 100% untuk semua foto baru.
+
+Demo: [klasifikasibuah.vercel.app](https://klasifikasibuah.vercel.app). Gunakan alamat yang berakhiran `buah`; alamat tanpa huruf `h` menghasilkan 404.
 
 ## Struktur dan Tanggung Jawab Berkas
 
@@ -125,11 +186,13 @@ Semua event dan hasil hanya berlaku untuk request saat itu. Foto tidak ditulis k
 | Method | Path | Fungsi |
 | --- | --- | --- |
 | `GET` | `/api/health` | Memastikan model dapat dimuat. |
-| `GET` | `/api/v1/model-info` | Menampilkan arsitektur, versi, kelas, input, dan metode keputusan. |
+| `GET` | `/api/v1/model-info` | Menampilkan arsitektur, versi, kelas, ukuran input, metode keputusan, dan konfigurasi gerbang buah. |
 | `POST` | `/api/v1/predict/stream` | Prediksi dan event proses melalui SSE; menerima satu `file` atau beberapa `files`, digunakan UI. |
 | `POST` | `/api/v1/predict` | Prediksi JSON tanpa riwayat SSE. |
 
 Foto dibatasi JPEG/PNG/WebP sampai 4 MB. API juga menolak gambar tidak valid atau lebih dari 20 megapiksel.
+
+Website memakai endpoint `/api/v1/predict/stream`. Endpoint `/api/v1/predict` adalah endpoint langsung untuk satu gambar: ia menjalankan preprocessing dan ResNet50, tetapi tidak menjalankan gerbang COCO-SSD Lite di browser atau pemotongan pisang. Karena itu, gunakan alur UI website untuk mendapat pemeriksaan buah/non-buah yang sama dengan demo.
 
 ## Menjalankan Lokal
 
@@ -159,7 +222,7 @@ npm run build
 
 ## Deploy Vercel
 
-Import root repository ke project Vercel. `vercel.json` mengarahkan frontend Vite dan backend FastAPI serta meneruskan `/api/*`. Gunakan preview deployment untuk mencoba health check dan upload sebelum mengalihkan domain. Periksa batas ukuran function Vercel karena TensorFlow dan model cukup besar; batas upload aplikasi adalah 4 MB.
+Demo saat ini aktif di [klasifikasibuah.vercel.app](https://klasifikasibuah.vercel.app). `vercel.json` mengarahkan frontend Vite dan backend FastAPI serta meneruskan `/api/*`. Pada pemeriksaan terakhir, deployment berhasil dan `/api/health` mengembalikan status siap. Batas upload aplikasi adalah 4 MB per foto; periksa status deployment dan health endpoint setelah perubahan berikutnya.
 
 ## Catatan Evaluasi dan Batasan
 
