@@ -1,3 +1,4 @@
+## Runtime packages for the FastAPI service and ResNet50 inference.
 fastapi==0.165.0
 Pillow==13.0.0
 python-multipart==0.0.34

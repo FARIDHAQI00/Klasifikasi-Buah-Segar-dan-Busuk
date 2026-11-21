@@ -2,12 +2,14 @@
 
 Website demo untuk menguji foto apel, pisang, dan jeruk dengan model **ResNet50** dari notebook UAS.
 
+Lihat [`dokumentasi.md`](dokumentasi.md) untuk peta berkas, workflow klasifikasi, dan pengecekan kesesuaian dengan notebook.
+
 ## Model
 
 - Artefak: [`backend/model/ResNet50_terbaik.keras`](backend/model/ResNet50_terbaik.keras)
 - Manifest kelas, preprocessing, dan SHA-256: [`backend/model/model_manifest.json`](backend/model/model_manifest.json)
 - Enam kelas model dipetakan langsung: indeks 0–2 menjadi **Segar**, indeks 3–5 menjadi **Busuk**.
-- Notebook melaporkan akurasi test 97,69% pada 2.727 gambar dan 31 gambar busuk tertebak Segar. Hasil foto baru adalah perkiraan visual, jadi periksa buah secara langsung.
+- Pada data test notebook, 31 dari 1.548 gambar busuk tertebak Segar oleh `argmax` mentah. Hasil foto baru adalah perkiraan visual, jadi periksa buah secara langsung.
 
 ## Menjalankan lokal
 

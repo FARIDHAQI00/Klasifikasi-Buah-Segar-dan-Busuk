@@ -1,3 +1,4 @@
+/* Global design system, full-bleed lighting, responsive layout, and inspection-state styles. */
 @import "@fontsource/dm-serif-display/400.css";
 @import "@fontsource/dm-serif-display/400-italic.css";
 @import "@fontsource-variable/manrope";
@@ -6,7 +7,7 @@
 :root {
   font-family: "Manrope Variable", "Segoe UI", sans-serif;
   color: #f6f4ff;
-  background: #091326;
+  background: #05060b;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -23,8 +24,8 @@
   --surface: #08090f;
   --surface-raised: #10111a;
   --surface-quiet: #0d0e15;
-  --rotten: #ffb7a9;
-  --fresh: #a4e6b7;
+  --rotten: #ff665e;
+  --fresh: #3df087;
   --radius-panel: 18px;
 }
 
@@ -41,7 +42,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background: #091326;
+  background: #05060b;
 }
 
 button,
@@ -69,13 +70,16 @@ input:focus-visible + .dropzone-content,
 }
 
 .ambient-shell {
+  position: relative;
+  isolation: isolate;
   min-height: 100vh;
-  padding: clamp(18px, 4.7vw, 60px);
+  padding: 0;
   background:
-    radial-gradient(ellipse at 0% 47%, rgb(16 196 187 / 78%), transparent 34%),
-    radial-gradient(ellipse at 100% 3%, rgb(36 91 232 / 78%), transparent 37%),
-    radial-gradient(ellipse at 100% 75%, rgb(83 43 210 / 78%), transparent 40%),
-    linear-gradient(130deg, #086c87 0%, #121b45 52%, #24208d 100%);
+    radial-gradient(ellipse 84% 136% at 50% 43%, #050508 0%, rgb(5 5 10 / 98%) 57%, rgb(5 5 10 / 24%) 100%),
+    radial-gradient(ellipse at 0% 43%, rgb(11 196 191 / 88%), transparent 40%),
+    radial-gradient(ellipse at 100% 3%, rgb(44 93 242 / 91%), transparent 44%),
+    radial-gradient(ellipse at 100% 77%, rgb(95 55 225 / 83%), transparent 41%),
+    linear-gradient(130deg, #08758a 0%, #111b4c 52%, #25218c 100%);
 }
 
 .skip-link {
@@ -99,30 +103,14 @@ input:focus-visible + .dropzone-content,
 .site-shell {
   position: relative;
   isolation: isolate;
-  width: min(1320px, 100%);
-  min-height: calc(100vh - clamp(36px, 9.4vw, 120px));
-  margin-inline: auto;
+  width: 100%;
+  min-height: 100vh;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 13%);
-  border-radius: 32px;
-  background:
-    radial-gradient(ellipse at 50% 9%, rgb(87 73 199 / 12%), transparent 31%),
-    linear-gradient(180deg, #050506 0%, #080910 58%, #08090f 100%);
-  box-shadow: 0 34px 100px rgb(0 0 0 / 34%);
-}
-
-.site-shell::before {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(ellipse at 50% 0%, rgb(255 255 255 / 3%), transparent 47%);
-  content: "";
-  pointer-events: none;
+  background: transparent;
 }
 
 .page-width {
-  width: min(1100px, calc(100% - clamp(42px, 10vw, 140px)));
+  width: min(1200px, calc(100% - clamp(42px, 10vw, 180px)));
   margin-inline: auto;
 }
 
@@ -206,7 +194,7 @@ input:focus-visible + .dropzone-content,
 
 .hero {
   position: relative;
-  min-height: 492px;
+  min-height: 520px;
   display: grid;
   place-items: center;
   padding-block: 42px 24px;
@@ -215,83 +203,13 @@ input:focus-visible + .dropzone-content,
 
 .hero-orbit {
   position: absolute;
-  top: -4px;
+  top: -20px;
   left: 50%;
-  width: min(800px, 92%);
-  height: 465px;
+  width: min(1440px, 112vw);
+  aspect-ratio: 2 / 1;
   transform: translateX(-50%);
-  overflow: hidden;
-  border-radius: 50%;
-  background:
-    radial-gradient(ellipse at 50% 3%, rgb(106 88 255 / 32%), transparent 29%),
-    radial-gradient(ellipse at 50% 50%, transparent 53%, rgb(8 8 13 / 94%) 71%),
-    radial-gradient(ellipse at 50% 100%, rgb(241 150 180 / 15%), transparent 31%);
+  background: url("/cekbuah-orb.svg") center top / 100% 100% no-repeat;
   pointer-events: none;
-}
-
-.hero-orbit::before,
-.hero-orbit::after {
-  position: absolute;
-  inset: 5px 2px -6px;
-  border: 1px solid rgb(226 222 255 / 13%);
-  border-radius: 50%;
-  box-shadow: inset 0 -13px 25px rgb(210 157 196 / 9%), 0 0 42px rgb(113 102 255 / 10%);
-  content: "";
-}
-
-.hero-orbit::after {
-  inset: 25px 32px -20px;
-  transform: rotate(-5deg);
-  border-color: rgb(226 222 255 / 9%);
-  box-shadow: inset 0 -10px 18px rgb(210 157 196 / 7%);
-}
-
-.hero-orbit__ring {
-  position: absolute;
-  z-index: 1;
-  display: block;
-  height: 2px;
-  filter: blur(7px);
-  pointer-events: none;
-}
-
-.hero-orbit__ring--outer {
-  top: 7%;
-  left: 49%;
-  width: 3px;
-  height: 86%;
-  background: linear-gradient(180deg, transparent 0%, rgb(139 124 255 / 58%) 28%, rgb(148 135 255 / 16%) 73%, transparent 100%);
-}
-
-.hero-orbit__ring--inner {
-  right: 8%;
-  bottom: 24%;
-  width: 45%;
-  height: 1px;
-  transform: rotate(-24deg);
-  background: linear-gradient(90deg, transparent, rgb(223 216 255 / 56%), transparent);
-}
-
-.hero-orbit__flare {
-  position: absolute;
-  z-index: 1;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #f3edff;
-  box-shadow: 0 0 14px 4px rgb(211 198 255 / 70%), 0 0 34px 10px rgb(139 126 255 / 42%);
-}
-
-.hero-orbit__flare--left {
-  bottom: 23%;
-  left: 12%;
-}
-
-.hero-orbit__flare--right {
-  right: 13%;
-  bottom: 42%;
-  width: 6px;
-  height: 6px;
 }
 
 .hero-copy {
@@ -303,8 +221,7 @@ input:focus-visible + .dropzone-content,
 
 .hero h1,
 .inspection-intro h2,
-.section-heading h2,
-.limits-section h2 {
+.section-heading h2 {
   font-family: "DM Serif Display", Georgia, serif;
   font-weight: 400;
 }
@@ -768,7 +685,7 @@ input:focus-visible + .dropzone-content,
 }
 
 .step-history__summary--error {
-  color: #ffad9d;
+  color: var(--rotten);
 }
 
 .step-history__list {
@@ -817,17 +734,21 @@ input:focus-visible + .dropzone-content,
 }
 
 .step-history__item--running .step-history__marker,
-.step-history__item--running .step-history__status,
-.step-history__item--complete .step-history__marker,
-.step-history__item--complete .step-history__status {
+.step-history__item--running .step-history__status {
   border-color: rgb(151 144 255 / 25%);
   color: #c1bdff;
 }
 
+.step-history__item--complete .step-history__marker,
+.step-history__item--complete .step-history__status {
+  border-color: rgb(61 240 135 / 47%);
+  color: var(--fresh);
+}
+
 .step-history__item--error .step-history__marker,
 .step-history__item--error .step-history__status {
-  border-color: rgb(255 167 149 / 28%);
-  color: #ffb5a5;
+  border-color: rgb(255 102 94 / 57%);
+  color: var(--rotten);
 }
 
 .inline-error {
@@ -858,15 +779,37 @@ input:focus-visible + .dropzone-content,
 }
 
 .result-panel--rotten {
-  border-color: rgb(255 157 139 / 31%);
-  background: linear-gradient(130deg, rgb(102 39 40 / 34%), rgb(48 23 30 / 67%));
-  color: #ffe2dc;
+  border-color: rgb(255 102 94 / 66%);
+  background: linear-gradient(130deg, rgb(121 30 34 / 56%), rgb(52 14 22 / 84%));
+  color: #fff0ed;
+  box-shadow: 0 0 26px rgb(255 66 68 / 12%), inset 0 1px rgb(255 255 255 / 5%);
 }
 
 .result-panel--fresh {
-  border-color: rgb(132 216 160 / 27%);
-  background: linear-gradient(130deg, rgb(30 77 58 / 38%), rgb(18 42 35 / 72%));
-  color: #e2f8e8;
+  border-color: rgb(61 240 135 / 58%);
+  background: linear-gradient(130deg, rgb(15 105 57 / 50%), rgb(9 48 34 / 84%));
+  color: #edfff2;
+  box-shadow: 0 0 26px rgb(36 255 127 / 11%), inset 0 1px rgb(255 255 255 / 5%);
+}
+
+.result-panel--rotten .result-icon {
+  border-color: rgb(255 102 94 / 48%);
+  background: rgb(255 72 67 / 15%);
+  color: var(--rotten);
+}
+
+.result-panel--fresh .result-icon {
+  border-color: rgb(61 240 135 / 44%);
+  background: rgb(35 227 112 / 13%);
+  color: var(--fresh);
+}
+
+.result-panel--rotten .result-heading h3 {
+  color: var(--rotten);
+}
+
+.result-panel--fresh .result-heading h3 {
+  color: var(--fresh);
 }
 
 .result-heading {
@@ -1005,45 +948,6 @@ input:focus-visible + .dropzone-content,
   line-height: 1.6;
 }
 
-.limits-section {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  margin-bottom: 60px;
-  padding: 19px 22px;
-  border: 1px solid rgb(149 143 255 / 17%);
-  border-radius: 15px;
-  background: linear-gradient(105deg, rgb(83 77 167 / 13%), rgb(255 255 255 / 2%));
-}
-
-.limits-icon {
-  width: 37px;
-  height: 37px;
-  flex: none;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgb(170 164 255 / 21%);
-  border-radius: 10px;
-  background: rgb(93 86 198 / 12%);
-  color: #bdb8ff;
-}
-
-.limits-section h2 {
-  margin: 0;
-  color: #f1effb;
-  font-size: 1.38rem;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-}
-
-.limits-section p {
-  max-width: 74ch;
-  margin: 6px 0 0;
-  color: #b6b2c2;
-  font-size: 0.85rem;
-  line-height: 1.6;
-}
-
 .footer {
   min-height: 70px;
   display: flex;
@@ -1085,12 +989,11 @@ input:focus-visible + .dropzone-content,
   }
 
   .hero {
-    min-height: 475px;
+    min-height: 500px;
   }
 
   .hero-orbit {
-    width: 96%;
-    height: 430px;
+    width: 118vw;
   }
 
   .inspection-section {
@@ -1127,17 +1030,11 @@ input:focus-visible + .dropzone-content,
 
 @media (max-width: 620px) {
   .ambient-shell {
-    padding: 10px 8px 18px;
-    background:
-      radial-gradient(ellipse at 0% 34%, rgb(16 196 187 / 74%), transparent 37%),
-      radial-gradient(ellipse at 100% 2%, rgb(36 91 232 / 74%), transparent 42%),
-      radial-gradient(ellipse at 100% 78%, rgb(83 43 210 / 73%), transparent 44%),
-      linear-gradient(150deg, #086c87 0%, #121b45 53%, #24208d 100%);
+    padding: 0;
   }
 
   .site-shell {
-    min-height: calc(100vh - 28px);
-    border-radius: 23px;
+    min-height: 100vh;
   }
 
   .page-width {
@@ -1187,9 +1084,11 @@ input:focus-visible + .dropzone-content,
   }
 
   .hero-orbit {
-    top: 0;
-    width: 110%;
-    height: 390px;
+    top: -4px;
+    width: 160vw;
+    height: 440px;
+    aspect-ratio: auto;
+    background-size: auto 440px;
   }
 
   .hero-copy {
@@ -1382,31 +1281,6 @@ input:focus-visible + .dropzone-content,
 
   .process-step p {
     max-width: 42ch;
-  }
-
-  .limits-section {
-    gap: 11px;
-    margin-bottom: 39px;
-    padding: 15px 13px;
-    border-radius: 13px;
-  }
-
-  .limits-icon {
-    width: 34px;
-    height: 34px;
-  }
-
-  .limits-icon svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .limits-section h2 {
-    font-size: 1.14rem;
-  }
-
-  .limits-section p {
-    font-size: 0.77rem;
   }
 
   .footer {

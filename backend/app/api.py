@@ -1,3 +1,4 @@
+"""FastAPI routes for model health, photo validation, prediction, and SSE progress."""
 from __future__ import annotations
 
 import io

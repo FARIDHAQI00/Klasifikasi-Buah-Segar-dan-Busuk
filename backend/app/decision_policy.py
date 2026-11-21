@@ -1,3 +1,4 @@
+"""Map six model class scores to the fruit name and Segar/Busuk result."""
 from __future__ import annotations
 
 from dataclasses import dataclass

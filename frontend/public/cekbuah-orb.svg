@@ -1,0 +1,74 @@
+<!-- Decorative full-bleed hero image: a dark glass orb, lavender beam, orbit lines, and flares. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" fill="none">
+  <defs>
+    <radialGradient id="glass" cx="50%" cy="36%" r="65%">
+      <stop offset="0" stop-color="#08080f" stop-opacity=".95"/>
+      <stop offset=".61" stop-color="#080910" stop-opacity=".97"/>
+      <stop offset=".78" stop-color="#11101f" stop-opacity=".94"/>
+      <stop offset=".89" stop-color="#30294a" stop-opacity=".77"/>
+      <stop offset=".965" stop-color="#c2b5ff" stop-opacity=".19"/>
+      <stop offset="1" stop-color="#9c8dff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="crown" cx="50%" cy="10%" r="65%">
+      <stop offset="0" stop-color="#7a6cff" stop-opacity=".55"/>
+      <stop offset=".44" stop-color="#5343c8" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#151326" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="800" y1="22" x2="800" y2="750" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a69bff" stop-opacity="0"/>
+      <stop offset=".24" stop-color="#8c7aff" stop-opacity=".32"/>
+      <stop offset=".58" stop-color="#8e81ff" stop-opacity=".12"/>
+      <stop offset=".88" stop-color="#d5c2ff" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#ffd3df" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="orbit" x1="180" y1="696" x2="1420" y2="696" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d8d1ff" stop-opacity="0"/>
+      <stop offset=".12" stop-color="#e1dcff" stop-opacity=".58"/>
+      <stop offset=".5" stop-color="#c9baff" stop-opacity=".1"/>
+      <stop offset=".86" stop-color="#e5dfff" stop-opacity=".65"/>
+      <stop offset="1" stop-color="#e1dcff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="baseGlow" cx="50%" cy="50%" r="50%">
+      <stop stop-color="#ffd5df" stop-opacity=".78"/>
+      <stop offset=".2" stop-color="#da9ded" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#8c72ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="edge" x1="350" y1="165" x2="1250" y2="710" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a49aff" stop-opacity=".03"/>
+      <stop offset=".46" stop-color="#d6ceff" stop-opacity=".31"/>
+      <stop offset=".72" stop-color="#f1d7eb" stop-opacity=".58"/>
+      <stop offset="1" stop-color="#a49aff" stop-opacity=".05"/>
+    </linearGradient>
+    <filter id="soft" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="bloom" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <clipPath id="sphere">
+      <ellipse cx="800" cy="372" rx="458" ry="400"/>
+    </clipPath>
+  </defs>
+
+  <ellipse cx="800" cy="372" rx="458" ry="400" fill="url(#glass)"/>
+  <ellipse cx="800" cy="372" rx="458" ry="400" fill="url(#crown)"/>
+  <g clip-path="url(#sphere)">
+    <path d="M752 2h96v790h-96z" fill="url(#beam)" filter="url(#soft)"/>
+    <path d="M787 36h26v726h-26z" fill="url(#beam)" opacity=".38"/>
+    <ellipse cx="800" cy="72" rx="290" ry="160" fill="#7867fa" fill-opacity=".09" filter="url(#soft)"/>
+  </g>
+
+  <ellipse cx="800" cy="372" rx="458" ry="400" stroke="url(#edge)" stroke-opacity=".52"/>
+  <ellipse cx="800" cy="372" rx="430" ry="378" stroke="#d8d3ff" stroke-opacity=".12" transform="rotate(-4 800 372)"/>
+  <path d="M246 644C389 832 1211 832 1354 644" stroke="url(#orbit)" stroke-width="1.5"/>
+  <path d="M305 651C470 786 1130 786 1295 651" stroke="#dfd8ff" stroke-opacity=".18"/>
+  <path d="M268 622C418 756 1182 756 1332 622" stroke="url(#orbit)" stroke-opacity=".68"/>
+
+  <ellipse cx="800" cy="739" rx="120" ry="25" fill="url(#baseGlow)" filter="url(#soft)"/>
+  <path d="M800 690v70" stroke="#ffe9f4" stroke-opacity=".76" stroke-width="3" filter="url(#bloom)"/>
+  <path d="M800 699v47" stroke="#fff4fa" stroke-opacity=".82"/>
+  <circle cx="306" cy="642" r="5" fill="#fff"/>
+  <circle cx="306" cy="642" r="14" fill="#d8ceff" fill-opacity=".58" filter="url(#bloom)"/>
+  <circle cx="1300" cy="500" r="4" fill="#fff"/>
+  <circle cx="1300" cy="500" r="12" fill="#d8ceff" fill-opacity=".58" filter="url(#bloom)"/>
+</svg>

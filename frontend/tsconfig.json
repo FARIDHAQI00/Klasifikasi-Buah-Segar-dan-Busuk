@@ -1,3 +1,4 @@
+// Root TypeScript project references for the frontend and Vite config.
 {
   "files": [],
   "references": [

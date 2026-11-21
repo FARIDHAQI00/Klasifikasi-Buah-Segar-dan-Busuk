@@ -1,3 +1,4 @@
+/** Upload UI, prediction result, and the ordered SSE processing history for one fruit photo. */
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -16,13 +17,14 @@ import {
 } from "lucide-react";
 
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
+const MIN_STEP_DISPLAY_MS = 240;
 const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const PROCESS_STEPS = [
   { id: "validation", label: "Validasi format dan ukuran foto" },
-  { id: "preprocessing", label: "Preprocessing RGB · 160 × 160" },
+  { id: "preprocessing", label: "Preprocessing ResNet50 · RGB 160 × 160" },
   { id: "model", label: "Menyiapkan model ResNet50" },
-  { id: "inference", label: "Inferensi enam kelas" },
-  { id: "label", label: "Pemetaan label Segar/Busuk" },
+  { id: "inference", label: "Inferensi ResNet50 · enam kelas" },
+  { id: "label", label: "Argmax · label Segar/Busuk" },
 ] as const;
 
 type ProcessingStepId = (typeof PROCESS_STEPS)[number]["id"];
@@ -87,7 +89,7 @@ async function readPredictionStream(
     step: ProcessingStepId,
     status: Exclude<ProcessingStatus, "pending">,
     durationMs?: number,
-  ) => void,
+  ) => Promise<void>,
 ): Promise<Prediction> {
   if (!response.body) throw new Error("Log proses tidak tersedia dari server.");
 
@@ -96,7 +98,7 @@ async function readPredictionStream(
   let buffer = "";
   let prediction: Prediction | null = null;
 
-  const handleEvent = (frame: string) => {
+  const handleEvent = async (frame: string) => {
     const data = frame
       .split("\n")
       .filter((line) => line.startsWith("data:"))
@@ -124,7 +126,7 @@ async function readPredictionStream(
         typeof event.duration_ms === "number" && Number.isFinite(event.duration_ms)
           ? event.duration_ms
           : undefined;
-      onStep(event.step, event.status, durationMs);
+      await onStep(event.step, event.status, durationMs);
       return;
     }
     if (event.type === "result" && isPrediction(event.result)) {
@@ -147,12 +149,12 @@ async function readPredictionStream(
       buffer += decoder.decode(chunk.value, { stream: !done }).replace(/\r\n/g, "\n");
       let frameEnd = buffer.indexOf("\n\n");
       while (frameEnd >= 0) {
-        handleEvent(buffer.slice(0, frameEnd));
+        await handleEvent(buffer.slice(0, frameEnd));
         buffer = buffer.slice(frameEnd + 2);
         frameEnd = buffer.indexOf("\n\n");
       }
     }
-    if (buffer.trim()) handleEvent(buffer);
+    if (buffer.trim()) await handleEvent(buffer);
   } catch (streamError) {
     await reader.cancel().catch(() => undefined);
     throw streamError;
@@ -175,6 +177,7 @@ function formatDuration(durationMs: number) {
 
 function App() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const stepStartedAtRef = useRef(new Map<ProcessingStepId, number>());
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [prediction, setPrediction] = useState<Prediction | null>(null);
@@ -227,6 +230,7 @@ function App() {
     if (!file || isLoading) return;
 
     setStepHistory(createProcessingLog());
+    stepStartedAtRef.current.clear();
     setIsLoading(true);
     setError("");
     setPrediction(null);
@@ -255,12 +259,27 @@ function App() {
         throw new Error(responseDetail(payload) || "Foto belum dapat diproses. Coba pilih gambar lain.");
       }
 
-      const result = await readPredictionStream(response, (stepId, status, durationMs) => {
+      const result = await readPredictionStream(response, async (stepId, status, durationMs) => {
+        if (status === "running") {
+          stepStartedAtRef.current.set(stepId, performance.now());
+        } else if (status === "complete") {
+          const startedAt = stepStartedAtRef.current.get(stepId);
+          if (startedAt !== undefined) {
+            const remainingMs = MIN_STEP_DISPLAY_MS - (performance.now() - startedAt);
+            if (remainingMs > 0) {
+              await new Promise<void>((resolve) => window.setTimeout(resolve, remainingMs));
+            }
+          }
+        }
+
         setStepHistory((current) =>
           current.map((step) =>
             step.id === stepId ? { ...step, status, durationMs } : step,
           ),
         );
+        if (status === "running") {
+          await new Promise<void>((resolve) => window.setTimeout(resolve, MIN_STEP_DISPLAY_MS));
+        }
       });
       setPrediction(result);
     } catch (requestError) {
@@ -293,7 +312,6 @@ function App() {
           <nav className="top-nav" aria-label="Navigasi utama">
             <a href="#pemeriksaan">Pemeriksaan</a>
             <a href="#alur">Cara kerja</a>
-            <a href="#catatan">Tentang hasil</a>
           </nav>
           <a className="topbar-cta" href="#pemeriksaan">
             Mulai cek <ArrowUpRight size={16} aria-hidden="true" />
@@ -302,12 +320,7 @@ function App() {
 
         <main id="main-content">
           <section className="hero page-width" aria-labelledby="hero-title">
-            <div className="hero-orbit" aria-hidden="true">
-              <span className="hero-orbit__ring hero-orbit__ring--outer" />
-              <span className="hero-orbit__ring hero-orbit__ring--inner" />
-              <span className="hero-orbit__flare hero-orbit__flare--left" />
-              <span className="hero-orbit__flare hero-orbit__flare--right" />
-            </div>
+            <div className="hero-orbit" aria-hidden="true" />
 
             <div className="hero-copy">
               <h1 id="hero-title">
@@ -552,7 +565,6 @@ function App() {
               <div>
                 <h2 id="process-title">Dari foto sampai hasil.</h2>
               </div>
-              <p>Setiap tahap yang tampil mengikuti proses backend dan model.</p>
             </div>
             <div className="process-steps">
               <article className="process-step">
@@ -585,15 +597,6 @@ function App() {
             </div>
           </section>
 
-          <section className="limits-section page-width" id="catatan" aria-labelledby="limits-title">
-            <div className="limits-icon" aria-hidden="true">
-              <ShieldCheck size={21} />
-            </div>
-            <div>
-              <h2 id="limits-title">Hasilnya adalah perkiraan visual.</h2>
-              <p>Periksa kondisi buah secara langsung sebelum dikonsumsi.</p>
-            </div>
-          </section>
         </main>
 
         <footer className="footer page-width">

@@ -1,3 +1,4 @@
+/** Configures the React/Tailwind Vite build and local proxy for backend API calls. */
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";

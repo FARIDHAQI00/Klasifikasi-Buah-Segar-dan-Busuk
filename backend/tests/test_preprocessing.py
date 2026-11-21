@@ -1,3 +1,4 @@
+"""Checks supported image decoding and exact ResNet50 RGB preprocessing behavior."""
 import io
 import unittest
 

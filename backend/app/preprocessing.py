@@ -1,3 +1,4 @@
+"""Notebook-matched image decoding, 160×160 resize, and ResNet50 preprocessing."""
 from __future__ import annotations
 
 import tensorflow as tf

@@ -2,10 +2,10 @@
 name: CekBuah
 description: A focused fruit-photo inspection experience in a luminous dark interface.
 colors:
-  ground: "#091326"
-  frame-teal: "#086c87"
-  frame-blue: "#121b45"
-  frame-violet: "#24208d"
+  ground: "#05060b"
+  frame-teal: "#08758a"
+  frame-blue: "#111b4c"
+  frame-violet: "#25218c"
   surface: "#08090f"
   surface-raised: "#10111a"
   surface-quiet: "#0d0e15"
@@ -16,8 +16,8 @@ colors:
   primary-bright: "#7774ff"
   accent-soft: "#bebaff"
   line: "rgb(220 216 255 / 14%)"
-  fresh-state: "#e2f8e8"
-  rotten-state: "#ffe2dc"
+  fresh-state: "#50ff94"
+  rotten-state: "#ff7168"
 typography:
   display:
     fontFamily: "DM Serif Display, Georgia, serif"
@@ -46,7 +46,7 @@ rounded:
   content: "13px"
   card: "18px"
   panel: "22px"
-  shell: "32px"
+  shell: "0px"
   pill: "999px"
 spacing:
   sm: "8px"
@@ -91,12 +91,12 @@ components:
     rounded: "13px"
     padding: "14px 15px 8px"
   result-fresh:
-    backgroundColor: "linear-gradient(130deg, rgb(30 77 58 / 38%), rgb(18 42 35 / 72%))"
+    backgroundColor: "linear-gradient(130deg, rgb(15 105 57 / 50%), rgb(9 48 34 / 84%))"
     textColor: "{colors.fresh-state}"
     rounded: "{rounded.content}"
     padding: "16px"
   result-rotten:
-    backgroundColor: "linear-gradient(130deg, rgb(102 39 40 / 34%), rgb(48 23 30 / 67%))"
+    backgroundColor: "linear-gradient(130deg, rgb(121 30 34 / 56%), rgb(52 14 22 / 84%))"
     textColor: "{colors.rotten-state}"
     rounded: "{rounded.content}"
     padding: "16px"
@@ -108,19 +108,19 @@ components:
 
 **Creative North Star: “The Luminous Inspection Window”**
 
-CekBuah places one clear fruit-inspection task inside a near-black, softly framed surface. A blue, teal, and violet field surrounds the application; a single CSS-drawn orbit gives the headline its luminous focus. The interface follows the user's supplied Clarid reference while replacing its finance claims with CekBuah's actual supported fruits and model details.
+CekBuah fills the viewport with a near-black center and teal, blue, and violet ambient light at the edges. A large illustrated glass orb with a lavender beam and fine orbit lines gives the headline its luminous focus. The interface follows the user's supplied Clarid reference while replacing its finance claims with CekBuah's actual supported fruits and model details.
 
 DM Serif Display gives the page a calm editorial voice. Manrope keeps the working copy, controls, upload guidance, processing history, and result states compact and readable. The page moves from introduction to upload, five actual backend/model steps, then the ResNet50 label. Segar and Busuk stay explicit in text and use distinct colors. The model result remains a visual estimate.
 
 **Key Characteristics:**
-- A near-black inset surface inside a teal-to-blue-to-violet outer field.
-- One editorial headline and one geometric orbit lead into a practical upload flow.
+- A full-bleed canvas with teal-to-blue-to-violet light fading around a near-black center.
+- One editorial headline sits over an illustrated glass orb with a vertical lavender glow.
 - The proof strip uses only three supported fruits and real ResNet50 specifications.
 - Result colors always accompany the words Segar or Busuk.
 
 ## Colors
 
-The palette uses an almost-black working surface, a saturated violet action color, and a luminous outer frame that stays behind the application content.
+The palette uses an almost-black full-page base, a saturated violet action color, and teal/blue/violet light that fades in at the viewport edges.
 
 ### Primary
 - **Signal Violet** (`{colors.primary}`): Main actions and the strongest interactive emphasis.
@@ -128,17 +128,17 @@ The palette uses an almost-black working surface, a saturated violet action colo
 - **Soft Violet** (`{colors.accent-soft}`): Secondary emphasis, model stamps, and interface icons.
 
 ### Secondary
-- **Market Teal** (`{colors.frame-teal}`): The left side of the ambient page frame.
-- **Night Blue** (`{colors.frame-blue}`): The middle ground of the outer frame.
-- **Orbit Violet** (`{colors.frame-violet}`): The right and lower edge of the outer frame.
+- **Market Teal** (`{colors.frame-teal}`): The left edge of the full-page ambient background.
+- **Night Blue** (`{colors.frame-blue}`): The upper and middle ambient background.
+- **Orbit Violet** (`{colors.frame-violet}`): The right and lower edge lighting.
 
 ### Tertiary
 - **Fresh Result Ink** (`{colors.fresh-state}`): Text in the Segar result state.
 - **Rotten Result Ink** (`{colors.rotten-state}`): Text in the Busuk result state.
 
 ### Neutral
-- **Night Ground** (`{colors.ground}`): Base page color visible behind the gradient frame.
-- **Black Glass** (`{colors.surface}`): Main inset application surface.
+- **Night Ground** (`{colors.ground}`): Base full-page color behind ambient light.
+- **Black Glass** (`{colors.surface}`): Main dark page and working-surface base.
 - **Raised Charcoal** (`{colors.surface-raised}`): Inspection panel and elevated working surfaces.
 - **Quiet Charcoal** (`{colors.surface-quiet}`): Drop target and secondary working surface.
 - **Ivory Ink** (`{colors.ink}`): Main text on dark surfaces.
@@ -169,16 +169,15 @@ The palette uses an almost-black working surface, a saturated violet action colo
 
 ## Layout
 
-The page uses a centered inset shell capped at 1320px, with a content column capped at 1100px. The top bar places the wordmark, a centered pill navigation, and a violet action on one row. The hero is centered over the orbit; supported fruits follow as a short proof strip, and the real specifications sit in a three-part capsule.
+The page uses a full-viewport canvas without an outer card or rounded app frame. The content column is capped at 1200px. The top bar places the wordmark, a centered pill navigation, and a violet action on one row. The hero is centered over the orb image; supported fruits follow as a short proof strip, and the real specifications sit in a three-part capsule.
 
 The inspection section uses two columns above 900px: product guidance on the left and the upload panel on the right. At 900px and below, those areas stack. At 620px and below, the navigation moves below the wordmark and action, the hero and specification capsule tighten, and the process rows stack vertically. The layout was inspected at 320px, 390px, 620px, 768px, 900px, 1024px, and 1440px without horizontal overflow.
 
 ## Elevation & Depth
 
-Depth comes from nested charcoal surfaces, fine lavender-tinted borders, and a few soft shadows. The outer shell lifts from the ambient background; the upload panel sits above the main application surface; smaller shadows appear on the primary actions. The orbit's glow is part of the hero lighting, not a layer behind controls.
+Depth comes from dark working surfaces, fine lavender-tinted borders, and a few soft shadows. The page itself has no outer shadow or frame; the upload panel and primary actions supply the interface depth. The orb is a decorative image behind the hero copy, not a layer behind the upload controls.
 
 ### Shadow Vocabulary
-- **Outer frame** (`0 34px 100px rgb(0 0 0 / 34%)`): Separates the large inset page from the colored outer field.
 - **Inspection panel** (`0 22px 60px rgb(0 0 0 / 29%)`): Lifts the upload task within the page.
 - **Primary action** (`0 8px 22px rgb(75 69 224 / 20%)`): Adds restrained violet depth to the main action.
 
@@ -186,7 +185,7 @@ Depth comes from nested charcoal surfaces, fine lavender-tinted borders, and a f
 
 ## Shapes
 
-The app shell has generous rounded corners (32px on desktop, 23px on mobile). Working panels use medium corners (17–22px); controls use compact corners (9–11px); navigation and the specification capsule use pill shapes. The orbit is a large, abstract geometric ellipse. It stays behind the headline and does not imitate a fruit photograph.
+The page has no rounded outer shell. Working panels use medium corners (17–22px); controls use compact corners (9–11px); navigation and the specification capsule use pill shapes. The hero background is an illustrated glass globe with a lavender center beam, curved orbit lines, and small flares. It stays behind the headline and does not imitate a fruit photograph.
 
 ## Components
 
@@ -198,8 +197,8 @@ The app shell has generous rounded corners (32px on desktop, 23px on mobile). Wo
 - **Disabled / Loading:** Keep the primary action visible; reduce opacity while loading and show the spinner with “Sedang memeriksa”.
 
 ### Cards / Containers
-- **Corner Style:** The application shell uses the largest radius; the inspection panel is smaller; nested result and history regions are compact.
-- **Background:** Charcoal surfaces distinguish work areas from the near-black inset.
+- **Corner Style:** There is no outer app frame; the inspection panel is the largest work surface, with smaller result and history regions nested inside.
+- **Background:** The full page remains dark with teal, blue, and violet edge lighting; charcoal surfaces distinguish the upload and result areas.
 - **Shadow Strategy:** Use the inspection-panel shadow once; results and history rely mainly on tone and borders.
 - **Border:** Thin lavender-gray lines define panel edges and quiet dividers.
 - **Internal Padding:** 19–28px for the inspection panel, tightening at mobile widths.
@@ -216,22 +215,24 @@ The app shell has generous rounded corners (32px on desktop, 23px on mobile). Wo
 - **Mobile:** The navigation moves to a centered row below the wordmark and primary action.
 
 ### Processing History
-The panel lists the five backend events in their actual order: validation, preprocessing, model setup, inference, and label mapping. Each row pairs a step name with its live state and backend duration when available. The history is local to the current check and is not saved as an account history.
+The panel lists the five backend events in their actual order: validation, preprocessing, model setup, inference, and label mapping. Each row pairs a step name with its live state and backend duration when available. Fast events are consumed sequentially and held visibly for at least 240ms per running step; the displayed duration remains the backend's measured time. The history is local to the current check and is not saved as an account history.
 
 ### Inspection Result
-Segar and Busuk use distinct dark-tinted result surfaces. Each result includes a state icon, written label, recognized fruit when available, the backend reason, model version, and a control to try another photo.
+Segar and Busuk use distinct, brighter green and red result surfaces with bright matching labels. Each result includes a state icon, written label, recognized fruit when available, the backend reason, model version, and a control to try another photo.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** keep the first actions, supported fruit types, and ResNet50 purpose clear at a glance.
-- **Do** use the orb as restrained geometric lighting behind the hero text.
+- **Do** use the illustrated orb as luminous lighting behind the hero text.
 - **Do** pair Segar and Busuk with their written labels and distinct state colors.
 - **Do** preserve all five live processing steps and their backend timings.
-- **Do** keep the outer teal-blue-violet field outside the near-black application surface.
+- **Do** let the teal-blue-violet ambient light blend into the full-bleed near-black page.
+- **Do** keep completed stages bright green and errors/results bright red so their state is easy to see.
 
 ### Don't:
 - **Don't** add invented partner names, audience counts, uptime claims, or an accuracy percentage.
 - **Don't** present a model result as a guarantee about the fruit's interior.
+- **Don't** add a large floating rounded frame around the whole page.
 - **Don't** let decorative lighting reduce the contrast of the headline or upload controls.
 - **Don't** hide an interactive state behind color alone.

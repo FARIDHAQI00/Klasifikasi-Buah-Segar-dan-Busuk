@@ -1,3 +1,4 @@
+/** Mounts the React application and its global stylesheet into the HTML root. */
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";

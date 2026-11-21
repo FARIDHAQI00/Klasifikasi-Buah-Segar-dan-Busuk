@@ -4,9 +4,9 @@
 
 ## Required visual character
 
-- A teal, blue, and violet outer field frames one large near-black rounded application surface.
+- Use a full-bleed near-black page with teal, blue, and violet light fading in from the edges. Do not frame the whole application in a floating rounded card.
 - The header keeps the wordmark left, a restrained rounded navigation at center, and a violet action at right.
-- The first viewport centers a large editorial serif headline over one luminous circular-orbit effect, followed by compact supporting text and two clear actions.
+- The first viewport centers a large editorial serif headline over a glass orb image, with a lavender vertical beam, thin curved orbit lines, and restrained light flares.
 - A calm horizontal proof strip leads into a dark indigo three-part capsule with real product specifications.
 - DM Serif Display handles display text; Manrope handles controls, descriptions, labels, and process details.
 - The look remains polished and legible on a 390px phone viewport.
@@ -15,6 +15,8 @@
 
 - Keep only factual CekBuah content: supported fruits, ResNet50, its 160 × 160 input, and one-photo processing.
 - Use the existing upload and preview, five real processing steps, and Segar/Busuk result behavior.
+- Keep fast backend events in their real order and let each running step remain visible long enough to read; retain the exact backend duration in the row.
+- Make completed/fresh states bright green and error/rotten states bright red, with the words still visible.
 - Replace the reference's finance brand names and audience/uptime claims with real fruit support and model details.
 - Do not add an accuracy percentage or change model output logic.
 

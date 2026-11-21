@@ -7,61 +7,61 @@
       "ground": {
         "role": "neutral",
         "displayName": "Night Ground",
-        "canonical": "#091326",
+        "canonical": "#05060b",
         "tonalRamp": [
-          "color-mix(in oklch, #091326 20%, black)",
-          "color-mix(in oklch, #091326 35%, black)",
-          "color-mix(in oklch, #091326 50%, black)",
-          "color-mix(in oklch, #091326 70%, black)",
-          "#091326",
-          "color-mix(in oklch, #091326 85%, white)",
-          "color-mix(in oklch, #091326 70%, white)",
-          "color-mix(in oklch, #091326 50%, white)"
+          "color-mix(in oklch, #05060b 20%, black)",
+          "color-mix(in oklch, #05060b 35%, black)",
+          "color-mix(in oklch, #05060b 50%, black)",
+          "color-mix(in oklch, #05060b 70%, black)",
+          "#05060b",
+          "color-mix(in oklch, #05060b 85%, white)",
+          "color-mix(in oklch, #05060b 70%, white)",
+          "color-mix(in oklch, #05060b 50%, white)"
         ]
       },
       "frame-teal": {
         "role": "secondary",
         "displayName": "Market Teal",
-        "canonical": "#086c87",
+        "canonical": "#08758a",
         "tonalRamp": [
-          "color-mix(in oklch, #086c87 20%, black)",
-          "color-mix(in oklch, #086c87 35%, black)",
-          "color-mix(in oklch, #086c87 50%, black)",
-          "color-mix(in oklch, #086c87 70%, black)",
-          "#086c87",
-          "color-mix(in oklch, #086c87 85%, white)",
-          "color-mix(in oklch, #086c87 70%, white)",
-          "color-mix(in oklch, #086c87 50%, white)"
+          "color-mix(in oklch, #08758a 20%, black)",
+          "color-mix(in oklch, #08758a 35%, black)",
+          "color-mix(in oklch, #08758a 50%, black)",
+          "color-mix(in oklch, #08758a 70%, black)",
+          "#08758a",
+          "color-mix(in oklch, #08758a 85%, white)",
+          "color-mix(in oklch, #08758a 70%, white)",
+          "color-mix(in oklch, #08758a 50%, white)"
         ]
       },
       "frame-blue": {
         "role": "secondary",
         "displayName": "Night Blue",
-        "canonical": "#121b45",
+        "canonical": "#111b4c",
         "tonalRamp": [
-          "color-mix(in oklch, #121b45 20%, black)",
-          "color-mix(in oklch, #121b45 35%, black)",
-          "color-mix(in oklch, #121b45 50%, black)",
-          "color-mix(in oklch, #121b45 70%, black)",
-          "#121b45",
-          "color-mix(in oklch, #121b45 85%, white)",
-          "color-mix(in oklch, #121b45 70%, white)",
-          "color-mix(in oklch, #121b45 50%, white)"
+          "color-mix(in oklch, #111b4c 20%, black)",
+          "color-mix(in oklch, #111b4c 35%, black)",
+          "color-mix(in oklch, #111b4c 50%, black)",
+          "color-mix(in oklch, #111b4c 70%, black)",
+          "#111b4c",
+          "color-mix(in oklch, #111b4c 85%, white)",
+          "color-mix(in oklch, #111b4c 70%, white)",
+          "color-mix(in oklch, #111b4c 50%, white)"
         ]
       },
       "frame-violet": {
         "role": "secondary",
         "displayName": "Orbit Violet",
-        "canonical": "#24208d",
+        "canonical": "#25218c",
         "tonalRamp": [
-          "color-mix(in oklch, #24208d 20%, black)",
-          "color-mix(in oklch, #24208d 35%, black)",
-          "color-mix(in oklch, #24208d 50%, black)",
-          "color-mix(in oklch, #24208d 70%, black)",
-          "#24208d",
-          "color-mix(in oklch, #24208d 85%, white)",
-          "color-mix(in oklch, #24208d 70%, white)",
-          "color-mix(in oklch, #24208d 50%, white)"
+          "color-mix(in oklch, #25218c 20%, black)",
+          "color-mix(in oklch, #25218c 35%, black)",
+          "color-mix(in oklch, #25218c 50%, black)",
+          "color-mix(in oklch, #25218c 70%, black)",
+          "#25218c",
+          "color-mix(in oklch, #25218c 85%, white)",
+          "color-mix(in oklch, #25218c 70%, white)",
+          "color-mix(in oklch, #25218c 50%, white)"
         ]
       },
       "surface": {
@@ -217,31 +217,31 @@
       "fresh-state": {
         "role": "tertiary",
         "displayName": "Fresh Result Ink",
-        "canonical": "#e2f8e8",
+        "canonical": "#50ff94",
         "tonalRamp": [
-          "color-mix(in oklch, #e2f8e8 20%, black)",
-          "color-mix(in oklch, #e2f8e8 35%, black)",
-          "color-mix(in oklch, #e2f8e8 50%, black)",
-          "color-mix(in oklch, #e2f8e8 70%, black)",
-          "#e2f8e8",
-          "color-mix(in oklch, #e2f8e8 85%, white)",
-          "color-mix(in oklch, #e2f8e8 70%, white)",
-          "color-mix(in oklch, #e2f8e8 50%, white)"
+          "color-mix(in oklch, #50ff94 20%, black)",
+          "color-mix(in oklch, #50ff94 35%, black)",
+          "color-mix(in oklch, #50ff94 50%, black)",
+          "color-mix(in oklch, #50ff94 70%, black)",
+          "#50ff94",
+          "color-mix(in oklch, #50ff94 85%, white)",
+          "color-mix(in oklch, #50ff94 70%, white)",
+          "color-mix(in oklch, #50ff94 50%, white)"
         ]
       },
       "rotten-state": {
         "role": "tertiary",
         "displayName": "Rotten Result Ink",
-        "canonical": "#ffe2dc",
+        "canonical": "#ff7168",
         "tonalRamp": [
-          "color-mix(in oklch, #ffe2dc 20%, black)",
-          "color-mix(in oklch, #ffe2dc 35%, black)",
-          "color-mix(in oklch, #ffe2dc 50%, black)",
-          "color-mix(in oklch, #ffe2dc 70%, black)",
-          "#ffe2dc",
-          "color-mix(in oklch, #ffe2dc 85%, white)",
-          "color-mix(in oklch, #ffe2dc 70%, white)",
-          "color-mix(in oklch, #ffe2dc 50%, white)"
+          "color-mix(in oklch, #ff7168 20%, black)",
+          "color-mix(in oklch, #ff7168 35%, black)",
+          "color-mix(in oklch, #ff7168 50%, black)",
+          "color-mix(in oklch, #ff7168 70%, black)",
+          "#ff7168",
+          "color-mix(in oklch, #ff7168 85%, white)",
+          "color-mix(in oklch, #ff7168 70%, white)",
+          "color-mix(in oklch, #ff7168 50%, white)"
         ]
       }
     },
@@ -265,14 +265,9 @@
     },
     "shadows": [
       {
-        "name": "outer-frame",
-        "value": "0 34px 100px rgb(0 0 0 / 34%)",
-        "purpose": "Separate the inset application surface from its blue-teal-violet frame."
-      },
-      {
         "name": "inspection-panel",
         "value": "0 22px 60px rgb(0 0 0 / 29%)",
-        "purpose": "Lift the upload panel within the near-black surface."
+        "purpose": "Lift the upload task from the full-bleed dark canvas."
       },
       {
         "name": "primary-action",
@@ -299,7 +294,7 @@
       {
         "name": "smooth-scroll",
         "value": "scroll-behavior: smooth",
-        "purpose": "Move between the hero, inspection, process, and result notes."
+        "purpose": "Move between the hero, inspection, and process sections."
       }
     ],
     "breakpoints": [
@@ -334,8 +329,8 @@
       "name": "Top Navigation",
       "kind": "nav",
       "refersTo": "navigation-pill",
-      "description": "Keeps inspection, process, and result-note links centered in the header.",
-      "html": "<nav class=\"ds-navigation-pill\" aria-label=\"Navigasi utama\"><a href=\"#pemeriksaan\">Pemeriksaan</a><a href=\"#alur\">Cara kerja</a><a href=\"#catatan\">Tentang hasil</a></nav>",
+      "description": "Keeps the two current-section links centered between the wordmark and violet action.",
+      "html": "<nav class=\"ds-navigation-pill\" aria-label=\"Navigasi utama\"><a href=\"#pemeriksaan\">Pemeriksaan</a><a href=\"#alur\">Cara kerja</a></nav>",
       "css": ".ds-navigation-pill { display: inline-flex; align-items: center; gap: 3px; padding: 5px; border: 1px solid rgb(255 255 255 / 10%); border-radius: 999px; background: rgb(255 255 255 / 5%); box-shadow: inset 0 1px rgb(255 255 255 / 4%), 0 8px 20px rgb(0 0 0 / 17%); } .ds-navigation-pill a { padding: 9px 14px; border-radius: 999px; color: #d7d5df; font: 550 0.79rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; text-decoration: none; transition: background-color 180ms ease, color 180ms ease; } .ds-navigation-pill a:hover { background: rgb(255 255 255 / 8%); color: #fff; } .ds-navigation-pill a:focus-visible { outline: 2px solid #a8a4ff; outline-offset: 2px; }"
     },
     {
@@ -358,9 +353,9 @@
       "name": "Processing History",
       "kind": "custom",
       "refersTo": "processing-history",
-      "description": "Shows the backend-reported status and duration of each current inspection step.",
+      "description": "Shows ordered backend events and measured durations; quick running states remain readable.",
       "html": "<section class=\"ds-history\" aria-label=\"Riwayat proses\"><header><h3>Riwayat proses</h3><span>Selesai</span></header><ol><li>Validasi format dan ukuran foto <span>Selesai · 18 ms</span></li><li>Preprocessing RGB · 160 × 160 <span>Selesai · 18 ms</span></li><li>Menyiapkan model ResNet50 <span>Selesai · 420 ms</span></li><li>Inferensi enam kelas <span>Selesai · 18 ms</span></li><li>Pemetaan label Segar/Busuk <span>Selesai · 18 ms</span></li></ol></section>",
-      "css": ".ds-history { padding: 14px 15px 8px; border: 1px solid rgb(225 223 245 / 11%); border-radius: 13px; background: #0b0c13; color: #bab7c6; font: 400 0.76rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-history header { display: flex; justify-content: space-between; gap: 12px; } .ds-history h3 { margin: 0; color: #eeeefa; font: 700 0.86rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-history header > span { color: #bcb7ff; font-weight: 700; } .ds-history ol { display: grid; margin: 9px 0 0; padding: 0; list-style: none; } .ds-history li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-top: 1px solid rgb(225 223 245 / 8%); } .ds-history li span { flex: none; color: #c1bdff; font-size: 0.68rem; }"
+      "css": ".ds-history { padding: 14px 15px 8px; border: 1px solid rgb(225 223 245 / 11%); border-radius: 13px; background: #0b0c13; color: #bab7c6; font: 400 0.76rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-history header { display: flex; justify-content: space-between; gap: 12px; } .ds-history h3 { margin: 0; color: #eeeefa; font: 700 0.86rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-history header > span { color: #50ff94; font-weight: 700; } .ds-history ol { display: grid; margin: 9px 0 0; padding: 0; list-style: none; } .ds-history li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-top: 1px solid rgb(225 223 245 / 8%); } .ds-history li span { flex: none; color: #50ff94; font-size: 0.68rem; }"
     },
     {
       "name": "Fresh Result",
@@ -368,7 +363,7 @@
       "refersTo": "result-fresh",
       "description": "Displays the Segar result with written fruit information and model reason.",
       "html": "<section class=\"ds-result-fresh\" aria-live=\"polite\"><strong>Hasil pemeriksaan</strong><h3>Segar</h3><p>Jenis yang dikenali: Pisang</p><p>Hasil klasifikasi visual dari ResNet50.</p></section>",
-      "css": ".ds-result-fresh { padding: 16px; border: 1px solid rgb(132 216 160 / 27%); border-radius: 13px; background: linear-gradient(130deg, rgb(30 77 58 / 38%), rgb(18 42 35 / 72%)); color: #e2f8e8; } .ds-result-fresh strong { font: 650 0.75rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-fresh h3 { margin: 2px 0 0; font: 780 1.19rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-fresh p { margin: 8px 0 0; font: 400 0.86rem/1.55 'Manrope Variable', 'Segoe UI', sans-serif; }"
+      "css": ".ds-result-fresh { padding: 16px; border: 1px solid rgb(61 240 135 / 58%); border-radius: 13px; background: linear-gradient(130deg, rgb(15 105 57 / 50%), rgb(9 48 34 / 84%)); color: #edfff2; } .ds-result-fresh strong { font: 650 0.75rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-fresh h3 { margin: 2px 0 0; font: 780 1.19rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-fresh p { margin: 8px 0 0; font: 400 0.86rem/1.55 'Manrope Variable', 'Segoe UI', sans-serif; }"
     },
     {
       "name": "Rotten Result",
@@ -376,17 +371,17 @@
       "refersTo": "result-rotten",
       "description": "Displays the Busuk result with written fruit information and model reason.",
       "html": "<section class=\"ds-result-rotten\" aria-live=\"polite\"><strong>Hasil pemeriksaan</strong><h3>Busuk</h3><p>Jenis yang dikenali: Pisang</p><p>Hasil klasifikasi visual dari ResNet50.</p></section>",
-      "css": ".ds-result-rotten { padding: 16px; border: 1px solid rgb(255 157 139 / 31%); border-radius: 13px; background: linear-gradient(130deg, rgb(102 39 40 / 34%), rgb(48 23 30 / 67%)); color: #ffe2dc; } .ds-result-rotten strong { font: 650 0.75rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-rotten h3 { margin: 2px 0 0; font: 780 1.19rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-rotten p { margin: 8px 0 0; font: 400 0.86rem/1.55 'Manrope Variable', 'Segoe UI', sans-serif; }"
+      "css": ".ds-result-rotten { padding: 16px; border: 1px solid rgb(255 102 94 / 66%); border-radius: 13px; background: linear-gradient(130deg, rgb(121 30 34 / 56%), rgb(52 14 22 / 84%)); color: #fff0ed; } .ds-result-rotten strong { font: 650 0.75rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-rotten h3 { margin: 2px 0 0; font: 780 1.19rem/1.4 'Manrope Variable', 'Segoe UI', sans-serif; } .ds-result-rotten p { margin: 8px 0 0; font: 400 0.86rem/1.55 'Manrope Variable', 'Segoe UI', sans-serif; }"
     }
   ],
   "narrative": {
     "northStar": "The Luminous Inspection Window",
-    "overview": "CekBuah places one clear fruit-inspection task inside a near-black, softly framed surface. A blue, teal, and violet field surrounds the application; a single CSS-drawn orbit gives the headline its luminous focus. The interface follows the user's supplied Clarid reference while replacing its finance claims with CekBuah's actual supported fruits and model details.\n\nDM Serif Display gives the page a calm editorial voice. Manrope keeps the working copy, controls, upload guidance, processing history, and result states compact and readable. The page moves from introduction to upload, five actual backend/model steps, then the ResNet50 label. Segar and Busuk stay explicit in text and use distinct colors. The model result remains a visual estimate.",
+    "overview": "CekBuah fills the viewport with a near-black center and teal, blue, and violet ambient light at the edges. An illustrated glass orb, lavender beam, orbit lines, and small flares give the headline its luminous focus. The page follows the user-pinned Clarid reference while replacing finance claims with supported fruits and real model details.\n\nDM Serif Display gives the page an editorial voice; Manrope keeps controls, upload guidance, processing history, and results readable. The page moves from introduction to upload, five actual backend/model steps, then the ResNet50 label. Segar and Busuk use bright, distinct colors. The model result remains a visual estimate.",
     "keyCharacteristics": [
-      "A near-black inset surface inside a teal-to-blue-to-violet outer field.",
-      "One editorial headline and one geometric orbit lead into a practical upload flow.",
-      "The proof strip uses only three supported fruits and real ResNet50 specifications.",
-      "Result colors always accompany the words Segar or Busuk."
+      "A full-bleed dark canvas with teal, blue, and violet edge lighting; no floating outer app frame.",
+      "One editorial headline sits over an illustrated glass orb with a vertical lavender beam.",
+      "The proof strip uses supported fruits and the actual ResNet50 specifications.",
+      "Segar, Busuk, completed, and error states retain written labels with bright green/red color cues."
     ],
     "rules": [
       {
@@ -406,19 +401,25 @@
       },
       {
         "name": "The Border-and-Tone Rule",
-        "body": "Use a quiet border or a shadow to separate a surface. Do not stack both as competing elevation cues.",
+        "body": "The full-bleed page has no outer border or shadow. Use a quiet border or shadow only to separate working surfaces.",
         "section": "elevation"
+      },
+      {
+        "name": "The Processing Timeline Rule",
+        "body": "Keep backend events in their actual order and show the measured backend duration; a short UI dwell only makes fast running states readable.",
+        "section": "layout"
       }
     ],
     "dos": [
       "**Do** keep the first actions, supported fruit types, and ResNet50 purpose clear at a glance.",
-      "**Do** use the orb as restrained geometric lighting behind the hero text.",
-      "**Do** pair Segar and Busuk with their written labels and distinct state colors.",
-      "**Do** preserve all five live processing steps and their backend timings.",
-      "**Do** keep the outer teal-blue-violet field outside the near-black application surface."
+      "**Do** use the illustrated orb as a full-screen hero background behind the headline.",
+      "**Do** pair Segar and Busuk with written labels and bright, distinct green/red states.",
+      "**Do** preserve all five live processing steps, their order, and measured backend durations.",
+      "**Do** let the teal-blue-violet edge light blend into the full-bleed dark canvas."
     ],
     "donts": [
-      "**Don't** add invented partner names, audience counts, uptime claims, or an accuracy percentage.",
+      "**Don't** add a floating rounded frame around the whole application.",
+      "**Don't** add invented partner names, audience counts, uptime claims, or an accuracy percentage to the UI.",
       "**Don't** present a model result as a guarantee about the fruit's interior.",
       "**Don't** let decorative lighting reduce the contrast of the headline or upload controls.",
       "**Don't** hide an interactive state behind color alone."

@@ -1,3 +1,4 @@
+"""Checks six-class argmax mapping, fruit labels, ties, and invalid model scores."""
 import unittest
 
 import numpy as np

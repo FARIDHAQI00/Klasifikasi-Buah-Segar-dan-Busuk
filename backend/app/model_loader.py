@@ -1,3 +1,4 @@
+"""Verify, lazily load, and run the pinned ResNet50 model artifact."""
 from __future__ import annotations
 
 import hashlib
