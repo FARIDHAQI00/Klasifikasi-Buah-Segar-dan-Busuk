@@ -2,6 +2,8 @@
 
 Website demo untuk menguji foto apel, pisang, dan jeruk dengan model **ResNet50** dari notebook UAS.
 
+Demo aktif: [klasifikasibuah.vercel.app](https://klasifikasibuah.vercel.app). Deployment dan alur klasifikasi pada sampel yang tersedia sudah dicek.
+
 Lihat [`dokumentasi.md`](dokumentasi.md) untuk peta berkas, workflow klasifikasi, dan pengecekan kesesuaian dengan notebook.
 
 ## Model

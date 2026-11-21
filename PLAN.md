@@ -1,6 +1,6 @@
 # Rencana Website Klasifikasi Buah Segar dan Busuk
 
-**Status:** Demo memakai deteksi buah COCO-SSD Lite dan klasifikasi region ResNet50; uji Vercel dan validasi foto campuran tetap perlu dilakukan
+**Status:** Demo aktif di Vercel; COCO-SSD Lite menyaring foto, ResNet50 memeriksa crop, dan satu contoh pisang campuran sudah teruji menghasilkan Busuk
 **Model website yang ditetapkan:** ResNet50 dari `backend/model/ResNet50_terbaik.keras`
 **Repo tujuan:** [FARIDHAQI00/Klasifikasi-Buah-Segar-dan-Busuk](https://github.com/FARIDHAQI00/Klasifikasi-Buah-Segar-dan-Busuk)  
 **Notebook acuan:** [UAS_Buah_Cepat_Resume.ipynb di Google Colab](https://colab.research.google.com/drive/16t9E0vxdy2ZF-86ZbjetxU_yVwtDOmON?usp=sharing)
@@ -199,11 +199,11 @@ File `.keras` terpilih dicommit di `backend/model/` karena diminta sebagai artef
 | 2. Modul inference | Pindahkan preprocessing dan pemanggilan model ke modul Python yang dapat menerima gambar dan mengeluarkan skor serta status. Muat model sekali per proses. | Selesai; hash diverifikasi sebelum model dimuat dan preprocessing dicocokkan dengan notebook. |
 | 3. API | Implementasikan health, model-info, single image, region batch; validasi upload dan error; batasi ukuran/jumlah pixel; jangan simpan gambar. | Kode menerima `file` atau `files`; batch inference memakai model yang sama. Perlu smoke test API batch pada runtime TensorFlow. |
 | 4. Frontend | Buat React SPA dengan COCO-SSD Lite gate, crop buah, upload batch, riwayat langkah aktual, hasil, dan error. | Production build lulus. Browser gate dicoba pada foto pisang dan non-buah yang diberikan; sampel ini belum cukup untuk mengukur cakupan deteksi umum. |
-| 5. Integrasi lokal | Jalankan frontend dan API bersama; periksa routing /api, preprocessing, label, batch response, serta alur error. | Tes kebijakan tujuh kasus lulus; alur browser-ke-API batch dan inferensi ResNet50 belum bisa diuji di runtime ini karena TensorFlow/FastAPI belum terpasang. |
-| 6. Deploy preview Vercel | Konfigurasikan Vercel Services, root frontend/backend, entrypoint FastAPI, routing, ukuran upload, artefak model, dan kapasitas Large Functions bila bundle melewati 500 MB. Jalankan preview dari branch kerja sebelum main. | Source/config siap diajukan; deployment preview, pengukuran bundle/cold start/memori, dan pemeriksaan project Vercel masih perlu dilakukan di akun pengguna. |
-| 7. Deploy demo dan dokumentasi | Setelah build terbaru terdeploy, cek health check, gate browser, crop batch, label, dan catat versi model. | Perlu verifikasi deployment Vercel terbaru dan ukuran payload batch dari akun pemilik repo. |
+| 5. Integrasi lokal/produksi | Periksa frontend, routing /api, preprocessing, label, batch response, dan alur error. | Tujuh tes kebijakan lulus. Runtime TensorFlow/FastAPI tidak tersedia di mesin lokal, tetapi endpoint produksi health/model-info siap; UI produksi menolak sampel non-buah dan mengirim tiga crop foto pisang campuran hingga hasil Busuk/Pisang. |
+| 6. Deploy Vercel | Hubungkan repo, atur frontend/backend Services, routing, artefak model, dan periksa hasil deployment. | Selesai untuk commit `7fed7e7`; status deployment Vercel sukses dan root serta API produksi merespons. |
+| 7. Verifikasi demo dan dokumentasi | Cek health, deteksi buah/non-buah, batch crop, label, dan versi model pada deployment aktif. | Selesai pada `https://klasifikasibuah.vercel.app`: sampel non-buah berhenti di browser; foto pisang campuran menghasilkan **Busuk/Pisang**; riwayat keenam tahap tampil tanpa error konsol. Ini uji contoh, bukan jaminan 100% pada semua foto. |
 
-Source dan frontend demo sudah diperbarui; validasi backend batch baru, preview Vercel, dan pengamatan foto tambahan masih menjadi tindak lanjut.
+Demo sudah bisa dipakai untuk presentasi pada sampel yang tersedia. Pengujian foto tambahan akan membantu menemukan batas detektor dan model, tetapi tidak mengubah hasil contoh produksi yang sudah terverifikasi.
 
 ## 9. Risiko dan mitigasi
 
@@ -222,5 +222,5 @@ Source dan frontend demo sudah diperbarui; validasi backend batch baru, preview 
 
 ## 10. Kriteria selesai
 
-Source demo menggunakan COCO-SSD Lite untuk gate buah dan ResNet50 untuk klasifikasi tiap crop. Sebelum menyebutnya siap demo publik, jalankan preview Vercel, uji deteksi foto buah/non-buah, dan periksa request batch serta label gabungan. Mixed photo yang dideteksi sebagai satu objek tetap memiliki risiko false-fresh lokal.
+Demo aktif di `https://klasifikasibuah.vercel.app`. Pada foto yang diuji, gate browser menolak non-buah dan ResNet50 mengembalikan **Busuk/Pisang** untuk foto pisang setengah busuk. Model tetap perkiraan visual; deteksi atau bercak busuk pada foto lain dapat terlewat.
 
