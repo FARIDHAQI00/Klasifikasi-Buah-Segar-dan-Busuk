@@ -203,10 +203,10 @@ input:focus-visible + .dropzone-content,
 
 .hero-orbit {
   position: absolute;
-  top: -20px;
+  top: 24px;
   left: 50%;
   width: min(1440px, 112vw);
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 16 / 9;
   transform: translateX(-50%);
   background: url("/cekbuah-orb.svg") center top / 100% 100% no-repeat;
   pointer-events: none;
@@ -1084,7 +1084,7 @@ input:focus-visible + .dropzone-content,
   }
 
   .hero-orbit {
-    top: -4px;
+    top: 24px;
     width: 160vw;
     height: 440px;
     aspect-ratio: auto;
