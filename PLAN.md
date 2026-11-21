@@ -1,6 +1,6 @@
 # Rencana Website Klasifikasi Buah Segar dan Busuk
 
-**Status:** MVP siap demo lokal; label Segar dan Busuk memakai prediksi langsung ResNet50
+**Status:** Demo memakai deteksi buah COCO-SSD Lite dan klasifikasi region ResNet50; uji Vercel dan validasi foto campuran tetap perlu dilakukan
 **Model website yang ditetapkan:** ResNet50 dari `backend/model/ResNet50_terbaik.keras`
 **Repo tujuan:** [FARIDHAQI00/Klasifikasi-Buah-Segar-dan-Busuk](https://github.com/FARIDHAQI00/Klasifikasi-Buah-Segar-dan-Busuk)  
 **Notebook acuan:** [UAS_Buah_Cepat_Resume.ipynb di Google Colab](https://colab.research.google.com/drive/16t9E0vxdy2ZF-86ZbjetxU_yVwtDOmON?usp=sharing)
@@ -19,8 +19,10 @@ Prioritas evaluasi adalah mengurangi kasus buah busuk yang diberi hasil segar. A
 - Pipeline notebook memakai gambar RGB 160 × 160. ResNet50 memakai bobot pretrained ImageNet dengan backbone dibekukan; classifier enam kelas berada pada bagian akhir.
 - ResNet50 dipilih notebook berdasarkan akurasi validasi tertinggi, yaitu 98,26%. Akurasi test yang tercatat 97,69%.
 - Confusion matrix test mencakup 2.727 gambar. Dengan keputusan argmax enam kelas, 31 dari 1.548 gambar busuk diberi kelas segar: 10 apel busuk diprediksi sebagai apel segar dan 21 jeruk busuk diprediksi sebagai jeruk segar.
-- Demo memakai argmax langsung agar pengguna melihat hasil kelas ResNet50. Catatan notebook tentang 31 false-fresh tetap disampaikan sebagai batas akurasi, bukan sebagai pengunci label.
-- Notebook menyimpan model dan hasil run ke Google Drive pada folder UAS_AI/buah_cepat_resume_daf3a93e2d. File model produksi perlu diambil dan diverifikasi sebelum integrasi; file model uji di folder lokal tidak boleh dianggap sebagai artefak final.
+- Website memakai COCO-SSD Lite di browser untuk menemukan objek apel, pisang, dan jeruk. ResNet50 tetap menjadi model freshness utama; tiap objek terdeteksi diklasifikasikan terpisah, lalu Busuk menang jika satu objek diprediksi busuk.
+- Tidak tersedia dataset lokal non-buah atau buah campuran tambahan. COCO-SSD menjadi gerbang pralatih dan dapat melewatkan target pada foto buram/tertutup; validasi terpisah tetap dibutuhkan sebelum klaim penolakan non-buah yang menyeluruh.
+- Bunch pisang yang dideteksi sebagai satu objek dibagi menjadi tiga slice tumpang-tindih sepanjang dimensi terpanjang. Cara ini membantu memeriksa kondisi lokal, tetapi masih dapat melewatkan bercak yang tidak tertangkap di crop; foto satu buah dekat tetap paling sesuai dengan cakupan dataset training.
+- Notebook menyimpan model dan hasil run ke Google Drive pada folder UAS_AI/buah_cepat_resume_daf3a93e2d. Artefak yang ditetapkan untuk website sudah disalin ke `backend/model/ResNet50_terbaik.keras`; SHA-256-nya cocok dengan manifest. Jangan mengganti artefak ini dengan model uji lain.
 
 ### Split data yang perlu diselaraskan
 
@@ -29,8 +31,8 @@ Konfigurasi preprocessing lokal mencatat jumlah gambar yang berbeda dari output 
 ### Keputusan produk
 
 1. Website selalu memuat ResNet50_terbaik.keras. Tidak ada pemilihan atau pergantian arsitektur model saat runtime; model_terpilih.json hanya metadata eksperimen dan bukan ketergantungan aplikasi.
-2. Status produk: **Segar** atau **Busuk** langsung dari kelas argmax.
-3. Tidak ada pengunci label tambahan di luar kelas ResNet50.
+2. Gerbang browser mengembalikan **Foto tidak dikenali** saat tidak ada objek buah target yang terdeteksi.
+3. ResNet50 memprediksi setiap crop objek; hasil akhir **Busuk** jika satu crop diprediksi busuk, dan **Segar** jika semua crop diprediksi segar.
 4. Website hanya membuat perkiraan visual dari foto. Hasilnya bukan jaminan keamanan atau kelayakan konsumsi.
 
 ## 3. Stack dan arsitektur
@@ -38,6 +40,7 @@ Konfigurasi preprocessing lokal mencatat jumlah gambar yang berbeda dari output 
 ### Stack
 
 - **Frontend:** React + Vite + TypeScript.
+- **Fruit gate:** TensorFlow.js COCO-SSD Lite in the browser; target classes are apple, banana, and orange.
 - **Styling:** Tailwind CSS melalui integrasi Vite.
 - **Backend:** Python + FastAPI.
 - **Inference:** TensorFlow/Keras memuat ResNet50 dalam format .keras.
@@ -50,6 +53,7 @@ Dokumentasi stack dan deploy: [React](https://react.dev/learn), [Vite](https://v
 
 - Gunakan satu Vercel Project yang terhubung ke root repo GitHub ini. `vercel.json` memakai format `services` saat ini; frontend Vite dan backend FastAPI dibangun terpisah lalu dirutekan melalui satu domain. Vercel Services tersedia dalam Beta; ikuti pilihan framework/preset yang ditawarkan dashboard saat impor.
 - Service frontend memakai root frontend/ dan membangun React/Vite menjadi asset statis. Service backend memakai root backend/ dan mengekspos instance FastAPI bernama app melalui entrypoint main:app.
+- COCO-SSD Lite berjalan di browser dan mengunduh bobot detektor saat pertama dipakai. Foto pengguna diperiksa lokal; hanya crop objek buah terdeteksi yang dikirim ke backend. Dependensi detector berada di frontend statis, tidak menambah ukuran Python Function Vercel.
 - File `vercel.json` di root mendefinisikan service dan rewrite: `/api/*` menuju backend, sedangkan path lain menuju frontend. Service backend menerima path `/api/...` asli. Karena satu deployment memiliki satu origin, frontend memanggil `/api/v1/predict` tanpa konfigurasi CORS lintas domain.
 - Hubungkan GitHub ke Vercel agar branch main menjadi deployment produksi dan pull request mendapat preview deployment. Gunakan vercel dev untuk memeriksa routing lokal bila konfigurasi Services sudah dipasang.
 - FastAPI dijalankan oleh Python Runtime sebagai Vercel Function. Model dimuat sekali per instance Function yang masih hidup; cold start berikutnya mungkin memuat ulang model. Jangan mengandalkan memori proses untuk menyimpan state permanen.
@@ -76,18 +80,19 @@ Contoh bentuk routing di vercel.json:
 ### Alur request
 
 1. Pengguna memilih foto dan melihat pratinjau.
-2. Browser mengirim file sebagai multipart request ke POST /api/v1/predict/stream.
-3. FastAPI memeriksa format file, ukuran unggahan, dimensi, dan apakah gambar dapat dibaca.
-4. Backend mengubah gambar ke RGB, resize ke 160 × 160, lalu menerapkan preprocessing ResNet50 yang sama dengan notebook.
-5. Model menghasilkan skor enam kelas sesuai urutan label di bawah.
-6. Backend mengirim event SSE saat tiap langkah dimulai dan selesai, lalu memilih kelas dengan skor tertinggi: indeks 0–2 menghasilkan Segar dan indeks 3–5 menghasilkan Busuk. Output model invalid menampilkan error.
-7. Frontend menampilkan hasil, jenis buah bila cukup jelas, serta keterangan singkat.
+2. COCO-SSD Lite mencari apel, pisang, atau jeruk di browser. Jika tidak ditemukan, UI menampilkan **Foto tidak dikenali** dan berhenti.
+3. Browser memotong tiap objek terdeteksi dan mengirimkan daftar sebagai multipart `files` ke POST /api/v1/predict/stream.
+4. FastAPI memeriksa format, ukuran, dimensi, dan integritas setiap potongan.
+5. Backend menjalankan preprocessing yang sama dengan notebook untuk tiap potongan.
+6. ResNet50 menghasilkan skor enam kelas sesuai urutan label untuk tiap potongan.
+7. Backend mengirim event SSE saat tiap langkah dimulai dan selesai. Hasil gabungan menjadi Busuk jika satu potongan busuk; jika semua segar, hasilnya Segar.
+8. Frontend menampilkan hasil, jenis buah bila cukup jelas, serta keterangan singkat.
 
 ### Kontrak API awal
 
 - GET /api/health — memeriksa aplikasi dan status model siap.
 - GET /api/v1/model-info — mengembalikan versi model, ukuran input, kelas, dan versi kebijakan.
-- POST /api/v1/predict/stream — menerima gambar dan mengirim event riwayat proses serta hasil melalui SSE.
+- POST /api/v1/predict/stream — menerima satu `file` atau beberapa `files` dan mengirim event riwayat proses serta hasil melalui SSE.
 - POST /api/v1/predict — endpoint JSON langsung untuk klien non-streaming.
 
 Contoh respons berhasil:
@@ -97,7 +102,7 @@ Contoh respons berhasil:
       "fruit": "Apel",
       "reason": "Perkiraan visual dari model ResNet50.",
       "model_version": "resnet50-terbaik-v1",
-      "policy_version": "direct-argmax-demo-v2"
+      "policy_version": "fruit-regions-any-rotten-v1"
     }
 
 Website menampilkan nama kelas, tanpa mengubah skor menjadi persentase keyakinan.
@@ -115,7 +120,7 @@ Urutan kelas harus sama persis dengan model:
 | 4 | rottenbanana | Pisang | Busuk |
 | 5 | rottenoranges | Jeruk | Busuk |
 
-Model mengeluarkan enam skor sesuai urutan tabel, tetapi API MVP saat ini tidak mengirim skor tersebut ke pengguna. Decision policy memilih kelas dengan skor tertinggi.
+Model mengeluarkan enam skor sesuai urutan tabel untuk setiap crop. API tidak mengirim skor tersebut ke pengguna. Decision policy memilih argmax tiap crop, lalu menggabungkan keputusan secara konservatif.
 
 - Indeks 0–2 (kelas segar) menghasilkan **Segar**.
 - Indeks 3–5 (kelas busuk) menghasilkan **Busuk**.
@@ -125,7 +130,8 @@ Fungsi preprocessing harus mengikuti implementasi notebook: decoding RGB, resize
 
 ## 4. Kebijakan hasil demo
 
-- Backend menampilkan kelas dengan skor tertinggi: kelas 0–2 menjadi **Segar**, kelas 3–5 menjadi **Busuk**.
+- Setiap crop dipetakan dengan argmax: kelas 0–2 **Segar**, kelas 3–5 **Busuk**.
+- Hasil foto menjadi **Busuk** bila sedikitnya satu crop terdeteksi busuk.
 - Jika output model tidak terbaca, API mengembalikan error.
 - Notebook mencatat 31 foto busuk terprediksi segar. Hasil website adalah perkiraan visual, bukan kepastian untuk semua foto baru.
 - Model dilatih untuk apel, pisang, dan jeruk; antarmuka tidak menjanjikan hasil tepat untuk objek atau buah di luar kelas tersebut.
@@ -143,8 +149,10 @@ Fungsi preprocessing harus mengikuti implementasi notebook: decoding RGB, resize
 - Satu halaman responsif untuk mengunggah satu foto.
 - Pratinjau, hapus/ganti foto, indikator proses, hasil, dan pesan error.
 - Dukungan awal JPEG, PNG, dan WebP dengan ukuran file maksimal 4 MB agar total request tetap di bawah batas payload Vercel Function 4,5 MB.
+- Deteksi browser untuk menolak foto yang tidak memiliki objek target terdeteksi, dengan hasil **Foto tidak dikenali**.
+- Crop per objek buah dan agregasi **Busuk** jika salah satu region diprediksi busuk.
 - Prediksi jenis buah dan kondisi Segar/Busuk melalui API.
-- Status runtime **Segar** dan **Busuk** dari argmax ResNet50.
+- Status runtime **Segar**, **Busuk**, dan **Foto tidak dikenali**.
 - Tidak menyimpan gambar pengguna atau membuat riwayat akun.
 - README berisi cara menjalankan lokal, menyiapkan artefak model, dan deploy.
 
@@ -162,6 +170,7 @@ Fungsi preprocessing harus mengikuti implementasi notebook: decoding RGB, resize
       vercel.json
       frontend/
         src/
+          fruitDetector.ts
         public/
         vite.config.ts
         package.json
@@ -186,15 +195,15 @@ File `.keras` terpilih dicommit di `backend/model/` karena diminta sebagai artef
 | Tahap | Pekerjaan | Hasil dan kriteria selesai |
 |---|---|---|
 | 0. Bekukan sumber dan artefak | Tetapkan `backend/model/ResNet50_terbaik.keras` sebagai satu-satunya model aplikasi; simpan SHA-256, kelas, preprocessing, versi TensorFlow, serta metrik run yang sama di manifest. | Selesai; backend hanya membaca artefak ini dan hash-nya cocok. Tidak ada model selector atau fallback arsitektur. |
-| 1. Pemetaan label | Aktifkan hasil langsung argmax enam kelas sesuai urutan di manifest. | Selesai; kelas segar menampilkan Segar dan kelas busuk menampilkan Busuk. |
+| 1. Pemetaan label | Jalankan argmax enam kelas untuk tiap region dan agregasi any-rotten-wins. | Selesai; tes unit memastikan satu region Busuk membuat hasil keseluruhan Busuk. |
 | 2. Modul inference | Pindahkan preprocessing dan pemanggilan model ke modul Python yang dapat menerima gambar dan mengeluarkan skor serta status. Muat model sekali per proses. | Selesai; hash diverifikasi sebelum model dimuat dan preprocessing dicocokkan dengan notebook. |
-| 3. API | Implementasikan health, model-info, dan predict; validasi upload dan error; batasi ukuran dan jumlah piksel; jangan simpan gambar. | Selesai; endpoint health/model-info serta unggah PNG lewat API lokal sudah merespons. |
-| 4. Frontend | Buat React SPA: upload/drag-drop, pratinjau, riwayat langkah aktual backend/model, hasil, error, dan tampilan ponsel. | Selesai; production build lulus. |
-| 5. Integrasi lokal | Jalankan frontend dan API bersama; periksa routing /api, preprocessing, label, respons, serta alur error. | Smoke API pada 30 foto test Kaggle yang hash-nya cocok (5 per kelas): 15 foto segar menghasilkan Segar dan 15 foto busuk menghasilkan Busuk. Uji format/ukuran upload dan preprocessing juga sudah diperiksa. Ini smoke check, bukan evaluasi penuh 2.727 gambar. |
+| 3. API | Implementasikan health, model-info, single image, region batch; validasi upload dan error; batasi ukuran/jumlah pixel; jangan simpan gambar. | Kode menerima `file` atau `files`; batch inference memakai model yang sama. Perlu smoke test API batch pada runtime TensorFlow. |
+| 4. Frontend | Buat React SPA dengan COCO-SSD Lite gate, crop buah, upload batch, riwayat langkah aktual, hasil, dan error. | Production build lulus. Browser gate dicoba pada foto pisang dan non-buah yang diberikan; sampel ini belum cukup untuk mengukur cakupan deteksi umum. |
+| 5. Integrasi lokal | Jalankan frontend dan API bersama; periksa routing /api, preprocessing, label, batch response, serta alur error. | Tes kebijakan tujuh kasus lulus; alur browser-ke-API batch dan inferensi ResNet50 belum bisa diuji di runtime ini karena TensorFlow/FastAPI belum terpasang. |
 | 6. Deploy preview Vercel | Konfigurasikan Vercel Services, root frontend/backend, entrypoint FastAPI, routing, ukuran upload, artefak model, dan kapasitas Large Functions bila bundle melewati 500 MB. Jalankan preview dari branch kerja sebelum main. | Source/config siap diajukan; deployment preview, pengukuran bundle/cold start/memori, dan pemeriksaan project Vercel masih perlu dilakukan di akun pengguna. |
-| 7. Deploy demo dan dokumentasi | Setelah preview Vercel berjalan, cek health check, upload foto, label, dan catat versi model. | Belum dideploy; perlu project/akun Vercel pemilik repo. |
+| 7. Deploy demo dan dokumentasi | Setelah build terbaru terdeploy, cek health check, gate browser, crop batch, label, dan catat versi model. | Perlu verifikasi deployment Vercel terbaru dan ukuran payload batch dari akun pemilik repo. |
 
-Demo lokal sudah terintegrasi. Tindak lanjut yang tersisa adalah preview Vercel dan pengamatan foto tambahan untuk menentukan apakah model perlu diperbarui.
+Source dan frontend demo sudah diperbarui; validasi backend batch baru, preview Vercel, dan pengamatan foto tambahan masih menjadi tindak lanjut.
 
 ## 9. Risiko dan mitigasi
 
@@ -203,7 +212,8 @@ Demo lokal sudah terintegrasi. Tindak lanjut yang tersisa adalah preview Vercel 
 | Busuk diberi label Segar | Risiko ini tercatat di evaluasi notebook (31 kasus); tampilkan hasil sebagai perkiraan visual dan kumpulkan contoh foto untuk peningkatan model. |
 | Split lokal dan Colab berbeda | Pilih satu manifest final dan simpan hash; hitung ulang evaluasi untuk model yang sama dengan split tersebut. |
 | Preprocessing berubah | Gunakan fungsi preprocessing yang identik dengan notebook dan verifikasi pada kumpulan gambar acuan. |
-| Foto di luar dataset | UI meminta foto apel, pisang, atau jeruk. Model MVP belum memiliki pendeteksi OOD/non-buah; batasi klaim ke tiga jenis tersebut dan lakukan uji foto kamera sebelum rilis. |
+| Foto di luar dataset | COCO-SSD Lite menolak foto bila tidak menemukan apel/pisang/jeruk. Model umum ini dapat salah deteksi atau luput; uji dengan contoh nyata sebelum klaim cakupan penuh. |
+| Campuran segar dan busuk | Kotak pisang dibagi tiga dan hasil Busuk menang bila satu slice diprediksi busuk. COCO dapat meleset dari bercak atau crop tidak cukup menampilkannya; kasus lokal tetap bisa terlewat. |
 | Artefak model besar atau hilang | Simpan hanya model ResNet50 terpilih (95,157,337 bytes) di `backend/model/`, pin hash SHA-256, dan verifikasi saat backend start. Jangan commit dataset/checkpoint. |
 | Kebocoran foto pengguna | Jangan simpan upload; hapus data gambar dari memori setelah request selesai; jangan mencatat file ke log. |
 | Batas Vercel Function | Ukur bundle, payload, RAM, cold start, dan latency pada preview; gunakan Large Functions bila sesuai atau pindahkan hanya API inference ke layanan Python container jika tetap tidak layak. |
@@ -212,5 +222,5 @@ Demo lokal sudah terintegrasi. Tindak lanjut yang tersisa adalah preview Vercel 
 
 ## 10. Kriteria selesai
 
-Source MVP siap diajukan ke Vercel saat website dapat menerima foto, memakai ResNet50 dan preprocessing yang benar, serta menampilkan prediksi langsung **Segar** atau **Busuk**. Preview dan pemeriksaan endpoint publik tetap dilakukan di akun/project Vercel pemilik repo.
+Source demo menggunakan COCO-SSD Lite untuk gate buah dan ResNet50 untuk klasifikasi tiap crop. Sebelum menyebutnya siap demo publik, jalankan preview Vercel, uji deteksi foto buah/non-buah, dan periksa request batch serta label gabungan. Mixed photo yang dideteksi sebagai satu objek tetap memiliki risiko false-fresh lokal.
 

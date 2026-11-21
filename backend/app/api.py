@@ -14,13 +14,14 @@ from pydantic import BaseModel
 from starlette.concurrency import run_in_threadpool
 from starlette.responses import StreamingResponse
 
-from .decision_policy import decide
+from .decision_policy import decide, decide_regions
 from .model_loader import load_model, predict, read_manifest
 from .preprocessing import prepare_image
 
 MAX_FILE_BYTES = 4 * 1024 * 1024
 MAX_BODY_BYTES = 4_500_000
 MAX_IMAGE_PIXELS = 20_000_000
+MAX_IMAGE_REGIONS = 12
 ALLOWED_FORMATS = {"JPEG", "PNG", "WEBP"}
 logger = logging.getLogger(__name__)
 
@@ -112,6 +113,7 @@ def model_info() -> dict[str, object]:
         "classes": manifest["classes"],
         "policy_version": manifest["policy_version"],
         "decision_method": manifest["decision_method"],
+        "fruit_gate": manifest["fruit_gate"],
     }
 
 
@@ -143,7 +145,11 @@ async def classify_image(
 @app.post("/api/v1/predict/stream")
 async def classify_image_stream(
     request: Request,
-    file: UploadFile = File(..., description="Foto apel, pisang, atau jeruk"),
+    file: UploadFile | None = File(default=None, description="Foto apel, pisang, atau jeruk"),
+    files: list[UploadFile] | None = File(
+        default=None,
+        description="Potongan buah yang terdeteksi oleh gerbang COCO-SSD di browser",
+    ),
 ) -> StreamingResponse:
     request_id = uuid.uuid4().hex[:12]
 
@@ -175,7 +181,23 @@ async def classify_image_stream(
 
         try:
             yield step_event(current_step, "running")
-            image_bytes = await read_validated_image(request, file)
+            if file is not None and files is not None:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Kirim satu foto atau daftar potongan buah, jangan keduanya.",
+                )
+            image_files = files if files is not None else ([file] if file is not None else [])
+            if not image_files:
+                raise HTTPException(status_code=400, detail="Foto buah belum dikirim.")
+            if len(image_files) > MAX_IMAGE_REGIONS:
+                raise HTTPException(
+                    status_code=413,
+                    detail="Terlalu banyak potongan buah. Unggah foto dengan lebih sedikit objek.",
+                )
+            image_bytes = [
+                await read_validated_image(request, image_file)
+                for image_file in image_files
+            ]
             yield step_event(
                 current_step, "complete", (time.perf_counter() - step_started) * 1000
             )
@@ -183,7 +205,10 @@ async def classify_image_stream(
             current_step = "preprocessing"
             step_started = time.perf_counter()
             yield step_event(current_step, "running")
-            tensor = await run_in_threadpool(prepare_image, image_bytes)
+            tensors = [
+                await run_in_threadpool(prepare_image, image_bytes_item)
+                for image_bytes_item in image_bytes
+            ]
             yield step_event(
                 current_step, "complete", (time.perf_counter() - step_started) * 1000
             )
@@ -199,7 +224,10 @@ async def classify_image_stream(
             current_step = "inference"
             step_started = time.perf_counter()
             yield step_event(current_step, "running")
-            scores = await run_in_threadpool(predict, tensor)
+            region_scores = [
+                await run_in_threadpool(predict, tensor)
+                for tensor in tensors
+            ]
             yield step_event(
                 current_step, "complete", (time.perf_counter() - step_started) * 1000
             )
@@ -207,7 +235,7 @@ async def classify_image_stream(
             current_step = "label"
             step_started = time.perf_counter()
             yield step_event(current_step, "running")
-            decision = decide(scores)
+            decision = decide(region_scores[0]) if len(region_scores) == 1 else decide_regions(region_scores)
             manifest = read_manifest()
             result = PredictionResponse(
                 status=decision.status,

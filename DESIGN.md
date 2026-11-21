@@ -110,7 +110,7 @@ components:
 
 CekBuah fills the viewport with a near-black center and teal, blue, and violet ambient light at the edges. A large illustrated glass orb with a lavender beam and fine orbit lines gives the headline its luminous focus. The interface follows the user's supplied Clarid reference while replacing its finance claims with CekBuah's actual supported fruits and model details.
 
-DM Serif Display gives the page a calm editorial voice. Manrope keeps the working copy, controls, upload guidance, processing history, and result states compact and readable. The page moves from introduction to upload, five actual backend/model steps, then the ResNet50 label. Segar and Busuk stay explicit in text and use distinct colors. The model result remains a visual estimate.
+DM Serif Display gives the page a calm editorial voice. Manrope keeps the working copy, controls, upload guidance, processing history, and result states compact and readable. The page moves from introduction to upload, browser fruit detection, five backend/model steps, then the ResNet50 label. Segar, Busuk, and unsupported-photo results stay explicit in text and use distinct colors. The model result remains a visual estimate.
 
 **Key Characteristics:**
 - A full-bleed canvas with teal-to-blue-to-violet light fading around a near-black center.
@@ -215,10 +215,10 @@ The page has no rounded outer shell. Working panels use medium corners (17–22p
 - **Mobile:** The navigation moves to a centered row below the wordmark and primary action.
 
 ### Processing History
-The panel lists the five backend events in their actual order: validation, preprocessing, model setup, inference, and label mapping. Each row pairs a step name with its live state and backend duration when available. Fast events are consumed sequentially and held visibly for at least 240ms per running step; the displayed duration remains the backend's measured time. The history is local to the current check and is not saved as an account history.
+The panel lists browser fruit detection followed by the five backend events in their actual order: validation, preprocessing, model setup, inference, and label aggregation. Each row pairs a step name with its live state and measured duration. When no target fruit is detected, only the browser detection row is shown because the backend was not called. Fast events are consumed sequentially and held visibly for at least 240ms per running step; the displayed duration remains measured time. The history is local to the current check and is not saved as an account history.
 
 ### Inspection Result
-Segar and Busuk use distinct, brighter green and red result surfaces with bright matching labels. Each result includes a state icon, written label, recognized fruit when available, the backend reason, model version, and a control to try another photo.
+Segar and Busuk use distinct, brighter green and red result surfaces with bright matching labels. An unsupported photo uses an amber result surface and tells the visitor to upload an apple, banana, or orange. Each result includes a state icon, written label, recognized fruit when available, reason, model version, and a control to try another photo.
 
 ## Do's and Don'ts
 

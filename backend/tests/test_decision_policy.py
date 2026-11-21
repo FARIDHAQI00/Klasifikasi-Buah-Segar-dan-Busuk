@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-from backend.app.decision_policy import decide
+from backend.app.decision_policy import decide, decide_regions
 
 
 class DecisionPolicyTests(unittest.TestCase):
@@ -41,6 +41,30 @@ class DecisionPolicyTests(unittest.TestCase):
             with self.subTest(scores=scores):
                 with self.assertRaises(ValueError):
                     decide(scores)
+
+    def test_any_rotten_region_makes_the_photo_rotten(self) -> None:
+        fresh_banana = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0]
+        rotten_banana = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0]
+
+        result = decide_regions([fresh_banana, rotten_banana])
+
+        self.assertEqual(result.status, "rotten")
+        self.assertEqual(result.fruit, "Pisang")
+
+    def test_fresh_regions_remain_fresh(self) -> None:
+        result = decide_regions(
+            [
+                [1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
+            ]
+        )
+
+        self.assertEqual(result.status, "fresh")
+        self.assertEqual(result.fruit, "Campuran")
+
+    def test_empty_region_list_is_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            decide_regions([])
 
 
 if __name__ == "__main__":

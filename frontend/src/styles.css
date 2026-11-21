@@ -792,6 +792,13 @@ input:focus-visible + .dropzone-content,
   box-shadow: 0 0 26px rgb(36 255 127 / 11%), inset 0 1px rgb(255 255 255 / 5%);
 }
 
+.result-panel--unsupported {
+  border-color: rgb(255 204 114 / 56%);
+  background: linear-gradient(130deg, rgb(101 69 23 / 48%), rgb(43 31 18 / 86%));
+  color: #fff5e3;
+  box-shadow: 0 0 24px rgb(255 194 83 / 9%), inset 0 1px rgb(255 255 255 / 5%);
+}
+
 .result-panel--rotten .result-icon {
   border-color: rgb(255 102 94 / 48%);
   background: rgb(255 72 67 / 15%);
@@ -804,12 +811,22 @@ input:focus-visible + .dropzone-content,
   color: var(--fresh);
 }
 
+.result-panel--unsupported .result-icon {
+  border-color: rgb(255 204 114 / 48%);
+  background: rgb(255 194 83 / 12%);
+  color: #ffd587;
+}
+
 .result-panel--rotten .result-heading h3 {
   color: var(--rotten);
 }
 
 .result-panel--fresh .result-heading h3 {
   color: var(--fresh);
+}
+
+.result-panel--unsupported .result-heading h3 {
+  color: #ffd587;
 }
 
 .result-heading {

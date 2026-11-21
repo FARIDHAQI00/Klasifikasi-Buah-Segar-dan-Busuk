@@ -32,7 +32,19 @@
     "rotten_bananas_predicted_fresh": 0,
     "rotten_oranges_predicted_fresh": 21
   },
-  "policy_version": "direct-argmax-demo-v2",
-  "decision_method": "six-class-argmax",
-  "prediction_note": "Direct six-class argmax for demo; notebook test recorded 31 rotten images classified as fresh."
+  "fruit_gate": {
+    "architecture": "COCO-SSD",
+    "variant": "lite_mobilenet_v2",
+    "execution": "browser",
+    "target_classes": ["apple", "banana", "orange"],
+    "minimum_score": 0.5,
+    "region_strategy": {
+      "banana": "three overlapping slices along the longest detected dimension",
+      "apple_orange": "one crop per detected object",
+      "maximum_detected_objects": 4
+    }
+  },
+  "policy_version": "fruit-regions-any-rotten-v1",
+  "decision_method": "COCO-SSD target-fruit detection; ResNet50 six-class argmax per detected region; rotten wins across regions",
+  "prediction_note": "The website stops when no target fruit is detected. Banana boxes are divided into three overlapping crops; other fruit boxes use one crop. It reports rotten if any crop is predicted rotten."
 }

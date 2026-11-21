@@ -8,8 +8,12 @@ Lihat [`dokumentasi.md`](dokumentasi.md) untuk peta berkas, workflow klasifikasi
 
 - Artefak: [`backend/model/ResNet50_terbaik.keras`](backend/model/ResNet50_terbaik.keras)
 - Manifest kelas, preprocessing, dan SHA-256: [`backend/model/model_manifest.json`](backend/model/model_manifest.json)
-- Enam kelas model dipetakan langsung: indeks 0–2 menjadi **Segar**, indeks 3–5 menjadi **Busuk**.
+- Gerbang COCO-SSD Lite di browser mendeteksi apel, pisang, atau jeruk lalu memotong tiap objek untuk dinilai ResNet50.
+- Tiap potongan memakai enam kelas ResNet50. Kotak pisang dibagi menjadi tiga slice tumpang-tindih; jika satu potongan diprediksi Busuk, hasil foto menjadi **Busuk**.
+- Jika tidak ada buah target terdeteksi, foto berhenti di browser dan ditampilkan sebagai **Foto tidak dikenali**.
 - Pada data test notebook, 31 dari 1.548 gambar busuk tertebak Segar oleh `argmax` mentah. Hasil foto baru adalah perkiraan visual, jadi periksa buah secara langsung.
+
+Detektor COCO-SSD adalah model objek umum dengan 80 kelas, termasuk apple, banana, dan orange. Gerbang ini menolak foto saat tak ada objek buah target terdeteksi; deteksi model umum tetap dapat luput pada foto buram, tertutup, atau sangat jauh. Untuk buah campuran, keputusan Busuk menang bila salah satu potongan objek yang terdeteksi diprediksi busuk.
 
 ## Menjalankan lokal
 
@@ -33,9 +37,9 @@ npm install
 npm run dev
 ```
 
-Frontend meneruskan `/api/*` ke FastAPI di `http://127.0.0.1:8000`. API menerima JPEG, PNG, atau WebP sampai 4 MB. `POST /api/v1/predict/stream` mengirim riwayat langkah backend dan hasil melalui SSE; `POST /api/v1/predict` tetap tersedia dengan respons JSON. `GET /api/health` memeriksa model.
+Frontend meneruskan `/api/*` ke FastAPI di `http://127.0.0.1:8000`. COCO-SSD memeriksa foto di browser dan hanya potongan buah terdeteksi yang dikirim ke backend. API menerima JPEG, PNG, atau WebP sampai 4 MB per berkas. `POST /api/v1/predict/stream` menerima satu `file` atau beberapa `files`, mengirim riwayat backend dan hasil melalui SSE; `POST /api/v1/predict` tetap tersedia dengan respons JSON untuk satu foto. `GET /api/health` memeriksa model.
 
-Riwayat UI mengikuti event aktual: validasi foto, preprocessing RGB 160 × 160, kesiapan model ResNet50, inferensi, lalu pemetaan Segar/Busuk.
+Riwayat UI mengikuti proses aktual: deteksi buah di browser, validasi, preprocessing RGB 160 × 160 per potongan, kesiapan model, inferensi per potongan, lalu agregasi hasil.
 
 Tes backend: `python -m unittest discover -s backend/tests -v`.
 

@@ -15,16 +15,18 @@ import {
   Upload,
   X,
 } from "lucide-react";
+import { detectFruitRegions } from "./fruitDetector";
 
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
 const MIN_STEP_DISPLAY_MS = 240;
 const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const PROCESS_STEPS = [
+  { id: "fruit_detection", label: "Deteksi apel, pisang, atau jeruk" },
   { id: "validation", label: "Validasi format dan ukuran foto" },
-  { id: "preprocessing", label: "Preprocessing ResNet50 · RGB 160 × 160" },
+  { id: "preprocessing", label: "Preprocessing ResNet50 · tiap bagian · 160 × 160" },
   { id: "model", label: "Menyiapkan model ResNet50" },
-  { id: "inference", label: "Inferensi ResNet50 · enam kelas" },
-  { id: "label", label: "Argmax · label Segar/Busuk" },
+  { id: "inference", label: "Inferensi ResNet50 · tiap bagian buah" },
+  { id: "label", label: "Agregasi hasil · Busuk jika ada bagian busuk" },
 ] as const;
 
 type ProcessingStepId = (typeof PROCESS_STEPS)[number]["id"];
@@ -43,7 +45,7 @@ const PROCESSING_STATUS_LABELS: Record<ProcessingStatus, string> = {
   error: "Gagal",
 };
 
-type ResultStatus = "fresh" | "rotten";
+type ResultStatus = "fresh" | "rotten" | "unsupported";
 
 type Prediction = {
   status: ResultStatus;
@@ -57,7 +59,7 @@ function isPrediction(value: unknown): value is Prediction {
   if (!value || typeof value !== "object") return false;
   const result = value as Record<string, unknown>;
   return (
-    (result.status === "fresh" || result.status === "rotten") &&
+    (result.status === "fresh" || result.status === "rotten" || result.status === "unsupported") &&
     (result.fruit === null || typeof result.fruit === "string") &&
     typeof result.reason === "string" &&
     typeof result.model_version === "string" &&
@@ -234,11 +236,59 @@ function App() {
     setIsLoading(true);
     setError("");
     setPrediction(null);
-
-    const formData = new FormData();
-    formData.append("file", file);
+    let fruitGateStartedAt: number | null = null;
 
     try {
+      fruitGateStartedAt = performance.now();
+      setStepHistory((current) =>
+        current.map((step) =>
+          step.id === "fruit_detection" ? { ...step, status: "running" } : step,
+        ),
+      );
+      const fruitRegions = await detectFruitRegions(file);
+      const detectionDurationMs = performance.now() - fruitGateStartedAt;
+      if (detectionDurationMs < MIN_STEP_DISPLAY_MS) {
+        await new Promise<void>((resolve) =>
+          window.setTimeout(resolve, MIN_STEP_DISPLAY_MS - detectionDurationMs),
+        );
+      }
+      const detectionLabel = fruitRegions.length
+        ? `Deteksi buah · ${fruitRegions.length} bagian`
+        : "Deteksi buah · tidak ditemukan";
+      setStepHistory((current) =>
+        current.map((step) =>
+          step.id === "fruit_detection"
+            ? { ...step, label: detectionLabel, status: "complete", durationMs: detectionDurationMs }
+            : step.id === "preprocessing"
+              ? { ...step, label: `Preprocessing ResNet50 · ${fruitRegions.length} bagian · 160 × 160` }
+              : step.id === "inference"
+                ? { ...step, label: `Inferensi ResNet50 · ${fruitRegions.length} bagian buah` }
+            : step,
+        ),
+      );
+      fruitGateStartedAt = null;
+
+      if (fruitRegions.length === 0) {
+        setStepHistory([
+          {
+            id: "fruit_detection",
+            label: detectionLabel,
+            status: "complete",
+            durationMs: detectionDurationMs,
+          },
+        ]);
+        setPrediction({
+          status: "unsupported",
+          fruit: null,
+          reason: "Foto tidak terdeteksi sebagai apel, pisang, atau jeruk. Coba ambil foto buah lebih dekat.",
+          model_version: "Detektor buah COCO-SSD Lite",
+          policy_version: "browser-fruit-gate-v1",
+        });
+        return;
+      }
+
+      const formData = new FormData();
+      fruitRegions.forEach((region) => formData.append("files", region.file));
       const response = await fetch("/api/v1/predict/stream", {
         method: "POST",
         body: formData,
@@ -283,17 +333,38 @@ function App() {
       });
       setPrediction(result);
     } catch (requestError) {
+      if (fruitGateStartedAt !== null) {
+        const detectionDurationMs = performance.now() - fruitGateStartedAt;
+        setStepHistory([
+          {
+            id: "fruit_detection",
+            label: PROCESS_STEPS[0].label,
+            status: "error",
+            durationMs: detectionDurationMs,
+          },
+        ]);
+      }
       setError(
-        requestError instanceof Error
-          ? requestError.message
-          : "Terjadi kendala saat menghubungi model. Coba lagi.",
+        fruitGateStartedAt !== null
+          ? requestError instanceof Error &&
+            (requestError.message.startsWith("Foto") || requestError.message.startsWith("Potongan"))
+            ? requestError.message
+            : "Detektor buah belum siap. Periksa koneksi internet lalu coba lagi."
+          : requestError instanceof Error
+            ? requestError.message
+            : "Terjadi kendala saat menghubungi model. Coba lagi.",
       );
     } finally {
       setIsLoading(false);
     }
   }
 
-  const resultTitle = prediction?.status === "rotten" ? "Busuk" : "Segar";
+  const resultTitle =
+    prediction?.status === "rotten"
+      ? "Busuk"
+      : prediction?.status === "unsupported"
+        ? "Foto tidak dikenali"
+        : "Segar";
 
   return (
     <div className="ambient-shell">
@@ -376,7 +447,7 @@ function App() {
           <section className="inspection-section page-width" id="pemeriksaan" aria-labelledby="inspection-title">
             <div className="inspection-intro">
               <h2 id="inspection-title">Satu foto untuk mulai.</h2>
-              <p>Unggah foto buah dengan pencahayaan cukup dan permukaan terlihat jelas.</p>
+              <p>Ambil satu buah dari dekat agar permukaan yang busuk terlihat jelas.</p>
             </div>
 
             <form className="inspection-panel" onSubmit={submitImage}>
@@ -534,6 +605,8 @@ function App() {
                     <span className="result-icon" aria-hidden="true">
                       {prediction.status === "rotten" ? (
                         <TriangleAlert size={21} />
+                      ) : prediction.status === "unsupported" ? (
+                        <CircleAlert size={21} />
                       ) : (
                         <CircleCheck size={21} />
                       )}
